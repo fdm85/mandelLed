@@ -9,5 +9,7 @@
 #define PERIPHERAL_H_
 void initClock(void);
 void initPeripherals(void);
+void blueLedToggle(void);
+void greenLedToggle(void);
 
 #endif /* PERIPHERAL_H_ */

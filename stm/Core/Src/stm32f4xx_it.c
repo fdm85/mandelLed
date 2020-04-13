@@ -32,7 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- 
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,7 +62,7 @@ extern DMA_HandleTypeDef hdma_tim3_ch3;
 /* USER CODE END EV */
 
 /******************************************************************************/
-/*           Cortex-M4 Processor Interruption and Exception Handlers          */ 
+/*           Cortex-M4 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
   * @brief This function handles Non maskable interrupt.
@@ -70,7 +70,7 @@ extern DMA_HandleTypeDef hdma_tim3_ch3;
 void NMI_Handler(void)
 {
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
-
+	__BKPT(0);
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
 
@@ -83,7 +83,7 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+	__BKPT(1);
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
@@ -98,7 +98,7 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
-
+	__BKPT(2);
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
   {
@@ -113,7 +113,7 @@ void MemManage_Handler(void)
 void BusFault_Handler(void)
 {
   /* USER CODE BEGIN BusFault_IRQn 0 */
-
+	__BKPT(3);
   /* USER CODE END BusFault_IRQn 0 */
   while (1)
   {
@@ -128,7 +128,7 @@ void BusFault_Handler(void)
 void UsageFault_Handler(void)
 {
   /* USER CODE BEGIN UsageFault_IRQn 0 */
-
+	__BKPT(4);
   /* USER CODE END UsageFault_IRQn 0 */
   while (1)
   {
