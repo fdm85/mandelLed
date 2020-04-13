@@ -8,6 +8,7 @@
 #include "cmsis_compiler.h"
 #include "stm32f4xx_hal.h"
 #include "peripheral.h"
+#include "ledData.h"
 
 
 static void maintainStatusLeds(void)
@@ -25,7 +26,10 @@ static void maintainStatusLeds(void)
 int main(void) {
 	initClock();
 	initPeripherals();
+	initDataRaw();
 	__enable_irq();
+
+	transmitData();
 	for (;;) {
 		maintainStatusLeds();
 		__NOP();
