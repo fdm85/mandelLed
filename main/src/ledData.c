@@ -8,7 +8,7 @@
 #include "ledData.h"
 #include "stdint.h"
 #include "tim.h"
-#define ledRawSize ((3 * 8))
+#define ledRawSize ((3 * 8)*60)
 #define retLength 41u
 #define length (retLength + ledRawSize + retLength)
 
