@@ -8,9 +8,11 @@
 #ifndef LEDDATA_H_
 #define LEDDATA_H_
 
-void initDataRaw(void);
-void initDataRaw2(void);
-void transmitData(void);
-void transmitData2(void);
+#include "stdint.h"
+
+void led_initDataRaw(void);
+void led_setAllLedsToUniColors(uint8_t brightness);
+void led_pasteData(void);
+void led_transmitData(void);
 
 #endif /* LEDDATA_H_ */

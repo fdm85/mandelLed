@@ -23,19 +23,16 @@ static void maintainStatusLeds(void)
 }
 static void cyclicReSend(void)
 {
-	static const uint32_t triggerTimeMs = 2000uL;	static uint32_t lastToggle = 0uL;
-	static uint8_t innerToggle = 0u;
+	static const uint32_t triggerTimeMs = 200uL;	static uint32_t lastToggle = 0uL;
+	static uint8_t brightness = 0u;
 	if( (HAL_GetTick() - lastToggle) > triggerTimeMs)
 	{
-		if(++innerToggle %2)
-		{
-			transmitData();
-		}
-		else
-		{
-			transmitData2();
-		}
+		led_setAllLedsToUniColors(brightness);
 		greenLedToggle();
+		led_pasteData();
+		led_transmitData();
+
+		brightness += 15u;
 		lastToggle = HAL_GetTick();
 	}
 }
@@ -44,8 +41,7 @@ static void cyclicReSend(void)
 int main(void) {
 	initClock();
 	initPeripherals();
-	initDataRaw();
-	initDataRaw2();
+	led_initDataRaw();
 	__enable_irq();
 
 	for (;;) {
