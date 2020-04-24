@@ -58,6 +58,7 @@ static void led_setLedColors(Led* led, uint8_t r, uint8_t g, uint8_t b)
 	led->b = b;
 }
 
+
 /// raw bits are stored MSB first, order is green, red, blue
 static void led_convertLed(Led* l, LedRaw* r)
 {
@@ -66,6 +67,12 @@ static void led_convertLed(Led* l, LedRaw* r)
 		r->r[i] = (l->r & (0x80u >> i)) ? lRawOn : lRawOff;
 		r->b[i] = (l->b & (0x80u >> i)) ? lRawOn : lRawOff;
 	}
+}
+
+void led_setLedToColor(uint8_t i, uint8_t r, uint8_t g, uint8_t b)
+{
+	uint8_t iM = i%ledCount;
+	led_setLedColors(&leds[iM], r, g, b);
 }
 
 void led_setAllLedsToUniColors(uint8_t brightness)

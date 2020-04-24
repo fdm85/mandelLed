@@ -12,6 +12,7 @@
 
 void led_initDataRaw(void);
 void led_setAllLedsToUniColors(uint8_t brightness);
+void led_setLedToColor(uint8_t i, uint8_t r, uint8_t g, uint8_t b);
 void led_pasteData(void);
 void led_transmitData(void);
 
