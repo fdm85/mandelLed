@@ -8,6 +8,7 @@
 #include "ledData.h"
 #include "stdint.h"
 #include "tim.h"
+#include "assrt.h"
 #define ledRawSize (3u * 8u)
 #define ledCount 60u
 #define resLength 41u
@@ -93,6 +94,9 @@ void led_transmitData(void)
 {
 	volatile HAL_StatusTypeDef result;
 	result = HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_3, &f1.rI[0], lRawTotalLength);
+	asrt(result == HAL_OK);
+//	result = HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_4, &f1.rI[0], lRawTotalLength);
+	asrt(result == HAL_OK);
 	(void)result;
 }
 
