@@ -34,3 +34,10 @@ void blueLedToggle(void)
 {
 	HAL_GPIO_TogglePin(LD6_GPIO_Port, LD6_Pin);
 }
+
+
+void outputEnableLvlShifter(void)
+{
+	  // write gpio E0 to low, output-enable of levelshifter --> on
+	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_0, GPIO_PIN_SET);
+}

@@ -11,5 +11,6 @@ void initClock(void);
 void initPeripherals(void);
 void blueLedToggle(void);
 void greenLedToggle(void);
+void outputEnableLvlShifter(void);
 
 #endif /* PERIPHERAL_H_ */
