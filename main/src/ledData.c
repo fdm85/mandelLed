@@ -10,9 +10,8 @@
 #include "tim.h"
 #include "assrt.h"
 #define ledRawSize (3u * 8u)
-#define ledCount 60u
 #define resLength 41u
-
+#define ledCount 60u
 #define lRawTotalCount (ledRawSize * ledCount)
 #define lRawOn ((2uL * 104uL)/3uL)
 #define lRawOff ((1uL * 104uL)/3uL)
@@ -38,6 +37,8 @@ typedef struct Lf {
 
 static Led leds[ledCount];
 static Lf f1;
+
+const uint32_t led_count = ledCount;
 
 void led_initDataRaw(void)
 {
@@ -94,8 +95,6 @@ void led_transmitData(void)
 {
 	volatile HAL_StatusTypeDef result;
 	result = HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_3, &f1.rI[0], lRawTotalLength);
-	assrt(result == HAL_OK);
-//	result = HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_4, &f1.rI[0], lRawTotalLength);
 	assrt(result == HAL_OK);
 	(void)result;
 }

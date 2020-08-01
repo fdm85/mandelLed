@@ -8,7 +8,7 @@
 #include "animations.h"
 #include "ledData.h"
 
-void circularRun1(uint8_t brightness)
+void anim_circularRun1(uint8_t brightness)
 {
 	static uint32_t index = 0u;
 	led_setAllLedsToUniColors(brightness);

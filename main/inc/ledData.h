@@ -9,6 +9,7 @@
 #define LEDDATA_H_
 
 #include "stdint.h"
+extern const uint32_t led_count;
 
 void led_initDataRaw(void);
 void led_setAllLedsToUniColors(uint8_t brightness);

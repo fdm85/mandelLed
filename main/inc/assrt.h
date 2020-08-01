@@ -8,6 +8,7 @@
 #ifndef ASSRT_H_
 #define ASSRT_H_
 
+#include "cmsis_compiler.h"
 #include "stdbool.h"
 
 #define assrt(b) if((b)==false) __BKPT(0)
