@@ -9,7 +9,7 @@
 #include "stm32f4xx_hal.h"
 #include "peripheral.h"
 #include "ledData.h"
-
+#include "animations.h"
 
 static void maintainStatusLeds(void)
 {
