@@ -10,6 +10,6 @@
 
 #include "stdbool.h"
 
-#define asrt(b) if((b)==false) __BKPT(0)
+#define assrt(b) if((b)==false) __BKPT(0)
 
 #endif /* ASSRT_H_ */
