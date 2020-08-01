@@ -10,6 +10,6 @@
 
 #include <stdint.h>
 
-void circularRun1(uint8_t index, uint8_t brightness);
+void circularRun1(uint8_t brightness);
 
 #endif /* ANIMATIONS_H_ */

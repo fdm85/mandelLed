@@ -26,16 +26,14 @@ static void cyclicReSend(void)
 {
 	static const uint32_t triggerTimeMs = 50uL;	static uint32_t lastToggle = 0uL;
 	static uint8_t brightness = 15u;
-	static uint32_t index = 0u;
 	if( (HAL_GetTick() - lastToggle) > triggerTimeMs)
 	{
-		circularRun1((uint8_t)index, brightness);
+		circularRun1(brightness);
 
 		greenLedToggle();
 		led_pasteData();
 		led_transmitData();
 
-		++index;
 		lastToggle = HAL_GetTick();
 	}
 }

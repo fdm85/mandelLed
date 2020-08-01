@@ -70,9 +70,9 @@ static void led_convertLed(Led* l, LedRaw* r)
 	}
 }
 
-void led_setLedToColor(uint8_t i, uint8_t r, uint8_t g, uint8_t b)
+void led_setLedToColor(uint32_t i, uint8_t r, uint8_t g, uint8_t b)
 {
-	uint8_t iM = i%ledCount;
+	uint8_t iM = (uint8_t)(i%ledCount);
 	led_setLedColors(&leds[iM], r, g, b);
 }
 
