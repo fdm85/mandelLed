@@ -11,17 +11,11 @@
 #include "assrt.h"
 #define ledRawSize (3u * 8u)
 #define resLength 41u
-#define ledCount 60u
 #define lRawTotalCount (ledRawSize * ledCount)
 #define lRawOn ((2uL * 104uL)/3uL)
 #define lRawOff ((1uL * 104uL)/3uL)
 #define lRawTotalLength ((41 * 2) + (ledCount * 24))
 
-typedef struct Led{
-	uint8_t g;
-	uint8_t r;
-	uint8_t b;
-}Led;
 
 typedef struct LedRaw{
 	uint32_t g[8];
@@ -35,7 +29,7 @@ typedef struct Lf {
 	uint32_t rO[resLength];
 }Lf;
 
-static Led leds[ledCount];
+static Led_Led_t leds[ledCount];
 static Lf f1;
 
 const uint32_t led_count = ledCount;
@@ -53,7 +47,7 @@ void led_initDataRaw(void)
 }
 
 
-static void led_setLedColors(Led* led, uint8_t r, uint8_t g, uint8_t b)
+static void led_setLedColors(Led_Led_t* led, uint8_t r, uint8_t g, uint8_t b)
 {
 	led->r = r;
 	led->g = g;
@@ -62,7 +56,7 @@ static void led_setLedColors(Led* led, uint8_t r, uint8_t g, uint8_t b)
 
 
 /// raw bits are stored MSB first, order is green, red, blue
-static void led_convertLed(Led* l, LedRaw* r)
+static void led_convertLed(Led_Led_t* l, LedRaw* r)
 {
 	for (uint8_t i = 0; i < 8u; ++i) {
 		r->g[i] = (l->g & (0x80u >> i)) ? lRawOn : lRawOff;
@@ -75,6 +69,15 @@ void led_setLedToColor(uint32_t i, uint8_t r, uint8_t g, uint8_t b)
 {
 	uint8_t iM = (uint8_t)(i%ledCount);
 	led_setLedColors(&leds[iM], r, g, b);
+}
+
+void led_getLedColor(uint32_t i, Led_Led_t *l)
+{
+	assrt(l);
+	uint8_t iM = (uint8_t)(i%ledCount);
+	l->b = leds[iM].b;
+	l->g = leds[iM].g;
+	l->r = leds[iM].r;
 }
 
 void led_setAllLedsToUniColors(uint8_t brightness)

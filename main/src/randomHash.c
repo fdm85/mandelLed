@@ -21,6 +21,8 @@ typedef union {
 	};
 }rand_u;
 
+Led_diffColor_t diffs[ledCount];
+
 void anim_random1(void)
 {
 	for (uint32_t i = 0; i < led_count; ++i) {
@@ -28,4 +30,16 @@ void anim_random1(void)
 		HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
 		led_setLedToColor(i, r.a, r.b, r.c);
 	}
+}
+
+
+void anim_setRandom2CycleCount(uint32_t c)
+{
+
+}
+
+
+void anim_random2(void)
+{
+
 }

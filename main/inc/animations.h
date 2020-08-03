@@ -13,6 +13,7 @@
 typedef enum  {
 	anim_cR1 = 0,
 	anim_rnd1,
+	anim_rnd2,
 }anim_mode_e;
 
 void anim_CyclicCall(void);
@@ -21,5 +22,8 @@ void anim_setBrightness(uint8_t set);
 
 void anim_circularRun1(uint8_t brightness);
 void anim_random1(void);
+
+void anim_setRandom2CycleCount(uint32_t c);
+void anim_random2(void);
 
 #endif /* ANIMATIONS_H_ */

@@ -31,6 +31,9 @@ void anim_CyclicCall(void)
 		case anim_rnd1:
 			anim_random1();
 			break;
+		case anim_rnd2:
+			anim_random2();
+			break;
 		default:
 			assrt(false);
 			break;

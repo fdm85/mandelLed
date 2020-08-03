@@ -1,3 +1,11 @@
+# IO
+|   Port      | Pin | Function |
+|:----------:|-------------:|------------:|
+| E | 0 |   Enable Level Shifter |
+| B | 0 |   LED Data out |
+
+
+
 # Current intake 60 Leds non insulated "noname"
 ## idle, all off
 Bias --> 42mA 4,2V
