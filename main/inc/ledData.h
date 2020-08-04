@@ -9,6 +9,7 @@
 #define LEDDATA_H_
 
 #include "stdint.h"
+#include "IQmathLib.h"
 extern const uint32_t led_count;
 
 typedef struct Led_Led{
@@ -18,9 +19,11 @@ typedef struct Led_Led{
 }Led_Led_t;
 
 typedef struct Led_diffColor{
-	int16_t g;
-	int16_t r;
-	int16_t b;
+	_iq g;
+	_iq r;
+	_iq b;
+	uint16_t itCur;
+	uint16_t itMax;
 }Led_diffColor_t;
 
 

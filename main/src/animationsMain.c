@@ -14,6 +14,7 @@ static uint8_t brightness = 15u;
 
 void anim_setMode(anim_mode_e set)
 {
+	assrt(set < anim_enumAssrt);
 	currMode = set;
 }
 
