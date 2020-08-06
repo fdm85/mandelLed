@@ -22,7 +22,7 @@ typedef union {
 	};
 } rand_u;
 
-Led_diffColor_t diffs_r2[ledCount];
+Led_progColor_t __attribute__((section (".ccmram"))) prog_r2[ledCount];
 uint16_t cycle_r2 = 100u;
 uint16_t it_r2 = 0u;
 
@@ -47,26 +47,27 @@ static void anim_r2Diff(void) {
 		HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
 		led_getLedColor(i, &l);
 
-		diffs_r2[i].r = _IQdiv(_IQ((int16_t )l.r - r.a), _IQ(cycle_r2));
-		diffs_r2[i].g = _IQdiv(_IQ((int16_t )l.g - r.b), _IQ(cycle_r2));
-		diffs_r2[i].b = _IQdiv(_IQ((int16_t )l.b - r.c), _IQ(cycle_r2));
+		prog_r2[i].r = _IQ(l.r);
+		prog_r2[i].g = _IQ(l.g);
+		prog_r2[i].b = _IQ(l.b);
+
+		prog_r2[i].rP = _IQdiv(_IQ((int16_t )r.a - l.r), _IQ(cycle_r2));
+		prog_r2[i].gP = _IQdiv(_IQ((int16_t )r.b - l.g), _IQ(cycle_r2));
+		prog_r2[i].bP = _IQdiv(_IQ((int16_t )r.c - l.b), _IQ(cycle_r2));
 	}
 }
 
 static void anim_r2CalcAndSet(void) {
 	for (uint32_t i = 0; i < led_count; ++i) {
-		Led_Led_t in;
 		Led_Led_t out;
-		led_getLedColor(i, &in);
 
-		_iq it = _IQ(it_r2);
-		_iq r = _IQmpy(diffs_r2[i].r, it);
-		_iq g = _IQmpy(diffs_r2[i].g, it);
-		_iq b = _IQmpy(diffs_r2[i].b, it);
+		_iq r = prog_r2[i].r + prog_r2[i].rP;
+		_iq g = prog_r2[i].g + prog_r2[i].gP;
+		_iq b = prog_r2[i].b + prog_r2[i].bP;
 
-		int32_t rOut = in.r + _IQint(r);
-		int32_t gOut = in.g + _IQint(g);
-		int32_t bOut = in.b + _IQint(b);
+		int32_t rOut = _IQint(r);
+		int32_t gOut = _IQint(g);
+		int32_t bOut = _IQint(b);
 
 		assrt(rOut < UINT8_MAX);
 		assrt(gOut < UINT8_MAX);
@@ -75,6 +76,7 @@ static void anim_r2CalcAndSet(void) {
 		out.r = (uint8_t)rOut;
 		out.g = (uint8_t)gOut;
 		out.b = (uint8_t)bOut;
+
 		led_setLedToColor(i, out.r, out.g, out.b);
 	}
 }
