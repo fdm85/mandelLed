@@ -52,16 +52,21 @@
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-/* Highest address of the user mode stack */
-_estack = 0x20020000;    /* end of RAM */
-/* Generate a link error if heap and stack don't fit into RAM */
-_Min_Heap_Size = 0x0;      /* required amount of heap  */
+_Min_Heap_Size = 0x100;      /* required amount of heap  */
 _Min_Stack_Size = 0x600; /* required amount of stack */
+_Min_Stack_Reserve_InFault = 0x20;
+_Ram_orig = 0x20000000;
+_Ram_Size = 128K;
+_Start_Stack = _Ram_orig;
+_Start_Ram = _Start_Stack + _Min_Stack_Size;
+_Start_Heap = (_Ram_orig + _Ram_Size) - (_Min_Heap_Size); 
 
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
+RAM_stack  (rw) : ORIGIN = _Start_Stack, LENGTH = _Min_Stack_Size
+RAM (xrw)      : ORIGIN = _Start_Ram, LENGTH = (_Ram_Size - (_Min_Stack_Size + _Min_Heap_Size))
+RAM_heap  (rw) : ORIGIN = _Start_Heap, LENGTH = _Min_Heap_Size
 CCMRAM (xrw)      : ORIGIN = 0x10000000, LENGTH = 64K
 FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 1024K
 }
@@ -131,6 +136,16 @@ SECTIONS
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >FLASH
 
+  /* _user_stack section */
+  .stack :
+  {
+    . = ALIGN(8);
+    PROVIDE ( _minStack = . + _Min_Stack_Reserve_InFault); /* symbol _estack used in startup as init value for SP */
+    . = . + _Min_Stack_Size;
+    . = ALIGN(8);
+    PROVIDE ( _estack = . ); /* symbol _estack used in startup as init value for SP */
+  } >RAM_stack
+  
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
@@ -182,17 +197,15 @@ SECTIONS
     __bss_end__ = _ebss;
   } >RAM
 
-  /* User_heap_stack section, used to check that there is enough RAM left */
-  ._user_heap_stack :
+  /* User_heap section, calculated to be flush at the end, linker will warn if sections overlap */
+  .heap :
   {
     . = ALIGN(8);
     PROVIDE ( end = . );
-    PROVIDE ( _end = . );
+    PROVIDE ( _end = . ); /* symbol _end is used by libc / nano to determine were the heap is allocated */
     . = . + _Min_Heap_Size;
-    . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >RAM
-
+  } >RAM_heap
   
 
   /* Remove information from the standard libraries */

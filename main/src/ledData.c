@@ -29,8 +29,8 @@ typedef struct Lf {
 	uint32_t rO[resLength];
 }Lf;
 
-static Led_Led_t leds[ledCount];
-static Lf f1;
+static Led_Led_t __attribute__((section (".ccmram"))) leds[ledCount];
+static Lf __attribute__((section (".ccmram"))) f1;
 
 const uint32_t led_count = ledCount;
 
