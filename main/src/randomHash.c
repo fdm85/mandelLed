@@ -61,13 +61,13 @@ static void anim_r2CalcAndSet(void) {
 	for (uint32_t i = 0; i < led_count; ++i) {
 		Led_Led_t out;
 
-		_iq r = prog_r2[i].r + prog_r2[i].rP;
-		_iq g = prog_r2[i].g + prog_r2[i].gP;
-		_iq b = prog_r2[i].b + prog_r2[i].bP;
+		prog_r2[i].r =+ prog_r2[i].rP;
+		prog_r2[i].g =+ prog_r2[i].gP;
+		prog_r2[i].b =+ prog_r2[i].bP;
 
-		int32_t rOut = _IQint(r);
-		int32_t gOut = _IQint(g);
-		int32_t bOut = _IQint(b);
+		int32_t rOut = _IQint(prog_r2[i].r);
+		int32_t gOut = _IQint(prog_r2[i].g);
+		int32_t bOut = _IQint(prog_r2[i].b);
 
 		assrt(rOut < UINT8_MAX);
 		assrt(gOut < UINT8_MAX);
@@ -83,9 +83,10 @@ static void anim_r2CalcAndSet(void) {
 
 void anim_random2(void) {
 	if (it_r2 == cycle_r2) {
+		it_r2 = 0u;
 		anim_r2Diff();
 	}
 
 	anim_r2CalcAndSet();
-	++cycle_r2;
+	++it_r2;
 }

@@ -51,6 +51,5 @@ int main(void) {
 	for (;;) {
 		maintainStatusLeds();
 		cyclicReSend();
-		__NOP();
 	}
 }
