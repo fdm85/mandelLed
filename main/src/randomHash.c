@@ -24,7 +24,7 @@ typedef union {
 
 Led_progColor_t __attribute__((section (".ccmram"))) prog_r2[ledCount];
 uint16_t cycle_r2 = 100u;
-uint16_t it_r2 = 0u;
+uint16_t it_r2 = 100u;
 
 void anim_random1(void) {
 	for (uint32_t i = 0; i < led_count; ++i) {
