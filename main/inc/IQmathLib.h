@@ -119,7 +119,7 @@ typedef _iq (*fpMultIQNum) (_iq A, _iq B);
 #define _IQ11(A)               ((_iq11)((A) * (1 << 11)))   //!<
 #define _IQ10(A)               ((_iq10)((A) * (1 << 10)))   //!<
 #define _IQ9(A)                ((_iq9) ((A) * (1 << 9)))    //!<
-#define _IQG(A)                ((_iq9) ((A) * (1 << GLOBAL_IQ)))    //!<
+#define _IQG(A)                ((_iq) ((A) * (1 << GLOBAL_IQ)))    //!<
 
 #if GLOBAL_IQ == 24
  #define _IQ(A)                  _IQ24(A)

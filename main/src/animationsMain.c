@@ -16,6 +16,10 @@ void anim_setMode(anim_mode_e set)
 {
 	assrt(set < anim_enumAssrt);
 	currMode = set;
+	if( (set == anim_rnd2) || (set == anim_rnd3) )
+	{
+		anim_r23Init();
+	}
 }
 
 void anim_setBrightness(uint8_t set)
@@ -34,6 +38,9 @@ void anim_CyclicCall(void)
 			break;
 		case anim_rnd2:
 			anim_random2();
+			break;
+		case anim_rnd3:
+			anim_random3();
 			break;
 		default:
 			assrt(false);
