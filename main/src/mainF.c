@@ -24,7 +24,7 @@ static void maintainStatusLeds(void)
 
 static void cyclicReSend(void)
 {
-	static const uint32_t triggerTimeMs = 50uL;	static uint32_t lastToggle = 0uL;
+	static const uint32_t triggerTimeMs = 20uL;	static uint32_t lastToggle = 0uL;
 
 	if( (HAL_GetTick() - lastToggle) > triggerTimeMs)
 	{
@@ -42,7 +42,7 @@ static void cyclicReSend(void)
 int main(void) {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_rnd2);
+	anim_setMode(anim_rnd3);
 
 	led_initDataRaw();
 	outputEnableLvlShifter();

@@ -23,8 +23,11 @@ typedef union {
 } rand_u;
 
 Led_progColor_t __attribute__((section (".ccmram"))) prog_r23[ledCount];
-uint16_t cycle_r2 = 100u;
-uint16_t it_r2 = 100u;
+static uint16_t cycleMin_r23 = 100u;
+static uint16_t it_r2 = 100u;
+static uint8_t dimMult = 3u;
+static uint8_t dimDiv = 4u;
+static _iq dimFactor;
 
 void anim_r23Init(void) {
 	for (uint32_t i = 0; i < led_count; ++i) {
@@ -39,6 +42,7 @@ void anim_r23Init(void) {
 		prog_r23[i].itCur = 0u;
 		prog_r23[i].itMax = 0u;
 	}
+	dimFactor = _IQdiv(dimMult, dimDiv);
 }
 
 void anim_random1(void) {
@@ -50,7 +54,7 @@ void anim_random1(void) {
 }
 
 void anim_setRandom2CycleCount(uint16_t c) {
-	cycle_r2 = c;
+	cycleMin_r23 = c;
 }
 
 static void anim_Diff(uint32_t i, bool isR3) {
@@ -59,18 +63,19 @@ static void anim_Diff(uint32_t i, bool isR3) {
 	HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
 	led_getLedColor(i, &l);
 
-	_iq div = _IQ(cycle_r2);
+	_iq div;
 	if (isR3) {
-		prog_r23[i].itCur = 1u;
-		if(r.d < 11u)
+		prog_r23[i].itCur = 0u;
+		prog_r23[i].itMax = r.d;
+		if(prog_r23[i].itMax == 0u)
 		{
-			prog_r23[i].itMax = 11u;
-		}
-		else
-		{
-			prog_r23[i].itMax = r.d;
+			++prog_r23[i].itMax;
 		}
 		div = _IQ(prog_r23[i].itMax);
+	}
+	else
+	{
+		div = _IQ(cycleMin_r23);
 	}
 
 	prog_r23[i].r = _IQ(l.r);
@@ -83,7 +88,6 @@ static void anim_Diff(uint32_t i, bool isR3) {
 }
 
 static void anim_render(uint32_t i) {
-	Led_Led_t out;
 
 	prog_r23[i].r += prog_r23[i].rP;
 	prog_r23[i].g += prog_r23[i].gP;
@@ -100,11 +104,7 @@ static void anim_render(uint32_t i) {
 	assrt(gOut >= 0L);
 	assrt(bOut >= 0L);
 
-	out.r = (uint8_t) rOut;
-	out.g = (uint8_t) gOut;
-	out.b = (uint8_t) bOut;
-
-	led_setLedToColor(i, out.r, out.g, out.b);
+	led_setLedToColor(i, (uint8_t)rOut, (uint8_t)gOut, (uint8_t)bOut);
 }
 static void anim_r2Diff(void) {
 	for (uint32_t i = 0; i < led_count; ++i) {
@@ -119,8 +119,8 @@ static void anim_r2CalcAndSet(void) {
 }
 
 void anim_random2(void) {
-	if (it_r2 == cycle_r2) {
-		it_r2 = 1u;
+	if (it_r2 == cycleMin_r23) {
+		it_r2 = 0u;
 		anim_r2Diff();
 	}
 
@@ -135,7 +135,7 @@ void anim_random3(void) {
 			anim_Diff(i, true);
 		}
 
-		anim_r2CalcAndSet();
+		anim_render(i);
 		++prog_r23[i].itCur;
 	}
 }
