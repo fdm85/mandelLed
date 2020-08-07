@@ -30,7 +30,7 @@ typedef struct Lf {
 }Lf;
 
 static Led_Led_t __attribute__((section (".ccmram"))) leds[ledCount];
-static Lf __attribute__((section (".ccmram"))) f1;
+static Lf f1;
 
 const uint32_t led_count = ledCount;
 

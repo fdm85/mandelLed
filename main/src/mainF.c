@@ -42,7 +42,7 @@ static void cyclicReSend(void)
 int main(void) {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_rnd1);
+	anim_setMode(anim_rnd2);
 
 	led_initDataRaw();
 	outputEnableLvlShifter();
