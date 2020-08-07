@@ -69,9 +69,9 @@ static void anim_r2CalcAndSet(void) {
 		int32_t gOut = _IQint(prog_r2[i].g);
 		int32_t bOut = _IQint(prog_r2[i].b);
 
-		assrt(rOut < UINT8_MAX);
-		assrt(gOut < UINT8_MAX);
-		assrt(bOut < UINT8_MAX);
+		assrt(rOut <= UINT8_MAX);
+		assrt(gOut <= UINT8_MAX);
+		assrt(bOut <= UINT8_MAX);
 
 		out.r = (uint8_t)rOut;
 		out.g = (uint8_t)gOut;
