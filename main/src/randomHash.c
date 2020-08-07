@@ -61,9 +61,9 @@ static void anim_r2CalcAndSet(void) {
 	for (uint32_t i = 0; i < led_count; ++i) {
 		Led_Led_t out;
 
-		prog_r2[i].r =+ prog_r2[i].rP;
-		prog_r2[i].g =+ prog_r2[i].gP;
-		prog_r2[i].b =+ prog_r2[i].bP;
+		prog_r2[i].r += prog_r2[i].rP;
+		prog_r2[i].g += prog_r2[i].gP;
+		prog_r2[i].b += prog_r2[i].bP;
 
 		int32_t rOut = _IQint(prog_r2[i].r);
 		int32_t gOut = _IQint(prog_r2[i].g);
