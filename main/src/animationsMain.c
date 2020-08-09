@@ -44,6 +44,9 @@ void anim_CyclicCall(void)
 		case anim_cR1:
 			anim_circularRun1(brightness);
 			break;
+		case anim_cR2:
+			anim_circularRun2(brightness);
+			break;
 		case anim_rnd1:
 			anim_random1();
 			break;
