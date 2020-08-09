@@ -12,6 +12,8 @@
 #include "tim.h"
 #include "crc.h"
 #include "rng.h"
+#include "main.h"
+#include "stdbool.h"
 
 #include "stm32f4xx_hal_gpio.h"
 
@@ -34,6 +36,11 @@ void greenLedToggle(void)
 	HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
 }
 
+void orangeLedToggle(void)
+{
+	HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+}
+
 void blueLedToggle(void)
 {
 	HAL_GPIO_TogglePin(LD6_GPIO_Port, LD6_Pin);
@@ -44,4 +51,9 @@ void outputEnableLvlShifter(void)
 {
 	  // write gpio E0 to low, output-enable of levelshifter --> on
 	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_0, GPIO_PIN_SET);
+}
+
+bool getModeSwitch(void)
+{
+	return HAL_GPIO_ReadPin(But1_GPIO_Port, But1_Pin);
 }

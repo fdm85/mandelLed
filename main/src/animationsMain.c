@@ -22,6 +22,17 @@ void anim_setMode(anim_mode_e set)
 	}
 }
 
+void anim_nextMode(void)
+{
+	++currMode;
+
+	if(currMode == anim_enumAssrt)
+	{
+		currMode = anim_cR1;
+	}
+	anim_r23Init();
+}
+
 void anim_setBrightness(uint8_t set)
 {
 	brightness = set;
