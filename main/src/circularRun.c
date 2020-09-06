@@ -8,7 +8,7 @@
 #include "animations.h"
 #include "ledData.h"
 
-#define cycle 10u
+#define cycle 3u
 #define cycleShort 3u
 //static uint8_t cycleCount = cycle;
 static uint8_t cycleCount = cycleShort;
@@ -47,15 +47,15 @@ void anim_circularRun2(uint8_t brightness) {
 	if (!cycleCount) {
 
 		led_setAllLedsToUniColors(brightness);
-		led_setLedToColor(index, brightness/2u, 0u, 0u);
-		led_setLedToColor((index + 1u), brightness, 0u, 0u);
-		led_setLedToColor((index + 2u), brightness, 0u, 0u);
+		led_setLedToColor(index, brightness/4u, 0u, 0u);
+		led_setLedToColor((index + 1u), brightness/3, 0u, 0u);
+		led_setLedToColor((index + 2u), brightness/2, 0u, 0u);
 		led_setLedToColor((index + 3u), brightness, 0u, 0u);
-		led_setLedToColor((index + 4u), brightness, 0u, 0u);
-		led_setLedToColor((index + 5u), brightness, 0u, 0u);
-		led_setLedToColor((index + 6u), brightness/2, 0u, 0u);
+		led_setLedToColor((index + 4u), brightness/2, 0u, 0u);
+		led_setLedToColor((index + 5u), brightness/3, 0u, 0u);
+		led_setLedToColor((index + 6u), brightness/4, 0u, 0u);
 
-		if((index == led_count) && !direction)
+		if((index == (led_count - 7u)) && !direction)
 		{
 			dir = -1;
 			direction = true;

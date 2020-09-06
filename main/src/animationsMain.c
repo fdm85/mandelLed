@@ -10,7 +10,7 @@
 #include "assrt.h"
 
 static anim_mode_e currMode = anim_cR1;
-static uint8_t brightness = 15u;
+static uint8_t brightness = 255u;
 
 void anim_setMode(anim_mode_e set)
 {

@@ -53,6 +53,7 @@ int main(void) {
 	initClock();
 	initPeripherals();
 	anim_setMode(anim_cR2);
+	led_setBrightnessTruncation(1u, 3u);
 
 	led_initDataRaw();
 	outputEnableLvlShifter();

@@ -31,6 +31,8 @@ typedef struct Lf {
 
 static Led_Led_t __attribute__((section (".ccmram"))) leds[ledCount];
 static Lf f1;
+static uint8_t btMult = 1u;
+static uint8_t btDiv = 1u;
 
 const uint32_t led_count = ledCount;
 
@@ -46,12 +48,21 @@ void led_initDataRaw(void)
 	led_pasteData();
 }
 
+void led_setBrightnessTruncation(uint8_t mult, uint8_t div)
+{
+	btMult = mult;
+	btDiv = div;
+}
+
 
 static void led_setLedColors(Led_Led_t* led, uint8_t r, uint8_t g, uint8_t b)
 {
-	led->r = r;
-	led->g = g;
-	led->b = b;
+	uint32_t rT = (uint32_t)(r * btMult) / btDiv;
+	uint32_t gT = (uint32_t)(g * btMult) / btDiv;
+	uint32_t bT = (uint32_t)(b * btMult) / btDiv;
+	led->r = rT;
+	led->g = gT;
+	led->b = bT;
 }
 
 
