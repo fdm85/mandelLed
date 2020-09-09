@@ -38,5 +38,6 @@ void led_getLedColor(uint32_t i, Led_Led_t *l);
 void led_pasteData(void);
 void led_transmitData(void);
 void led_setBrightnessTruncation(uint8_t mult, uint8_t div);
+void led_setAllLedsToColor(uint8_t r, uint8_t g, uint8_t b);
 
 #endif /* LEDDATA_H_ */

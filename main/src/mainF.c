@@ -37,7 +37,7 @@ static void cyclicReSend(void) {
 
 	static uint32_t lastToggle = 0uL;
 
-	if ((HAL_GetTick() - lastToggle) > triggerTimeMs) {
+	if (anim_Repeat() && ((HAL_GetTick() - lastToggle) > triggerTimeMs)) {
 		anim_CyclicCall();
 
 		greenLedToggle();
@@ -52,8 +52,8 @@ static void cyclicReSend(void) {
 int main(void) {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_cR2);
-	led_setBrightnessTruncation(1u, 3u);
+	anim_setMode(anim_white);
+	led_setBrightnessTruncation(1u, 1u);
 
 	led_initDataRaw();
 	outputEnableLvlShifter();

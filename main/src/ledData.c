@@ -57,12 +57,16 @@ void led_setBrightnessTruncation(uint8_t mult, uint8_t div)
 
 static void led_setLedColors(Led_Led_t* led, uint8_t r, uint8_t g, uint8_t b)
 {
-	uint32_t rT = (uint32_t)(r * btMult) / btDiv;
-	uint32_t gT = (uint32_t)(g * btMult) / btDiv;
-	uint32_t bT = (uint32_t)(b * btMult) / btDiv;
-	led->r = rT;
-	led->g = gT;
-	led->b = bT;
+	uint32_t rOut = (uint32_t)(r * btMult) / btDiv;
+	uint32_t gOut = (uint32_t)(g * btMult) / btDiv;
+	uint32_t bOut = (uint32_t)(b * btMult) / btDiv;
+
+	assrt(rOut <= UINT8_MAX);
+	assrt(gOut <= UINT8_MAX);
+	assrt(bOut <= UINT8_MAX);
+	led->r = rOut;
+	led->g = gOut;
+	led->b = bOut;
 }
 
 
@@ -89,6 +93,13 @@ void led_getLedColor(uint32_t i, Led_Led_t *l)
 	l->b = leds[iM].b;
 	l->g = leds[iM].g;
 	l->r = leds[iM].r;
+}
+
+void led_setAllLedsToColor(uint8_t r, uint8_t g, uint8_t b)
+{
+	for (uint8_t i = 0; i < ledCount; ++i) {
+		led_setLedColors(&leds[i], r, g, b);
+	}
 }
 
 void led_setAllLedsToUniColors(uint8_t brightness)

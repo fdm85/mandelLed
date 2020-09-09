@@ -64,17 +64,18 @@ static void anim_Diff(uint32_t i, bool isR3) {
 	led_getLedColor(i, &l);
 
 	_iq div;
+
 	if (isR3) {
 		prog_r23[i].itCur = 0u;
 		prog_r23[i].itMax = r.d;
-		if(prog_r23[i].itMax == 0u)
-		{
+
+		if (prog_r23[i].itMax == 0u) {
 			++prog_r23[i].itMax;
 		}
+
 		div = _IQ(prog_r23[i].itMax);
-	}
-	else
-	{
+
+	} else {
 		div = _IQ(cycleMin_r23);
 	}
 
@@ -104,7 +105,7 @@ static void anim_render(uint32_t i) {
 	assrt(gOut >= 0L);
 	assrt(bOut >= 0L);
 
-	led_setLedToColor(i, (uint8_t)rOut, (uint8_t)gOut, (uint8_t)bOut);
+	led_setLedToColor(i, (uint8_t) rOut, (uint8_t) gOut, (uint8_t) bOut);
 }
 static void anim_r2Diff(void) {
 	for (uint32_t i = 0; i < led_count; ++i) {
