@@ -24,6 +24,7 @@
 #include "dma.h"
 #include "rng.h"
 #include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/

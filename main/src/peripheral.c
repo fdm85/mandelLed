@@ -14,6 +14,7 @@
 #include "rng.h"
 #include "main.h"
 #include "stdbool.h"
+#include "usart.h"
 
 #include "stm32f4xx_hal_gpio.h"
 
@@ -29,6 +30,7 @@ void initPeripherals(void)
 	MX_TIM3_Init();
 	MX_RNG_Init();
 	MX_CRC_Init();
+	MX_USART2_UART_Init();
 }
 
 void greenLedToggle(void)

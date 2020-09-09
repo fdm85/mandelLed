@@ -10,6 +10,7 @@
 #include "peripheral.h"
 #include "ledData.h"
 #include "animations.h"
+#include "com.h"
 
 static void maintainStatusLeds(void) {
 	static const uint32_t blueLedToggleTimeMs = 200uL;
@@ -37,7 +38,7 @@ static void cyclicReSend(void) {
 
 	static uint32_t lastToggle = 0uL;
 
-	if (anim_Repeat() && ((HAL_GetTick() - lastToggle) > triggerTimeMs)) {
+	if (anim_needRepeat() && ((HAL_GetTick() - lastToggle) > triggerTimeMs)) {
 		anim_CyclicCall();
 
 		greenLedToggle();
@@ -58,9 +59,10 @@ int main(void) {
 	led_initDataRaw();
 	outputEnableLvlShifter();
 	__enable_irq();
-
+	com_enableRx();
 	for (;;) {
 		maintainStatusLeds();
 		cyclicReSend();
+		com_parse();
 	}
 }

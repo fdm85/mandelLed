@@ -7,6 +7,7 @@
 
 #include "animations.h"
 #include "assrt.h"
+#include "ledData.h"
 
 static anim_mode_e currMode = anim_white;
 static uint8_t brightness = 255u;
@@ -32,7 +33,7 @@ void anim_nextMode(void) {
 	repeat = true;
 }
 
-bool anim_Repeat(void)
+bool anim_needRepeat(void)
 {
 	return repeat;
 }
