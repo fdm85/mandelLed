@@ -64,9 +64,9 @@ static void led_setLedColors(Led_Led_t* led, uint8_t r, uint8_t g, uint8_t b)
 	assrt(rOut <= UINT8_MAX);
 	assrt(gOut <= UINT8_MAX);
 	assrt(bOut <= UINT8_MAX);
-	led->r = rOut;
-	led->g = gOut;
-	led->b = bOut;
+	led->r = (uint8_t)rOut;
+	led->g = (uint8_t)gOut;
+	led->b = (uint8_t)bOut;
 }
 
 

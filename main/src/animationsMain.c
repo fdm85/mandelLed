@@ -11,7 +11,7 @@
 static anim_mode_e currMode = anim_white;
 static uint8_t brightness = 255u;
 
-static repeat = false;
+static bool repeat = false;
 
 void anim_setMode(anim_mode_e set) {
 	assrt(set < anim_enumAssrt);
