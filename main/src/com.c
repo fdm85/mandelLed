@@ -27,16 +27,27 @@ void com_enableRx(void) {
 	for (uint16_t i = 0; i < 64u; ++i) {
 		rxBuf[i] = 0u;
 	}
-	HAL_UART_Receive_IT(&huart2, (uint8_t*)&rxBuf[0], 1u);
+	HAL_UART_Receive_IT(&huart2, (uint8_t*) &rxBuf[0], 1u);
 }
 
 void com_parse(void) {
-	switch (rxBuf[0]) {
-	case 's':
-		anim_nextMode();
-		break;
-	}
 
+	if (rxBuf[0]) {
+		switch (rxBuf[0]) {
+		case 'm':
+			anim_nextMode();
+			break;
+		case 'h':
+			anim_addBrightness(15);
+			break;
+		case 'd':
+			anim_addBrightness(-15);
+			break;
+
+		default:
+			break;
+		}
+	}
 	com_enableRx();
 }
 

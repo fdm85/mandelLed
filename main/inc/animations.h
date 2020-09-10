@@ -28,6 +28,7 @@ void anim_setCirc(bool shrt);
 void anim_CyclicCall(void);
 void anim_setMode(anim_mode_e set);
 void anim_setBrightness(uint8_t set);
+void anim_addBrightness(int8_t add);
 void anim_nextMode(void);
 bool anim_needRepeat(void);
 

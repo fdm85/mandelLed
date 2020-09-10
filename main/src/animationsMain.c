@@ -40,6 +40,26 @@ bool anim_needRepeat(void)
 
 void anim_setBrightness(uint8_t set) {
 	brightness = set;
+	repeat = true;
+}
+
+void anim_addBrightness(int8_t add) {
+
+	int32_t new = brightness;
+	new += add;
+	if( (new > 0) && (new <= UINT8_MAX) )
+	{
+		brightness = (uint8_t)new;
+	}
+	else if(add > 0)
+	{
+		brightness = UINT8_MAX;
+	}
+	else
+	{
+		brightness = 0u;
+	}
+	repeat = true;
 }
 
 void anim_CyclicCall(void) {
