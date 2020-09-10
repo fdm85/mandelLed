@@ -32,7 +32,7 @@ void com_enableRx(void) {
 
 void com_parse(void) {
 
-	if (rxBuf[0]) {
+	if (doParse) {
 		switch (rxBuf[0]) {
 		case 'm':
 			anim_nextMode();
@@ -47,8 +47,8 @@ void com_parse(void) {
 		default:
 			break;
 		}
-	}
 	com_enableRx();
+	}
 }
 
 /**

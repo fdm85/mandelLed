@@ -12,7 +12,7 @@
 static anim_mode_e currMode = anim_white;
 static uint8_t brightness = 255u;
 
-static bool repeat = false;
+static bool repeat = true;
 
 void anim_setMode(anim_mode_e set) {
 	assrt(set < anim_enumAssrt);
@@ -94,6 +94,28 @@ void anim_CyclicCall(void) {
 		led_setAllLedsToColor(0, 0, brightness);
 		repeat = false;
 		break;
+	case anim_cycleColors:
+	{
+		static uint8_t z = 0u;
+		switch(z++)
+		{
+		case 0:
+			led_setAllLedsToColor(brightness, brightness, brightness);
+			break;
+		case 1:
+			led_setAllLedsToColor(brightness, 0, 0);
+			break;
+		case 2:
+			led_setAllLedsToColor(0, brightness, 0);
+			break;
+		case 3:
+		default:
+			led_setAllLedsToColor(0, 0, brightness);
+			z = 0u;
+			break;
+		}
+		break;
+	}
 	default:
 		assrt(false);
 		break;

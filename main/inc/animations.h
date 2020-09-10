@@ -21,6 +21,7 @@ typedef enum  {
 	anim_red,
 	anim_green,
 	anim_blue,
+	anim_cycleColors,
 	anim_enumAssrt
 }anim_mode_e;
 

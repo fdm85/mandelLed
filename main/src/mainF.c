@@ -33,15 +33,17 @@ static void maintainStatusLeds(void) {
 	}
 }
 
+static bool sendLock = false;
 static void cyclicReSend(void) {
-	static const uint32_t triggerTimeMs = 20uL;
+	static const uint32_t triggerTimeMs = 50uL;
 
 	static uint32_t lastToggle = 0uL;
 
-	if (anim_needRepeat() && ((HAL_GetTick() - lastToggle) > triggerTimeMs)) {
+	if (!sendLock && anim_needRepeat() && ((HAL_GetTick() - lastToggle) > triggerTimeMs)) {
 		anim_CyclicCall();
 
 		greenLedToggle();
+		sendLock = true;
 		led_pasteData();
 		led_transmitData();
 
@@ -50,10 +52,22 @@ static void cyclicReSend(void) {
 
 }
 
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(htim);
+
+	sendLock = false;
+//  __BKPT(0);
+  /* NOTE : This function should not be modified, when the callback is needed,
+            the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file
+   */
+}
+
 int main(void) {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_white);
+	anim_setMode(anim_rnd3);
 	led_setBrightnessTruncation(1u, 1u);
 
 	led_initDataRaw();
