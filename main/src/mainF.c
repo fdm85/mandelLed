@@ -33,7 +33,7 @@ static void maintainStatusLeds(void) {
 	}
 }
 
-static bool sendLock = false;
+static volatile bool sendLock = false;
 static void cyclicReSend(void) {
 	static const uint32_t triggerTimeMs = 50uL;
 
@@ -67,7 +67,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 int main(void) {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_rnd3);
+	anim_setMode(anim_red);
 	led_setBrightnessTruncation(1u, 1u);
 
 	led_initDataRaw();

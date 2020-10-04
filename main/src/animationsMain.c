@@ -84,15 +84,15 @@ void anim_CyclicCall(void) {
 		break;
 	case anim_red:
 		led_setAllLedsToColor(brightness, 0, 0);
-		repeat = false;
+		repeat = true;
 		break;
 	case anim_green:
 		led_setAllLedsToColor(0, brightness, 0);
-		repeat = false;
+		repeat = true;
 		break;
 	case anim_blue:
 		led_setAllLedsToColor(0, 0, brightness);
-		repeat = false;
+		repeat = true;
 		break;
 	case anim_cycleColors:
 	{

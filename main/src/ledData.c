@@ -38,7 +38,8 @@ const uint32_t led_count = ledCount;
 
 void led_initDataRaw(void)
 {
-	f1.rI[0] = lRawOff;
+//	f1.rI[0] = lRawOff;
+	f1.rI[0] = 0uL;
 	f1.rO[0] = 0uL;
 	for (uint16_t i = 1; i < resLength; ++i) {
 			f1.rI[i] = 0;
@@ -97,21 +98,21 @@ void led_getLedColor(uint32_t i, Led_Led_t *l)
 
 void led_setAllLedsToColor(uint8_t r, uint8_t g, uint8_t b)
 {
-	for (uint8_t i = 0; i < ledCount; ++i) {
+	for (uint16_t i = 0; i < ledCount; ++i) {
 		led_setLedColors(&leds[i], r, g, b);
 	}
 }
 
 void led_setAllLedsToUniColors(uint8_t brightness)
 {
-	for (uint8_t i = 0; i < ledCount; ++i) {
+	for (uint16_t i = 0; i < ledCount; ++i) {
 		led_setLedColors(&leds[i], brightness, brightness, brightness);
 	}
 }
 
 void led_pasteData(void)
 {
-	for (uint8_t i = 0; i < ledCount; ++i) {
+	for (uint16_t i = 0; i < ledCount; ++i) {
 		led_convertLed(&leds[i], &f1.ledRaw[i]);
 	}
 }
