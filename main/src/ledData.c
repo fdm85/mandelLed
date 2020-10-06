@@ -83,14 +83,14 @@ static void led_convertLed(Led_Led_t* l, LedRaw* r)
 
 void led_setLedToColor(uint32_t i, uint8_t r, uint8_t g, uint8_t b)
 {
-	uint8_t iM = (uint8_t)(i%ledCount);
+	uint16_t iM = (uint16_t)(i%ledCount);
 	led_setLedColors(&leds[iM], r, g, b);
 }
 
 void led_getLedColor(uint32_t i, Led_Led_t *l)
 {
 	assrt(l);
-	uint8_t iM = (uint8_t)(i%ledCount);
+	uint16_t iM = (uint8_t)(i%ledCount);
 	l->b = leds[iM].b;
 	l->g = leds[iM].g;
 	l->r = leds[iM].r;

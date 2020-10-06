@@ -67,7 +67,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 int main(void) {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_red);
+	anim_setMode(anim_rnd3);
 	led_setBrightnessTruncation(1u, 1u);
 
 	led_initDataRaw();
