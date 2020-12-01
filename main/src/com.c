@@ -47,7 +47,7 @@ void com_parse(void) {
 		default:
 			break;
 		}
-	com_enableRx();
+		com_enableRx();
 	}
 }
 

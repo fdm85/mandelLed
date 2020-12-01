@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "ledData.h"
 
 typedef enum  {
 	anim_cR1 = 0,
@@ -22,6 +23,7 @@ typedef enum  {
 	anim_green,
 	anim_blue,
 	anim_cycleColors,
+	anim_layers,
 	anim_enumAssrt
 }anim_mode_e;
 
@@ -35,11 +37,24 @@ bool anim_needRepeat(void);
 
 void anim_circularRun1(uint8_t brightness);
 void anim_random1(void);
-void anim_circularRun2(uint8_t brightness);
+
+typedef struct redRider
+{
+	uint32_t pos;
+	uint32_t ledStart;
+	uint32_t ledEnd;
+	uint8_t cycleCount;
+	uint8_t brightness;
+	bool sig;
+}redRider_t;
+void anim_redRider(redRider_t* arg);
+void anim_initRedRider(redRider_t* arg);
 
 void anim_setRandom2CycleCount(uint16_t c);
 void anim_random2(void);
 void anim_random3(void);
 void anim_r23Init(void);
+
+void anim_layerRedRider(uint32_t pos);
 
 #endif /* ANIMATIONS_H_ */

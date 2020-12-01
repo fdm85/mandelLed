@@ -11,10 +11,10 @@
 #include "assrt.h"
 #define ledRawSize (3u * 8u)
 #define resLength 41u
-#define lRawTotalCount (ledRawSize * ledCount)
+#define lRawTotalCount (ledRawSize * D_LED_COUNT)
 #define lRawOn ((2uL * 104uL)/3uL)
 #define lRawOff ((1uL * 104uL)/3uL)
-#define lRawTotalLength ((41 * 2) + (ledCount * 24))
+#define lRawTotalLength ((41 * 2) + (D_LED_COUNT * 24))
 
 
 typedef struct LedRaw{
@@ -25,20 +25,19 @@ typedef struct LedRaw{
 
 typedef struct Lf {
 	uint32_t rI[resLength];
-	LedRaw ledRaw[ledCount];
+	LedRaw ledRaw[D_LED_COUNT];
 	uint32_t rO[resLength];
 }Lf;
 
-static Led_Led_t __attribute__((section (".ccmram"))) leds[ledCount];
+static Led_Led_t __attribute__((section (".ccmram"))) leds[D_LED_COUNT];
 static Lf f1;
 static uint8_t btMult = 1u;
 static uint8_t btDiv = 1u;
 
-const uint32_t led_count = ledCount;
+const uint32_t led_count = D_LED_COUNT;
 
 void led_initDataRaw(void)
 {
-//	f1.rI[0] = lRawOff;
 	f1.rI[0] = 0uL;
 	f1.rO[0] = 0uL;
 	for (uint16_t i = 1; i < resLength; ++i) {
@@ -83,14 +82,14 @@ static void led_convertLed(Led_Led_t* l, LedRaw* r)
 
 void led_setLedToColor(uint32_t i, uint8_t r, uint8_t g, uint8_t b)
 {
-	uint16_t iM = (uint16_t)(i%ledCount);
+	uint16_t iM = (uint16_t)(i%D_LED_COUNT);
 	led_setLedColors(&leds[iM], r, g, b);
 }
 
 void led_getLedColor(uint32_t i, Led_Led_t *l)
 {
 	assrt(l);
-	uint16_t iM = (uint8_t)(i%ledCount);
+	uint16_t iM = (uint8_t)(i%D_LED_COUNT);
 	l->b = leds[iM].b;
 	l->g = leds[iM].g;
 	l->r = leds[iM].r;
@@ -98,21 +97,21 @@ void led_getLedColor(uint32_t i, Led_Led_t *l)
 
 void led_setAllLedsToColor(uint8_t r, uint8_t g, uint8_t b)
 {
-	for (uint16_t i = 0; i < ledCount; ++i) {
+	for (uint16_t i = 0; i < D_LED_COUNT; ++i) {
 		led_setLedColors(&leds[i], r, g, b);
 	}
 }
 
 void led_setAllLedsToUniColors(uint8_t brightness)
 {
-	for (uint16_t i = 0; i < ledCount; ++i) {
+	for (uint16_t i = 0; i < D_LED_COUNT; ++i) {
 		led_setLedColors(&leds[i], brightness, brightness, brightness);
 	}
 }
 
 void led_pasteData(void)
 {
-	for (uint16_t i = 0; i < ledCount; ++i) {
+	for (uint16_t i = 0; i < D_LED_COUNT; ++i) {
 		led_convertLed(&leds[i], &f1.ledRaw[i]);
 	}
 }

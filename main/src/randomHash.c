@@ -22,7 +22,7 @@ typedef union {
 	};
 } rand_u;
 
-Led_progColor_t __attribute__((section (".ccmram"))) prog_r23[ledCount];
+Led_progColor_t __attribute__((section (".ccmram"))) prog_r23[D_LED_COUNT];
 static uint16_t cycleMin_r23 = 100u;
 static uint16_t it_r2 = 100u;
 static uint8_t dimMult = 3u;

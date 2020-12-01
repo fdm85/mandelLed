@@ -9,8 +9,9 @@
 #include "assrt.h"
 #include "ledData.h"
 
-static anim_mode_e currMode = anim_white;
+static anim_mode_e currMode = anim_cR2;
 static uint8_t brightness = 255u;
+static redRider_t redRider1;
 
 static bool repeat = true;
 
@@ -19,6 +20,9 @@ void anim_setMode(anim_mode_e set) {
 	currMode = set;
 	if ((set == anim_rnd2) || (set == anim_rnd3)) {
 		anim_r23Init();
+	}
+	if (set == anim_cR2) {
+		anim_initRedRider(&redRider1);
 	}
 }
 
@@ -29,6 +33,7 @@ void anim_nextMode(void) {
 		currMode = anim_cR1;
 	}
 	anim_r23Init();
+	anim_initRedRider(&redRider1);
 
 	repeat = true;
 }
@@ -68,7 +73,7 @@ void anim_CyclicCall(void) {
 		anim_circularRun1(brightness);
 		break;
 	case anim_cR2:
-		anim_circularRun2(brightness);
+		anim_redRider(&redRider1);
 		break;
 	case anim_rnd1:
 		anim_random1();
