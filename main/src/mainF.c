@@ -33,41 +33,70 @@ static void maintainStatusLeds(void) {
 	}
 }
 
+typedef enum {
+	e_render, e_waitTxCplt, e_paste
+} eSm;
 static volatile bool sendLock = false;
+static volatile uint32_t a, b, c, d, e, f;
 static void cyclicReSend(void) {
-	static const uint32_t triggerTimeMs = 50uL;
 
+	static eSm state = e_render;
+
+	static const uint32_t triggerTimeMs = 25uL;
 	static uint32_t lastToggle = 0uL;
 
-	if (!sendLock && anim_needRepeat() && ((HAL_GetTick() - lastToggle) > triggerTimeMs)) {
+	switch (state) {
+	case e_render:
+		a = HAL_GetTick();
 		anim_CyclicCall();
+		b = HAL_GetTick() - a;
+		state = e_waitTxCplt;
+		break;
 
+	case e_waitTxCplt:
+		if(!sendLock && ((HAL_GetTick() - lastToggle) > triggerTimeMs))
+		{
+			state = e_paste;
+		}
+		break;
+
+	case e_paste:
 		greenLedToggle();
 		sendLock = true;
+		c = HAL_GetTick();
 		led_pasteData();
+		d = HAL_GetTick() - c;
 		led_transmitData();
 
 		lastToggle = HAL_GetTick();
-	}
 
+		state = e_render;
+		break;
+
+	default :
+		__BKPT(0);
+		break;
+	}
 }
 
-void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
-{
-  /* Prevent unused argument(s) compilation warning */
-  UNUSED(htim);
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
+	/* Prevent unused argument(s) compilation warning */
+	UNUSED(htim);
 
 	sendLock = false;
+	e = HAL_GetTick() - (d + c);
+
+	f =  HAL_GetTick();
 //  __BKPT(0);
-  /* NOTE : This function should not be modified, when the callback is needed,
-            the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file
-   */
+	/* NOTE : This function should not be modified, when the callback is needed,
+	 the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file
+	 */
 }
 
 int main(void) {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_cR2);
+	anim_setMode(anim_layers);
 	led_setBrightnessTruncation(1u, 1u);
 
 	led_initDataRaw();

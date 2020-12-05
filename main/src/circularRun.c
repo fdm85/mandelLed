@@ -45,31 +45,52 @@ void anim_initRedRider(redRider_t* arg)
 	arg->pos = 0uL;
 	arg->ledStart = 0uL;
 	arg->ledEnd = (uint32_t)D_LED_COUNT;
-	arg->cycleCount = 1u;
-	arg->brightness = 255u;
+	arg->r = 255u;
+	arg->g = 0u;
+	arg->b = 0u;
+	arg->step = 2u;
+	arg->length = 8u;
+	arg->blanks = 4u;
 	arg->sig = false;
 }
 
-void anim_redRider(redRider_t* arg) {
+static inline void riderBlanker(redRider_t* arg)
+{
+	for (uint8_t i = 1; i <= arg->blanks; ++i) {
 
-	led_setLedToColor(arg->pos, arg->brightness/4u, 0u, 0u);
-	led_setLedToColor((arg->pos + 1u), arg->brightness/3, 0u, 0u);
-	led_setLedToColor((arg->pos + 2u), arg->brightness/2, 0u, 0u);
-	led_setLedToColor((arg->pos + 3u), arg->brightness, 0u, 0u);
-	led_setLedToColor((arg->pos + 4u), arg->brightness/2, 0u, 0u);
-	led_setLedToColor((arg->pos + 5u), arg->brightness/3, 0u, 0u);
-	led_setLedToColor((arg->pos + 6u), arg->brightness/4, 0u, 0u);
+		if((int32_t)arg->pos -i >= (int32_t)arg->ledStart)
+			led_setLedToColor(arg->pos - i, 0u, 0u, 0u);
+	}
+	for (uint8_t i = 0; i < arg->blanks; ++i) {
 
-	if((arg->pos == arg->ledEnd) && !arg->sig)
+		if(arg->pos + (uint32_t)(arg->length + i) <= arg->ledEnd)
+			led_setLedToColor(arg->pos + (uint32_t)(arg->length + i), 0u, 0u, 0u);
+	}
+}
+
+static inline void riderFiller(redRider_t* arg)
+{
+	for (uint8_t i = 0; i < arg->length; ++i) {
+		led_setLedToColor((arg->pos + i), arg->r, arg->g, arg->b);
+	}
+}
+
+void anim_rider(redRider_t* arg) {
+
+
+	riderBlanker(arg);
+	riderFiller(arg);
+
+	if((arg->pos >= (arg->ledEnd - arg->length)) && !arg->sig)
 	{
 		arg->sig = true;
 	}
-	else if((arg->pos == arg->ledStart) && arg->sig)
+	if((arg->pos <= (arg->ledStart + arg->length)) && arg->sig)
 	{
 		arg->sig = false;
 	}
 
-	if(arg->sig) --arg->pos;
-	else ++arg->pos;
+	if(arg->sig) arg->pos -= arg->step;
+	else arg->pos += arg->step;
 }
 

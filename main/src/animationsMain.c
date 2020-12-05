@@ -13,15 +13,14 @@ static anim_mode_e currMode = anim_cR2;
 static uint8_t brightness = 255u;
 static redRider_t redRider1;
 
-static bool repeat = true;
 
 void anim_setMode(anim_mode_e set) {
 	assrt(set < anim_enumAssrt);
 	currMode = set;
-	if ((set == anim_rnd2) || (set == anim_rnd3)) {
+	if ((set == anim_rnd2) || (set == anim_rnd3) || (set == anim_layers)) {
 		anim_r23Init();
 	}
-	if (set == anim_cR2) {
+	if ((set == anim_cR2) || (set == anim_layers)) {
 		anim_initRedRider(&redRider1);
 	}
 }
@@ -35,17 +34,10 @@ void anim_nextMode(void) {
 	anim_r23Init();
 	anim_initRedRider(&redRider1);
 
-	repeat = true;
-}
-
-bool anim_needRepeat(void)
-{
-	return repeat;
 }
 
 void anim_setBrightness(uint8_t set) {
 	brightness = set;
-	repeat = true;
 }
 
 void anim_addBrightness(int8_t add) {
@@ -64,7 +56,6 @@ void anim_addBrightness(int8_t add) {
 	{
 		brightness = 0u;
 	}
-	repeat = true;
 }
 
 void anim_CyclicCall(void) {
@@ -73,7 +64,7 @@ void anim_CyclicCall(void) {
 		anim_circularRun1(brightness);
 		break;
 	case anim_cR2:
-		anim_redRider(&redRider1);
+		anim_rider(&redRider1);
 		break;
 	case anim_rnd1:
 		anim_random1();
@@ -89,15 +80,12 @@ void anim_CyclicCall(void) {
 		break;
 	case anim_red:
 		led_setAllLedsToColor(brightness, 0, 0);
-		repeat = true;
 		break;
 	case anim_green:
 		led_setAllLedsToColor(0, brightness, 0);
-		repeat = true;
 		break;
 	case anim_blue:
 		led_setAllLedsToColor(0, 0, brightness);
-		repeat = true;
 		break;
 	case anim_cycleColors:
 	{
@@ -121,6 +109,10 @@ void anim_CyclicCall(void) {
 		}
 		break;
 	}
+	case anim_layers:
+		anim_random3();
+		anim_rider(&redRider1);
+		break;
 	default:
 		assrt(false);
 		break;

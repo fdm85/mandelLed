@@ -33,7 +33,6 @@ void anim_setMode(anim_mode_e set);
 void anim_setBrightness(uint8_t set);
 void anim_addBrightness(int8_t add);
 void anim_nextMode(void);
-bool anim_needRepeat(void);
 
 void anim_circularRun1(uint8_t brightness);
 void anim_random1(void);
@@ -43,11 +42,15 @@ typedef struct redRider
 	uint32_t pos;
 	uint32_t ledStart;
 	uint32_t ledEnd;
-	uint8_t cycleCount;
-	uint8_t brightness;
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t step;
+	uint8_t length;
+	uint8_t blanks;
 	bool sig;
 }redRider_t;
-void anim_redRider(redRider_t* arg);
+void anim_rider(redRider_t* arg);
 void anim_initRedRider(redRider_t* arg);
 
 void anim_setRandom2CycleCount(uint16_t c);
