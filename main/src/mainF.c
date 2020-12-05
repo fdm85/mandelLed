@@ -42,7 +42,7 @@ static void cyclicReSend(void) {
 
 	static eSm state = e_render;
 
-	static const uint32_t triggerTimeMs = 25uL;
+	static const uint32_t triggerTimeMs = 22uL;
 	static uint32_t lastToggle = 0uL;
 
 	switch (state) {
@@ -66,6 +66,7 @@ static void cyclicReSend(void) {
 		c = HAL_GetTick();
 		led_pasteData();
 		d = HAL_GetTick() - c;
+		e = HAL_GetTick();
 		led_transmitData();
 
 		lastToggle = HAL_GetTick();
@@ -84,7 +85,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
 	UNUSED(htim);
 
 	sendLock = false;
-	e = HAL_GetTick() - (d + c);
+	e = HAL_GetTick() - e;
 
 	f =  HAL_GetTick();
 //  __BKPT(0);

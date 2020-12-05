@@ -8,10 +8,21 @@
 #include "animations.h"
 #include "assrt.h"
 #include "ledData.h"
+#include "physic.h"
 
 static anim_mode_e currMode = anim_cR2;
 static uint8_t brightness = 255u;
-static redRider_t redRider1;
+static rider_t rider1;
+static rider_t rider2;
+static rider_t rider3;
+
+typedef void(*fpAnim)(void* arg);
+typedef struct animFunc animFunc_t;
+struct animFunc {
+	fpAnim f;
+	void* a;
+	animFunc_t* n;
+};
 
 
 void anim_setMode(anim_mode_e set) {
@@ -21,7 +32,9 @@ void anim_setMode(anim_mode_e set) {
 		anim_r23Init();
 	}
 	if ((set == anim_cR2) || (set == anim_layers)) {
-		anim_initRedRider(&redRider1);
+		anim_initRedRider(&rider1);
+		anim_initRedRider2(&rider2);
+		anim_initRedRider3(&rider3);
 	}
 }
 
@@ -32,8 +45,9 @@ void anim_nextMode(void) {
 		currMode = anim_cR1;
 	}
 	anim_r23Init();
-	anim_initRedRider(&redRider1);
-
+	anim_initRedRider(&rider1);
+	anim_initRedRider2(&rider2);
+	anim_initRedRider3(&rider3);
 }
 
 void anim_setBrightness(uint8_t set) {
@@ -58,13 +72,19 @@ void anim_addBrightness(int8_t add) {
 	}
 }
 
+static void animLayers()
+{
+
+}
+
 void anim_CyclicCall(void) {
 	switch (currMode) {
 	case anim_cR1:
 		anim_circularRun1(brightness);
 		break;
 	case anim_cR2:
-		anim_rider(&redRider1);
+		riderBlanker(&rider1);
+		riderFiller(&rider1);
 		break;
 	case anim_rnd1:
 		anim_random1();
@@ -111,7 +131,24 @@ void anim_CyclicCall(void) {
 	}
 	case anim_layers:
 		anim_random3();
-		anim_rider(&redRider1);
+		if(phy_doesCollide(&rider1, &rider2))
+		{
+			phy_perfElasticImpact(&rider1, &rider2);
+		}
+		if(phy_doesCollide(&rider1, &rider3))
+		{
+			phy_perfElasticImpact(&rider1, &rider3);
+		}
+		if(phy_doesCollide(&rider2, &rider3))
+		{
+			phy_perfElasticImpact(&rider2, &rider3);
+		}
+		riderBlanker(&rider1);
+		riderBlanker(&rider2);
+		riderBlanker(&rider3);
+		riderFiller(&rider1);
+		riderFiller(&rider2);
+		riderFiller(&rider3);
 		break;
 	default:
 		assrt(false);
