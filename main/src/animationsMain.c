@@ -16,32 +16,31 @@ static rider_t rider1;
 static rider_t rider2;
 static rider_t rider3;
 
-typedef void(*fpAnim)(void* arg);
-typedef struct animFunc animFunc_t;
-struct animFunc {
-	fpAnim f;
-	void* a;
-	animFunc_t* n;
-};
+rider_t *rA[] =
+{ &rider1, &rider2, &rider3, NULL };
 
-
-void anim_setMode(anim_mode_e set) {
+void anim_setMode(anim_mode_e set)
+{
 	assrt(set < anim_enumAssrt);
 	currMode = set;
-	if ((set == anim_rnd2) || (set == anim_rnd3) || (set == anim_layers)) {
+	if ((set == anim_rnd2) || (set == anim_rnd3) || (set == anim_layers))
+	{
 		anim_r23Init();
 	}
-	if ((set == anim_cR2) || (set == anim_layers)) {
+	if ((set == anim_cR2) || (set == anim_layers))
+	{
 		anim_initRedRider(&rider1);
 		anim_initRedRider2(&rider2);
 		anim_initRedRider3(&rider3);
 	}
 }
 
-void anim_nextMode(void) {
+void anim_nextMode(void)
+{
 	++currMode;
 
-	if (currMode == anim_enumAssrt) {
+	if (currMode == anim_enumAssrt)
+	{
 		currMode = anim_cR1;
 	}
 	anim_r23Init();
@@ -50,19 +49,21 @@ void anim_nextMode(void) {
 	anim_initRedRider3(&rider3);
 }
 
-void anim_setBrightness(uint8_t set) {
+void anim_setBrightness(uint8_t set)
+{
 	brightness = set;
 }
 
-void anim_addBrightness(int8_t add) {
+void anim_addBrightness(int8_t add)
+{
 
 	int32_t new = brightness;
 	new += add;
-	if( (new > 0) && (new <= UINT8_MAX) )
+	if ((new > 0) && (new <= UINT8_MAX))
 	{
-		brightness = (uint8_t)new;
+		brightness = (uint8_t) new;
 	}
-	else if(add > 0)
+	else if (add > 0)
 	{
 		brightness = UINT8_MAX;
 	}
@@ -72,8 +73,31 @@ void anim_addBrightness(int8_t add) {
 	}
 }
 
-void anim_CyclicCall(void) {
-	switch (currMode) {
+static void layers(void)
+{
+	anim_random3();
+	for (uint8_t i = 0; rA[i + 1] != NULL; ++i)
+	{
+		if (phy_doesCollide(rA[i], rA[i + 1]))
+		{
+			phy_perfSimpleImpact(rA[i], rA[i + 1]);
+			phy_swapColors(rA[i], rA[i + 1]);
+		}
+	}
+	for (uint8_t i = 0; rA[i] != NULL; ++i)
+	{
+		riderBlanker(rA[i]);
+	}
+	for (uint8_t i = 0; rA[i] != NULL; ++i)
+	{
+		riderFiller(rA[i]);
+	}
+}
+
+void anim_CyclicCall(void)
+{
+	switch (currMode)
+	{
 	case anim_cR1:
 		anim_circularRun1(brightness);
 		break;
@@ -105,7 +129,7 @@ void anim_CyclicCall(void) {
 	case anim_cycleColors:
 	{
 		static uint8_t z = 0u;
-		switch(z++)
+		switch (z++)
 		{
 		case 0:
 			led_setAllLedsToColor(brightness, brightness, brightness);
@@ -125,25 +149,7 @@ void anim_CyclicCall(void) {
 		break;
 	}
 	case anim_layers:
-		anim_random3();
-		if(phy_doesCollide(&rider1, &rider2))
-		{
-			phy_perfSimpleImpact(&rider1, &rider2);
-		}
-		if(phy_doesCollide(&rider1, &rider3))
-		{
-			phy_perfSimpleImpact(&rider1, &rider3);
-		}
-		if(phy_doesCollide(&rider2, &rider3))
-		{
-			phy_perfSimpleImpact(&rider2, &rider3);
-		}
-		riderBlanker(&rider1);
-		riderBlanker(&rider2);
-		riderBlanker(&rider3);
-		riderFiller(&rider1);
-		riderFiller(&rider2);
-		riderFiller(&rider3);
+		layers();
 		break;
 	default:
 		assrt(false);

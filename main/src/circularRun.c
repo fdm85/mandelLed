@@ -59,20 +59,6 @@ void anim_initRedRider2(rider_t* arg)
 {
 	arg->posMin = 0uL;
 	arg->posMax = (uint32_t)D_LED_COUNT;
-	arg->c.r = 0u;
-	arg->c.g = 0u;
-	arg->c.b = 255u;
-	arg->step = _IQG(-1.5);
-	arg->length = 8u;
-	arg->pos = arg->posMax - arg->length;
-	arg->blanks = 4;
-	arg->posIq = _IQG(arg->pos);
-}
-
-void anim_initRedRider3(rider_t* arg)
-{
-	arg->posMin = 0uL;
-	arg->posMax = (uint32_t)D_LED_COUNT;
 	arg->pos = arg->posMax/2uL;
 	arg->c.r = 100u;
 	arg->c.g = 200u;
@@ -80,6 +66,20 @@ void anim_initRedRider3(rider_t* arg)
 	arg->step = _IQG(3.25);
 	arg->length = 6u;
 	arg->blanks = 4u;
+	arg->posIq = _IQG(arg->pos);
+}
+
+void anim_initRedRider3(rider_t* arg)
+{
+	arg->posMin = 0uL;
+	arg->posMax = (uint32_t)D_LED_COUNT;
+	arg->c.r = 0u;
+	arg->c.g = 0u;
+	arg->c.b = 255u;
+	arg->step = _IQG(-1.5);
+	arg->length = 8u;
+	arg->pos = arg->posMax - arg->length;
+	arg->blanks = 4;
 	arg->posIq = _IQG(arg->pos);
 }
 

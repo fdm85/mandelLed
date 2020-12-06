@@ -50,8 +50,6 @@ void phy_perfSimpleImpact(rider_t* a, rider_t* b)
 {
 	a->step *= -1;
 	b->step *= -1;
-
-	phy_swapColors(a, b);
 }
 
 //        (m1 * v1) + m2 * (2 * v2 - v1)
