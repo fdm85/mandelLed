@@ -40,13 +40,13 @@ void anim_random1(void);
 typedef struct rider
 {
 	uint32_t pos;
-	uint32_t ledStart;
-	uint32_t ledEnd;
+	_iq posIq;
+	uint32_t posMin;
+	uint32_t posMax;
 	Led_Led_t c;
-	uint8_t step;
+	_iq step;
 	uint8_t length;
 	uint8_t blanks;
-	bool sig;
 }rider_t;
 
 void riderBlanker(rider_t* arg);

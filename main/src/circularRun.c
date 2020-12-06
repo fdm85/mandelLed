@@ -7,6 +7,7 @@
 
 #include "animations.h"
 #include "ledData.h"
+#include "IQmathLib.h"
 
 #define cycle 3u
 #define cycleShort 3u
@@ -43,55 +44,55 @@ void anim_circularRun1(uint8_t brightness) {
 void anim_initRedRider(rider_t* arg)
 {
 	arg->pos = 0uL;
-	arg->ledStart = 0uL;
-	arg->ledEnd = (uint32_t)D_LED_COUNT;
+	arg->posMin = 0uL;
+	arg->posMax = (uint32_t)D_LED_COUNT;
 	arg->c.r = 255u;
 	arg->c.g = 0u;
 	arg->c.b = 0u;
-	arg->step = 2u;
+	arg->step = _IQG(2);
 	arg->length = 8u;
 	arg->blanks = 4u;
-	arg->sig = false;
+	arg->posIq = _IQG(arg->pos);
 }
 
 void anim_initRedRider2(rider_t* arg)
 {
-	arg->ledStart = 0uL;
-	arg->ledEnd = (uint32_t)D_LED_COUNT;
+	arg->posMin = 0uL;
+	arg->posMax = (uint32_t)D_LED_COUNT;
 	arg->c.r = 0u;
 	arg->c.g = 0u;
 	arg->c.b = 255u;
-	arg->step = 2u;
+	arg->step = _IQG(-1.5);
 	arg->length = 8u;
-	arg->pos = ((uint32_t)D_LED_COUNT) - arg->length;
-	arg->blanks = 4u;
-	arg->sig = true;
+	arg->pos = arg->posMax - arg->length;
+	arg->blanks = 4;
+	arg->posIq = _IQG(arg->pos);
 }
 
 void anim_initRedRider3(rider_t* arg)
 {
-	arg->ledStart = 0uL;
-	arg->ledEnd = (uint32_t)D_LED_COUNT;
-	arg->c.r = 0u;
-	arg->c.g = 255u;
+	arg->posMin = 0uL;
+	arg->posMax = (uint32_t)D_LED_COUNT;
+	arg->pos = arg->posMax/2uL;
+	arg->c.r = 100u;
+	arg->c.g = 200u;
 	arg->c.b = 0u;
-	arg->step = 2u;
-	arg->length = 8u;
-	arg->pos = ((uint32_t)D_LED_COUNT)/2uL;
+	arg->step = _IQG(3.25);
+	arg->length = 6u;
 	arg->blanks = 4u;
-	arg->sig = true;
+	arg->posIq = _IQG(arg->pos);
 }
 
 void riderBlanker(rider_t* arg)
 {
 	for (uint8_t i = 1; i <= arg->blanks; ++i) {
 
-		if((int32_t)arg->pos -i >= (int32_t)arg->ledStart)
+		if((int32_t)arg->pos -i >= (int32_t)arg->posMin)
 			led_setLedToColor(arg->pos - i, 0u, 0u, 0u);
 	}
 	for (uint8_t i = 0; i < arg->blanks; ++i) {
 
-		if(arg->pos + (uint32_t)(arg->length + i) <= arg->ledEnd)
+		if(arg->pos + (uint32_t)(arg->length + i) <= arg->posMax)
 			led_setLedToColor(arg->pos + (uint32_t)(arg->length + i), 0u, 0u, 0u);
 	}
 }
@@ -101,17 +102,18 @@ void riderFiller(rider_t* arg)
 	for (uint8_t i = 0; i < arg->length; ++i) {
 		led_setLedToColor((arg->pos + i), arg->c.r, arg->c.g, arg->c.b);
 	}
-	if((arg->pos >= (arg->ledEnd - arg->length)) && !arg->sig)
+	if((arg->pos >= (arg->posMax - arg->length)) && (arg->step > 0))
 	{
-		arg->sig = true;
+		arg->step *= -1;
 	}
-	if((arg->pos <= (arg->ledStart + arg->length)) && arg->sig)
+	if((arg->pos <= (arg->posMin + arg->length)) && (arg->step < 0))
 	{
-		arg->sig = false;
+		arg->step *= -1;
 	}
 
-	if(arg->sig) arg->pos -= arg->step;
-	else arg->pos += arg->step;
+	arg->posIq += arg->step;
+
+	arg->pos = (uint32_t)_IQint(arg->posIq);
 
 }
 

@@ -72,11 +72,6 @@ void anim_addBrightness(int8_t add) {
 	}
 }
 
-static void animLayers()
-{
-
-}
-
 void anim_CyclicCall(void) {
 	switch (currMode) {
 	case anim_cR1:
@@ -133,15 +128,15 @@ void anim_CyclicCall(void) {
 		anim_random3();
 		if(phy_doesCollide(&rider1, &rider2))
 		{
-			phy_perfElasticImpact(&rider1, &rider2);
+			phy_perfSimpleImpact(&rider1, &rider2);
 		}
 		if(phy_doesCollide(&rider1, &rider3))
 		{
-			phy_perfElasticImpact(&rider1, &rider3);
+			phy_perfSimpleImpact(&rider1, &rider3);
 		}
 		if(phy_doesCollide(&rider2, &rider3))
 		{
-			phy_perfElasticImpact(&rider2, &rider3);
+			phy_perfSimpleImpact(&rider2, &rider3);
 		}
 		riderBlanker(&rider1);
 		riderBlanker(&rider2);
