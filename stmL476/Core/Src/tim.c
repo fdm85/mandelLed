@@ -40,7 +40,7 @@ void MX_TIM8_Init(void)
   htim8.Init.Period = 55;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim8.Init.RepetitionCounter = 0;
-  htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_PWM_Init(&htim8) != HAL_OK)
   {
     Error_Handler();
@@ -102,7 +102,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim_pwmHandle)
     hdma_tim8_ch4_trig_com.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
     hdma_tim8_ch4_trig_com.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
     hdma_tim8_ch4_trig_com.Init.Mode = DMA_NORMAL;
-    hdma_tim8_ch4_trig_com.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_tim8_ch4_trig_com.Init.Priority = DMA_PRIORITY_HIGH;
     if (HAL_DMA_Init(&hdma_tim8_ch4_trig_com) != HAL_OK)
     {
       Error_Handler();

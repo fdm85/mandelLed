@@ -33,6 +33,7 @@ void initPeripherals(void)
 
 void greenLedToggle(void)
 {
+	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 }
 
 void orangeLedToggle(void)

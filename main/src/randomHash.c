@@ -17,9 +17,11 @@
 #include "rng.h"
 #endif
 
-typedef union {
+typedef union
+{
 	uint32_t u32;
-	struct {
+	struct
+	{
 		uint8_t a;
 		uint8_t b;
 		uint8_t c;
@@ -34,8 +36,10 @@ static uint8_t dimMult = 3u;
 static uint8_t dimDiv = 4u;
 static _iq dimFactor;
 
-void anim_r23Init(void) {
-	for (uint32_t i = 0; i < led_count; ++i) {
+void anim_r23Init(void)
+{
+	for (uint32_t i = 0; i < led_count; ++i)
+	{
 		prog_r23[i].r = 0L;
 		prog_r23[i].g = 0L;
 		prog_r23[i].b = 0L;
@@ -50,19 +54,23 @@ void anim_r23Init(void) {
 	dimFactor = _IQdiv(dimMult, dimDiv);
 }
 
-void anim_random1(void) {
-	for (uint32_t i = 0; i < led_count; ++i) {
+void anim_random1(void)
+{
+	for (uint32_t i = 0; i < led_count; ++i)
+	{
 		rand_u r;
 		HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
 		led_setLedToColor(i, r.a, r.b, r.c);
 	}
 }
 
-void anim_setRandom2CycleCount(uint16_t c) {
+void anim_setRandom2CycleCount(uint16_t c)
+{
 	cycleMin_r23 = c;
 }
 
-static void anim_Diff(uint32_t i, bool isR3) {
+static void anim_Diff(uint32_t i, bool isR3)
+{
 	rand_u r;
 	Led_Led_t l;
 	HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
@@ -70,17 +78,21 @@ static void anim_Diff(uint32_t i, bool isR3) {
 
 	_iq div;
 
-	if (isR3) {
+	if (isR3)
+	{
 		prog_r23[i].itCur = 0u;
 		prog_r23[i].itMax = r.d;
 
-		if (prog_r23[i].itMax == 0u) {
+		if (prog_r23[i].itMax == 0u)
+		{
 			++prog_r23[i].itMax;
 		}
 
 		div = _IQ(prog_r23[i].itMax);
 
-	} else {
+	}
+	else
+	{
 		div = _IQ(cycleMin_r23);
 	}
 
@@ -93,7 +105,8 @@ static void anim_Diff(uint32_t i, bool isR3) {
 	prog_r23[i].bP = _IQdiv(_IQ((int16_t )r.c - l.b), div);
 }
 
-static void anim_render(uint32_t i) {
+static void anim_render(uint32_t i)
+{
 
 	prog_r23[i].r += prog_r23[i].rP;
 	prog_r23[i].g += prog_r23[i].gP;
@@ -112,20 +125,26 @@ static void anim_render(uint32_t i) {
 
 	led_setLedToColor(i, (uint8_t) rOut, (uint8_t) gOut, (uint8_t) bOut);
 }
-static void anim_r2Diff(void) {
-	for (uint32_t i = 0; i < led_count; ++i) {
+static void anim_r2Diff(void)
+{
+	for (uint32_t i = 0; i < led_count; ++i)
+	{
 		anim_Diff(i, false);
 	}
 }
 
-static void anim_r2CalcAndSet(void) {
-	for (uint32_t i = 0; i < led_count; ++i) {
+static void anim_r2CalcAndSet(void)
+{
+	for (uint32_t i = 0; i < led_count; ++i)
+	{
 		anim_render(i);
 	}
 }
 
-void anim_random2(void) {
-	if (it_r2 == cycleMin_r23) {
+void anim_random2(void)
+{
+	if (it_r2 == cycleMin_r23)
+	{
 		it_r2 = 0u;
 		anim_r2Diff();
 	}
@@ -134,10 +153,13 @@ void anim_random2(void) {
 	++it_r2;
 }
 
-void anim_random3(void) {
-	for (uint32_t i = 0; i < led_count; ++i) {
+void anim_random3(void)
+{
+	for (uint32_t i = 0; i < led_count; ++i)
+	{
 
-		if (prog_r23[i].itCur == prog_r23[i].itMax) {
+		if (prog_r23[i].itCur == prog_r23[i].itMax)
+		{
 			anim_Diff(i, true);
 		}
 
