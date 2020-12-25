@@ -18,7 +18,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../../stmF407/Core/Inc/rng.h"
+#include "rng.h"
 
 /* USER CODE BEGIN 0 */
 

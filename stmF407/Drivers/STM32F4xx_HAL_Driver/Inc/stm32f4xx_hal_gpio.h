@@ -26,7 +26,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../../../stmF407/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+#include "stm32f4xx_hal_def.h"
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
@@ -211,7 +211,7 @@ typedef enum
   */
 
 /* Include GPIO HAL Extension module */
-#include "../../../../stmF407/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h"
+#include "stm32f4xx_hal_gpio_ex.h"
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup GPIO_Exported_Functions

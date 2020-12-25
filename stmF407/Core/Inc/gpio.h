@@ -20,13 +20,12 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __gpio_H
 #define __gpio_H
-
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../../stmF407/Core/Inc/main.h"
+#include "main.h"
 
 /* USER CODE BEGIN Includes */
 

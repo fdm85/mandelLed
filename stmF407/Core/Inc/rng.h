@@ -19,13 +19,12 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __rng_H
 #define __rng_H
-
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../../stmF407/Core/Inc/main.h"
+#include "main.h"
 
 /* USER CODE BEGIN Includes */
 

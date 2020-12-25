@@ -19,7 +19,6 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __tim_H
 #define __tim_H
-
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -38,9 +37,9 @@ extern TIM_HandleTypeDef htim3;
 /* USER CODE END Private defines */
 
 void MX_TIM3_Init(void);
-
+                        
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
-
+                    
 /* USER CODE BEGIN Prototypes */
 
 /* USER CODE END Prototypes */

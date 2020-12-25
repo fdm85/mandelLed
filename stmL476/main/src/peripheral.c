@@ -25,7 +25,7 @@ void initPeripherals(void)
 {
 	MX_GPIO_Init();
 	MX_DMA_Init();
-	MX_TIM8_Init();
+	MX_TIM4_Init();
 	MX_RNG_Init();
 	MX_CRC_Init();
 	MX_USART2_UART_Init();
@@ -51,5 +51,5 @@ void outputEnableLvlShifter(void)
 
 bool getModeSwitch(void)
 {
-	return false;
+	return true;
 }

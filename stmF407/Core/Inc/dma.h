@@ -25,7 +25,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../../stmF407/Core/Inc/main.h"
+#include "main.h"
 
 /* DMA memory to memory transfer handles -------------------------------------*/
 

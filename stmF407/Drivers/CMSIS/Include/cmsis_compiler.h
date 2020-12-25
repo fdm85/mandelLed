@@ -31,28 +31,28 @@
  * Arm Compiler 4/5
  */
 #if   defined ( __CC_ARM )
-  #include "../../../../stmF407/Drivers/CMSIS/Include/cmsis_armcc.h"
+  #include "cmsis_armcc.h"
 
 
 /*
  * Arm Compiler 6 (armclang)
  */
 #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-  #include "../../../../stmF407/Drivers/CMSIS/Include/cmsis_armclang.h"
+  #include "cmsis_armclang.h"
 
 
 /*
  * GNU Compiler
  */
 #elif defined ( __GNUC__ )
-  #include "../../../../stmF407/Drivers/CMSIS/Include/cmsis_gcc.h"
+  #include "cmsis_gcc.h"
 
 
 /*
  * IAR Compiler
  */
 #elif defined ( __ICCARM__ )
-  #include "../../../../stmF407/Drivers/CMSIS/Include/cmsis_iccarm.h"
+  #include <cmsis_iccarm.h>
 
 
 /*

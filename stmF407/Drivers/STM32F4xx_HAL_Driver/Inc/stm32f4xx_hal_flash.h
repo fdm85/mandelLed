@@ -26,7 +26,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../../../stmF407/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+#include "stm32f4xx_hal_def.h"
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
@@ -294,8 +294,8 @@ typedef struct
   */
 
 /* Include FLASH HAL Extension module */
-#include "../../../../stmF407/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h"
-#include "../../../../stmF407/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h"
+#include "stm32f4xx_hal_flash_ex.h"
+#include "stm32f4xx_hal_flash_ramfunc.h"
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup FLASH_Exported_Functions

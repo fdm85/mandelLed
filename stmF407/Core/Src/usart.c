@@ -18,7 +18,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../../stmF407/Core/Inc/usart.h"
+#include "usart.h"
 
 /* USER CODE BEGIN 0 */
 

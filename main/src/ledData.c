@@ -19,9 +19,9 @@
 #endif
 
 #ifdef STM32L476xx
-#define PWM_TIM		htim8
-#define PWM_CHAN	TIM_CHANNEL_4
-#define PWM_RAW		55uL
+#define PWM_TIM		htim4
+#define PWM_CHAN	TIM_CHANNEL_1
+#define PWM_RAW		101uL
 #endif
 
 #ifdef STM32F303xE
@@ -144,8 +144,7 @@ void led_pasteData(void)
 void led_transmitData(void)
 {
 	volatile HAL_StatusTypeDef result;
-	result = HAL_TIM_PWM_Start_DMA(&PWM_TIM, PWM_CHAN, &f1.rI[0],
-			lRawTotalLength);
+	result = HAL_TIM_PWM_Start_DMA(&PWM_TIM, PWM_CHAN, &f1.rI[0], lRawTotalLength);
 	assrt(result == HAL_OK);
 	(void) result;
 }

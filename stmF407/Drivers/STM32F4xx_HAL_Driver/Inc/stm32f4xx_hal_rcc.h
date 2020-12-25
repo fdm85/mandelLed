@@ -26,11 +26,11 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../../../stmF407/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+#include "stm32f4xx_hal_def.h"
 
 /* Include RCC HAL Extended module */
 /* (include on top of file since RCC structures are defined in extended file) */
-#include "../../../../stmF407/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h"
+#include "stm32f4xx_hal_rcc_ex.h"
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
