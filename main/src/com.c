@@ -6,11 +6,17 @@
  */
 
 #include "com.h"
-#include "usart.h"
-#include "stm32f4xx_hal_uart.h"
 #include "assrt.h"
 #include "stdbool.h"
 #include "animations.h"
+#include "usart.h"
+#ifdef STM32F404xx
+#include "stm32f4xx_hal_uart.h"
+#endif
+
+#ifdef STM32F303xE
+#include "stm32f3xx_hal_uart.h"
+#endif
 
 static uint16_t rxBuf[64];
 static uint16_t rxSize;

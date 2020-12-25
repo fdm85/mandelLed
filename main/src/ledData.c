@@ -7,14 +7,30 @@
 
 #include "ledData.h"
 #include "stdint.h"
-#include "tim.h"
 #include "assrt.h"
+
+#include "tim.h"
 #define ledRawSize (3u * 8u)
 #define resLength 41u
 #define lRawTotalCount (ledRawSize * D_LED_COUNT)
 #define lRawOn ((2uL * 104uL)/3uL)
 #define lRawOff ((1uL * 104uL)/3uL)
 #define lRawTotalLength ((41 * 2) + (D_LED_COUNT * 24))
+
+#ifdef STM32F407xx
+#define PWM_TIM		htim3
+#define PWM_CHAN	TIM_CHANNEL_3
+#endif
+
+#ifdef STM32L476xx
+#define PWM_TIM		htim8
+#define PWM_CHAN	TIM_CHANNEL_4
+#endif
+
+#ifdef STM32F303xE
+#define PWM_TIM		htim1
+#define PWM_CHAN	TIM_CHANNEL_4
+#endif
 
 
 typedef struct LedRaw{
@@ -119,7 +135,7 @@ void led_pasteData(void)
 void led_transmitData(void)
 {
 	volatile HAL_StatusTypeDef result;
-	result = HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_3, &f1.rI[0], lRawTotalLength);
+	result = HAL_TIM_PWM_Start_DMA(&PWM_TIM, PWM_CHAN, &f1.rI[0], lRawTotalLength);
 	assrt(result == HAL_OK);
 	(void)result;
 }

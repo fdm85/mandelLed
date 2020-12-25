@@ -7,10 +7,15 @@
 
 #include "animations.h"
 #include "ledData.h"
-#include "crc.h"
-#include "rng.h"
 #include <stdint.h>
 #include "assrt.h"
+#include "crc.h"
+#ifdef STM32F407xx
+#include "rng.h"
+#endif
+#ifdef STM32L476xx
+#include "rng.h"
+#endif
 
 typedef union {
 	uint32_t u32;

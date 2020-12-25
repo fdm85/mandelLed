@@ -5,12 +5,22 @@
  *      Author: cgrue
  */
 
-#include "cmsis_compiler.h"
-#include "stm32f4xx_hal.h"
 #include "peripheral.h"
 #include "ledData.h"
 #include "animations.h"
 #include "com.h"
+#include "cmsis_compiler.h"
+#ifdef STM32F407xx
+#include "stm32f4xx_hal.h"
+#endif
+#ifdef STM32L476xx
+#include "stm32l4xx_hal.h"
+#endif
+
+#ifdef STM32F303xE
+#include "stm32f3xx_hal.h"
+#endif
+
 
 static void maintainStatusLeds(void) {
 	static const uint32_t blueLedToggleTimeMs = 200uL;
