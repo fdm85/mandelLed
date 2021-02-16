@@ -47,6 +47,9 @@ typedef struct LedRaw
 typedef struct Lf
 {
 	uint32_t rI[resLength];
+#ifdef LVL_CONVERTER_LED
+	LedRaw converterLed[1];
+#endif
 	LedRaw ledRaw[D_LED_COUNT];
 	uint32_t rO[resLength];
 } Lf;
@@ -58,10 +61,25 @@ static uint8_t btDiv = 1u;
 
 const uint32_t led_count = D_LED_COUNT;
 
+/// raw bits are stored MSB first, order is green, red, blue
+static void led_convertLed(Led_Led_t *l, LedRaw *r)
+{
+	for (uint8_t i = 0; i < 8u; ++i)
+	{
+		r->g[i] = (l->g & (0x80u >> i)) ? lRawOn : lRawOff;
+		r->r[i] = (l->r & (0x80u >> i)) ? lRawOn : lRawOff;
+		r->b[i] = (l->b & (0x80u >> i)) ? lRawOn : lRawOff;
+	}
+}
+
 void led_initDataRaw(void)
 {
 	f1.rI[0] = 0uL;
 	f1.rO[0] = 0uL;
+#ifdef LVL_CONVERTER_LED
+	Led_Led_t init = {0u, 0u, 0u};
+	led_convertLed(&init, &f1.converterLed[0]);
+#endif
 	for (uint16_t i = 1; i < resLength; ++i)
 	{
 		f1.rI[i] = 0;
@@ -89,17 +107,6 @@ static void led_setLedColors(Led_Led_t *led, uint8_t r, uint8_t g, uint8_t b)
 	led->r = (uint8_t) rOut;
 	led->g = (uint8_t) gOut;
 	led->b = (uint8_t) bOut;
-}
-
-/// raw bits are stored MSB first, order is green, red, blue
-static void led_convertLed(Led_Led_t *l, LedRaw *r)
-{
-	for (uint8_t i = 0; i < 8u; ++i)
-	{
-		r->g[i] = (l->g & (0x80u >> i)) ? lRawOn : lRawOff;
-		r->r[i] = (l->r & (0x80u >> i)) ? lRawOn : lRawOff;
-		r->b[i] = (l->b & (0x80u >> i)) ? lRawOn : lRawOff;
-	}
 }
 
 void led_setLedToColor(uint32_t i, uint8_t r, uint8_t g, uint8_t b)
