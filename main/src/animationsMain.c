@@ -81,7 +81,7 @@ typedef enum {
 	done,
 } puState_t;
 static puState_t puS = init;
-#define step	(10u)
+#define step	(1u)
 static void powerUp(void)
 {
 	static uint32_t last;
@@ -93,7 +93,7 @@ static void powerUp(void)
 			puS = increment;
 			break;
 		case increment:
-			if( (HAL_GetTick() - last) > 20uL)
+			if( (HAL_GetTick() - last) > 10uL)
 			{
 				last = HAL_GetTick();
 				if(i < (UINT8_MAX - step))
