@@ -10,6 +10,8 @@
 #include "ledData.h"
 #include "physic.h"
 
+extern uint32_t HAL_GetTick(void);
+
 static anim_mode_e currMode = anim_cR2;
 static uint8_t brightness = 255u;
 static rider_t rider1;
@@ -73,6 +75,47 @@ void anim_addBrightness(int8_t add)
 	}
 }
 
+typedef enum {
+	init,
+	increment,
+	done,
+} puState_t;
+static puState_t puS = init;
+#define step	(10u)
+static void powerUp(void)
+{
+	static uint32_t last;
+	static uint8_t i = 1u;
+	switch (puS) {
+		case init:
+			last = HAL_GetTick();
+			led_setAllLedsToColor(i,i,i);
+			puS = increment;
+			break;
+		case increment:
+			if( (HAL_GetTick() - last) > 20uL)
+			{
+				last = HAL_GetTick();
+				if(i < (UINT8_MAX - step))
+				{
+					i = (uint8_t)(i + step);
+				}
+				else
+				{
+					i = UINT8_MAX;
+					puS = done;
+				}
+				led_setAllLedsToColor(i,i,i);
+			}
+
+			break;
+
+		default:
+			__BKPT(0);
+			break;
+	}
+}
+
 static void layers(void)
 {
 	anim_random3();
@@ -96,8 +139,16 @@ static void layers(void)
 
 void anim_CyclicCall(void)
 {
+	if(puS != done)
+	{
+		powerUp();
+		return;
+	}
 	switch (currMode)
 	{
+	case anim_powerUp:
+		anim_circularRun1(brightness);
+		break;
 	case anim_cR1:
 		anim_circularRun1(brightness);
 		break;

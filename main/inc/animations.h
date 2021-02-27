@@ -13,7 +13,8 @@
 #include "ledData.h"
 
 typedef enum  {
-	anim_cR1 = 0,
+	anim_powerUp = 0,
+	anim_cR1,
 	anim_cR2,
 	anim_rnd1,
 	anim_rnd2,
