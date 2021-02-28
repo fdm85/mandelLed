@@ -52,10 +52,13 @@ static void cyclicReSend(void)
 	static const uint32_t triggerTimeMs = 22uL;
 	static uint32_t lastToggle = 0uL;
 
+
+
 	switch (state)
 	{
 	case e_render:
 		a = HAL_GetTick();
+		brightnessAdc();
 		anim_CyclicCall();
 		b = HAL_GetTick() - a;
 		state = e_waitTxCplt;
@@ -72,6 +75,8 @@ static void cyclicReSend(void)
 		greenLedToggle();
 		sendLock = true;
 		c = HAL_GetTick();
+		uint8_t brightness = (uint8_t)(0xFFu & getAdcVal());
+		led_setBrightnessTruncation(0xFFu, brightness);
 		led_pasteData();
 		d = HAL_GetTick() - c;
 		e = HAL_GetTick();
@@ -116,7 +121,6 @@ int main(void)
 	com_enableRx();
 	for (;;)
 	{
-		brightnessAdc();
 		maintainStatusLeds();
 		cyclicReSend();
 		com_parse();

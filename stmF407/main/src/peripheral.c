@@ -19,8 +19,6 @@
 #include "usart.h"
 #include "adc.h"
 
-static uint32_t brgtns;
-
 void initClock(void)
 {
 	SystemClock_Config();
@@ -69,29 +67,29 @@ bool getModeSwitch(void)
 void brightnessAdc(void)
 {
 	uint32_t adcState = HAL_ADC_GetState(&hadc1);
-
+	static const uint32_t triggerTimeMs = 50uL;
+	static uint32_t lastToggle = 0uL;
 
 	if(adcState & HAL_ADC_STATE_READY)
 	{
-		if(HAL_ADC_PollForConversion(&hadc1, 2uL) == HAL_OK)
+		if ((HAL_GetTick() - lastToggle) > triggerTimeMs)
 		{
-			brgtns = HAL_ADC_GetValue(&hadc1);
+			lastToggle = HAL_GetTick();
 			HAL_ADC_Start_IT(&hadc1);
 		}
-	}
-	if(adcState & HAL_ADC_STATE_REG_EOC)
-	{
-		brgtns = HAL_ADC_GetValue(&hadc1);
-	}
-	else
-	{
 
 	}
-
 }
 
 static uint32_t adcVal;
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
+	(void)hadc;
 	adcVal = HAL_ADC_GetValue(&hadc1);
+
+}
+
+uint32_t getAdcVal(void)
+{
+	return adcVal;
 }
