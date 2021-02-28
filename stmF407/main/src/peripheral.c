@@ -17,6 +17,9 @@
 #include "rng.h"
 #include "tim.h"
 #include "usart.h"
+#include "adc.h"
+
+static uint32_t brgtns;
 
 void initClock(void)
 {
@@ -31,6 +34,8 @@ void initPeripherals(void)
 	MX_RNG_Init();
 	MX_CRC_Init();
 	MX_USART2_UART_Init();
+	MX_ADC1_Init();
+	HAL_ADC_Start_IT(&hadc1);
 }
 
 void greenLedToggle(void)
@@ -58,4 +63,35 @@ void outputEnableLvlShifter(void)
 bool getModeSwitch(void)
 {
 	return HAL_GPIO_ReadPin(But1_GPIO_Port, But1_Pin);
+}
+
+
+void brightnessAdc(void)
+{
+	uint32_t adcState = HAL_ADC_GetState(&hadc1);
+
+
+	if(adcState & HAL_ADC_STATE_READY)
+	{
+		if(HAL_ADC_PollForConversion(&hadc1, 2uL) == HAL_OK)
+		{
+			brgtns = HAL_ADC_GetValue(&hadc1);
+			HAL_ADC_Start_IT(&hadc1);
+		}
+	}
+	if(adcState & HAL_ADC_STATE_REG_EOC)
+	{
+		brgtns = HAL_ADC_GetValue(&hadc1);
+	}
+	else
+	{
+
+	}
+
+}
+
+static uint32_t adcVal;
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+	adcVal = HAL_ADC_GetValue(&hadc1);
 }

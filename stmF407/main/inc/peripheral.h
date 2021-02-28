@@ -16,5 +16,6 @@ void greenLedToggle(void);
 void orangeLedToggle(void);
 void outputEnableLvlShifter(void);
 bool getModeSwitch(void);
+void brightnessAdc(void);
 
 #endif /* PERIPHERAL_H_ */
