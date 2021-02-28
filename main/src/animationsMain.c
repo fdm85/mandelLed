@@ -81,33 +81,29 @@ typedef enum {
 	done,
 } puState_t;
 static puState_t puS = init;
-#define step	(1u)
+
 static void powerUp(void)
 {
-	static uint32_t last;
 	static uint8_t i = 1u;
+	static uint16_t s = 1u;
 	switch (puS) {
 		case init:
-			last = HAL_GetTick();
 			led_setAllLedsToColor(i,i,i);
 			puS = increment;
 			break;
 		case increment:
-			if( (HAL_GetTick() - last) > 10uL)
+			if(i < (UINT8_MAX - s))
 			{
-				last = HAL_GetTick();
-				if(i < (UINT8_MAX - step))
-				{
-					i = (uint8_t)(i + step);
-				}
-				else
-				{
-					i = UINT8_MAX;
-					puS = done;
-				}
-				led_setAllLedsToColor(i,i,i);
+				i = (uint8_t)(i + s);
+				s =  (uint16_t)(s * 3u);
+				s = (uint16_t)(s / 2u);
 			}
-
+			else
+			{
+				i = UINT8_MAX;
+				puS = done;
+			}
+			led_setAllLedsToColor(i,i,i);
 			break;
 
 		default:
