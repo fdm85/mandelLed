@@ -56,10 +56,15 @@ typedef struct Lf
 
 static Led_Led_t __attribute__((section (".ccmram"))) leds[D_LED_COUNT];
 static Lf f1;
-static uint8_t btMult = 1u;
-static uint8_t btDiv = 1u;
+static uint32_t btMult = 1u;
+static uint32_t btDiv = 1u;
 
 const uint32_t led_count = D_LED_COUNT;
+
+uint32_t getLedCount(void)
+{
+	return led_count;
+}
 
 /// raw bits are stored MSB first, order is green, red, blue
 static void led_convertLed(Led_Led_t *l, LedRaw *r)
@@ -89,7 +94,7 @@ void led_initDataRaw(void)
 	led_pasteData();
 }
 
-void led_setBrightnessTruncation(uint8_t mult, uint8_t div)
+void led_setBrightnessTruncation(uint32_t mult, uint32_t div)
 {
 	btMult = mult;
 	btDiv = div;
@@ -111,6 +116,8 @@ static void led_setLedColors(Led_Led_t *led, uint8_t r, uint8_t g, uint8_t b)
 
 void led_setLedToColor(uint32_t i, uint8_t r, uint8_t g, uint8_t b)
 {
+	if(i > D_LED_COUNT)
+		__BKPT(0);
 	uint16_t iM = (uint16_t) (i % D_LED_COUNT);
 	led_setLedColors(&leds[iM], r, g, b);
 }

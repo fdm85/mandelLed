@@ -48,8 +48,10 @@ typedef struct rider
 	_iq step;
 	uint8_t length;
 	uint8_t blanks;
+	uint8_t iteration;
 }rider_t;
-
+void anim_initPuRide(rider_t* arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir);
+void rideOnceFiller(rider_t* arg);
 void riderBlanker(rider_t* arg);
 void riderFiller(rider_t* arg);
 void anim_initRedRider(rider_t* arg);

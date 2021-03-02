@@ -75,8 +75,8 @@ static void cyclicReSend(void)
 		greenLedToggle();
 		sendLock = true;
 		c = HAL_GetTick();
-		uint8_t brightness = (uint8_t)(0xFFu & getAdcVal());
-		led_setBrightnessTruncation(0xFFu, brightness);
+		uint32_t brightness = (uint32_t)(0xFFFuL & getAdcVal());
+		led_setBrightnessTruncation(0xFFFu, brightness);
 		led_pasteData();
 		d = HAL_GetTick() - c;
 		e = HAL_GetTick();

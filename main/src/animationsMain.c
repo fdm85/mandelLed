@@ -10,16 +10,31 @@
 #include "ledData.h"
 #include "physic.h"
 
-extern uint32_t HAL_GetTick(void);
-
 static anim_mode_e currMode = anim_cR2;
 static uint8_t brightness = 255u;
 static rider_t rider1;
 static rider_t rider2;
 static rider_t rider3;
+static rider_t rPu01;
+static rider_t rPu11;
+static rider_t rPu02;
+static rider_t rPu12;
+static rider_t rPu03;
+static rider_t rPu13;
+static rider_t rPu04;
+static rider_t rPu14;
 
 rider_t *rA[] =
 { &rider1, &rider2, &rider3, NULL };
+
+rider_t *rPu1[] =
+{ &rPu01, &rPu11, NULL };
+rider_t *rPu2[] =
+{ &rPu02, &rPu12, NULL };
+rider_t *rPu3[] =
+{ &rPu03, &rPu13, NULL };
+rider_t *rPu4[] =
+{ &rPu04, &rPu14, NULL };
 
 void anim_setMode(anim_mode_e set)
 {
@@ -75,40 +90,112 @@ void anim_addBrightness(int8_t add)
 	}
 }
 
-typedef enum {
-	init,
-	increment,
-	done,
+typedef enum
+{
+	init, blueSpawn, greenSpawn, redSpawn, whiteSpawn, fullWhite, done,
 } puState_t;
 static puState_t puS = init;
 
 static void powerUp(void)
 {
-	static uint8_t i = 1u;
-	static uint16_t s = 1u;
-	switch (puS) {
-		case init:
-			led_setAllLedsToColor(i,i,i);
-			puS = increment;
-			break;
-		case increment:
-			if(i < (UINT8_MAX - s))
-			{
-				i = (uint8_t)(i + s);
-				s =  (uint16_t)(s * 3u);
-				s = (uint16_t)(s / 2u);
-			}
-			else
-			{
-				i = UINT8_MAX;
-				puS = done;
-			}
-			led_setAllLedsToColor(i,i,i);
-			break;
+	static uint8_t breaker = 0u;
+	static uint32_t ledCount = 0uL;
+	switch (puS)
+	{
+	case init:
+		ledCount = getLedCount();
+		led_setAllLedsToColor(0, 0, 0);
+		anim_initPuRide(&rPu01, 0u, 0u, 255u, 0u);
+		anim_initPuRide(&rPu11, 0u, 0u, 255u, 1u);
+		anim_initPuRide(&rPu02, 0u, 255u, 0u, 0u);
+		anim_initPuRide(&rPu12, 0u, 255u, 0u, 1u);
+		anim_initPuRide(&rPu03, 255u, 0u, 0u, 0u);
+		anim_initPuRide(&rPu13, 255u, 0u, 0u, 1u);
+		anim_initPuRide(&rPu04, 255u, 255u, 255u, 0u);
+		anim_initPuRide(&rPu14, 255u, 255u, 255u, 1u);
+		puS = blueSpawn;
+		break;
+	case blueSpawn:
+		for (uint8_t i = 0; i < 2u; ++i)
+		{
+			riderBlanker(rPu1[i]);
+			rideOnceFiller(rPu1[i]);
+		}
+		if (rPu01.iteration > 32u)
+			puS = greenSpawn;
+		break;
+	case greenSpawn:
+		for (uint8_t i = 0; i < 2u; ++i)
+		{
+			riderBlanker(rPu1[i]);
+			rideOnceFiller(rPu1[i]);
+			riderBlanker(rPu2[i]);
+			rideOnceFiller(rPu2[i]);
+		}
+		if (rPu02.iteration > 32u)
+			puS = redSpawn;
+		break;
+	case redSpawn:
+		for (uint8_t i = 0; i < 2u; ++i)
+		{
+			riderBlanker(rPu1[i]);
+			rideOnceFiller(rPu1[i]);
+			riderBlanker(rPu2[i]);
+			rideOnceFiller(rPu2[i]);
+			riderBlanker(rPu3[i]);
+			rideOnceFiller(rPu3[i]);
+		}
+		if (rPu03.iteration > 32u)
+			puS = whiteSpawn;
+		break;
+	case whiteSpawn:
+		for (uint8_t i = 0; i < 2u; ++i)
+		{
+			riderBlanker(rPu1[i]);
+			rideOnceFiller(rPu1[i]);
+			riderBlanker(rPu2[i]);
+			rideOnceFiller(rPu2[i]);
+			riderBlanker(rPu3[i]);
+			rideOnceFiller(rPu3[i]);
+			rideOnceFiller(rPu4[i]);
+		}
+		if (!rPu04.length)
+			puS = fullWhite;
+		break;
+	case fullWhite:
+	{
+		Led_Led_t l;
+		++breaker;
+		for (uint32_t i = 0; i < ledCount; ++i) {
+			led_getLedColor(i, &l);
 
-		default:
-			__BKPT(0);
-			break;
+			if( (l.r + 40u) < UINT8_MAX)
+				l.r = (uint8_t)(l.r + 20u);
+			else
+				l.r = UINT8_MAX;
+
+			if( (l.g + 40u) < UINT8_MAX)
+				l.g = (uint8_t)(l.g + 20u);
+			else
+				l.g = UINT8_MAX;
+
+			if( (l.b + 40u) < UINT8_MAX)
+				l.b = (uint8_t)(l.b + 20u);
+			else
+				l.b = UINT8_MAX;
+
+			led_setLedToColor(i, l.r, l.g, l.b);
+		}
+		if(breaker > 12)
+			puS = done;
+		break;
+	}
+
+	case done:
+		return;
+	default:
+		__BKPT(0);
+		break;
 	}
 }
 
@@ -135,7 +222,7 @@ static void layers(void)
 
 void anim_CyclicCall(void)
 {
-	if(puS != done)
+	if (puS != done)
 	{
 		powerUp();
 		return;
