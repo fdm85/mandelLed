@@ -9,12 +9,10 @@
 #include "stdbool.h"
 #include "stm32f3xx_hal_gpio.h"
 
-#include "crc.h"
 #include "dma.h"
 #include "gpio.h"
 #include "main.h"
 #include "tim.h"
-#include "usart.h"
 
 void initClock(void)
 {
@@ -25,10 +23,7 @@ void initPeripherals(void)
 {
 	MX_GPIO_Init();
 	MX_DMA_Init();
-	MX_TIM3_Init();
-	MX_RNG_Init();
-	MX_CRC_Init();
-	MX_USART2_UART_Init();
+	MX_TIM2_Init();
 }
 
 void greenLedToggle(void)

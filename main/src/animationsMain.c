@@ -222,22 +222,20 @@ static void layers(void)
 
 void anim_CyclicCall(void)
 {
-	if (puS != done)
-	{
-		powerUp();
-		return;
-	}
+//	if (puS != done)
+//	{
+//		powerUp();
+//		return;
+//	}
 	switch (currMode)
 	{
-	case anim_powerUp:
-		anim_circularRun1(brightness);
-		break;
 	case anim_cR1:
 		anim_circularRun1(brightness);
 		break;
 	case anim_cR2:
 		riderBlanker(&rider1);
 		riderFiller(&rider1);
+//		led_setAllLedsToColor(5, 0, 0);
 		break;
 	case anim_rnd1:
 		anim_random1();

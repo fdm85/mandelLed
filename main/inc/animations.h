@@ -25,6 +25,7 @@ typedef enum  {
 	anim_blue,
 	anim_cycleColors,
 	anim_layers,
+	anim_SpecGraph,
 	anim_enumAssrt
 }anim_mode_e;
 
@@ -36,7 +37,6 @@ void anim_addBrightness(int8_t add);
 void anim_nextMode(void);
 
 void anim_circularRun1(uint8_t brightness);
-void anim_random1(void);
 
 typedef struct rider
 {
@@ -58,11 +58,24 @@ void anim_initRedRider(rider_t* arg);
 void anim_initRedRider2(rider_t* arg);
 void anim_initRedRider3(rider_t* arg);
 
+#ifndef STM32F303xE
+void anim_random1(void);
 void anim_setRandom2CycleCount(uint16_t c);
 void anim_random2(void);
 void anim_random3(void);
 void anim_r23Init(void);
 
 void anim_layerRedRider(uint32_t pos);
+
+#else
+#define anim_random1()
+#define anim_setRandom2CycleCount()
+#define anim_random2()
+#define anim_random3()
+#define anim_r23Init()
+
+#define anim_layerRedRider()
+
+#endif
 
 #endif /* ANIMATIONS_H_ */

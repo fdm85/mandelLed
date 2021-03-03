@@ -9,7 +9,6 @@
 #include "ledData.h"
 #include <stdint.h>
 #include "assrt.h"
-#include "crc.h"
 #ifdef STM32F407xx
 #include "rng.h"
 #endif

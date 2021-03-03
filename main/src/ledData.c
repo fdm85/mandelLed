@@ -25,8 +25,9 @@
 #endif
 
 #ifdef STM32F303xE
-#define PWM_TIM		htim1
-#define PWM_CHAN	TIM_CHANNEL_4
+#define PWM_TIM		htim2
+#define PWM_CHAN	TIM_CHANNEL_1
+#define PWM_RAW		101uL
 #endif
 
 
@@ -82,7 +83,7 @@ void led_initDataRaw(void)
 	f1.rI[0] = 0uL;
 	f1.rO[0] = 0uL;
 #ifdef LVL_CONVERTER_LED
-	Led_Led_t init = {0u, 0u, 0u};
+	Led_Led_t init = {12u, 0u, 0u};
 	led_convertLed(&init, &f1.converterLed[0]);
 #endif
 	for (uint16_t i = 1; i < resLength; ++i)
