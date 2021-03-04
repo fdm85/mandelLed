@@ -56,6 +56,7 @@ static void cyclicReSend(void)
 	{
 	case e_render:
 		a = HAL_GetTick();
+		msgeq();
 		anim_CyclicCall();
 		b = HAL_GetTick() - a;
 		state = e_waitTxCplt;
