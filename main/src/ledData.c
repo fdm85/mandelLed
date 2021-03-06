@@ -103,9 +103,9 @@ void led_setBrightnessTruncation(uint32_t mult, uint32_t div)
 
 static void led_setLedColors(Led_Led_t *led, uint8_t r, uint8_t g, uint8_t b)
 {
-	uint32_t rOut = (uint32_t) (r * btDiv) / btMult;
-	uint32_t gOut = (uint32_t) (g * btDiv) / btMult;
-	uint32_t bOut = (uint32_t) (b * btDiv) / btMult;
+	uint32_t rOut = (uint32_t) (r * btMult) / btDiv;
+	uint32_t gOut = (uint32_t) (g * btMult) / btDiv;
+	uint32_t bOut = (uint32_t) (b * btMult) / btDiv;
 
 	assrt(rOut <= UINT8_MAX);
 	assrt(gOut <= UINT8_MAX);

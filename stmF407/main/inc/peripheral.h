@@ -10,6 +10,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "stm32f3xx_hal_gpio.h"
 
 void initClock(void);
 void initPeripherals(void);

@@ -12,7 +12,7 @@
 #include "com.h"
 #include "cmsis_compiler.h"
 #include "stm32f3xx_hal.h"
-
+#include "msgeq7.h"
 static void maintainStatusLeds(void)
 {
 	static const uint32_t blueLedToggleTimeMs = 200uL;
@@ -56,7 +56,7 @@ static void cyclicReSend(void)
 	{
 	case e_render:
 		a = HAL_GetTick();
-		msgeq();
+		msgeq_ticker();
 		anim_CyclicCall();
 		b = HAL_GetTick() - a;
 		state = e_waitTxCplt;
@@ -110,7 +110,7 @@ int main(void)
 	initClock();
 	initPeripherals();
 	anim_setMode(anim_cR2);
-	led_setBrightnessTruncation(1u, 1u);
+	led_setBrightnessTruncation(32uL, 255uL);
 
 	led_initDataRaw();
 	__enable_irq();
