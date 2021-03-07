@@ -69,27 +69,45 @@ static void mtrx_InitR(void)
 	uint8_t R0[8] = { 223u, 222u, 159u, 158u, 96u, 95u, 32u, 31u };
 	uint8_t R1[8] = { 224u, 221u, 160u, 157u, 97u, 94u, 33u, 30u };
 
+	uint8_t R2[8] = { 225u, 220u, 161u, 156u, 98u, 93u, 34u, 29u };
+	uint8_t R3[8] = { 226u, 219u, 162u, 155u, 99u, 92u, 35u, 28u };
+
+	uint8_t R4[8] = { 227u, 218u, 163u, 154u, 100u, 91u, 36u, 27u };
+	uint8_t R5[8] = { 228u, 217u, 164u, 153u, 101u, 90u, 37u, 26u };
+
+	uint8_t R6[8] = { 229u, 216u, 165u, 152u, 102u, 89u, 38u, 25u };
+	uint8_t R7[8] = { 230u, 215u, 166u, 151u, 103u, 88u, 39u, 24u };
+
+	uint8_t R8[8] = { 231u, 214u, 167u, 150u, 104u, 87u, 40u, 23u };
+	uint8_t R9[8] = { 232u, 213u, 168u, 149u, 105u, 86u, 41u, 22u };
+
+	uint8_t R10[8] = { 233u, 212u, 169u, 148u, 106u, 85u, 42u, 21u };
+	uint8_t R11[8] = { 234u, 211u, 170u, 147u, 107u, 84u, 43u, 20u };
+
+	uint8_t R12[8] = { 235u, 210u, 171u, 146u, 108u, 83u, 44u, 19u };
+	uint8_t R13[8] = { 236u, 209u, 172u, 145u, 109u, 82u, 45u, 18u };
+
 	for (uint8_t i = 0; i < barHeigth; ++i) {
 		lright[0].bar[0].dots[i] = R0[i];
 		lright[0].bar[1].dots[i] = R1[i];
 
-//		lright[1].bar[0].dots[i] = R2[i];
-//		lright[1].bar[1].dots[i] = R3[i];
-//
-//		lright[2].bar[0].dots[i] = R4[i];
-//		lright[2].bar[1].dots[i] = R5[i];
-//
-//		lright[3].bar[0].dots[i] = R6[i];
-//		lright[3].bar[1].dots[i] = R7[i];
-//
-//		lright[4].bar[0].dots[i] = R8[i];
-//		lright[4].bar[1].dots[i] = R9[i];
-//
-//		lright[5].bar[0].dots[i] = R10[i];
-//		lright[5].bar[1].dots[i] = R11[i];
-//
-//		lright[6].bar[0].dots[i] = R12[i];
-//		lright[6].bar[1].dots[i] = R13[i];
+		lright[1].bar[0].dots[i] = R2[i];
+		lright[1].bar[1].dots[i] = R3[i];
+
+		lright[2].bar[0].dots[i] = R4[i];
+		lright[2].bar[1].dots[i] = R5[i];
+
+		lright[3].bar[0].dots[i] = R6[i];
+		lright[3].bar[1].dots[i] = R7[i];
+
+		lright[4].bar[0].dots[i] = R8[i];
+		lright[4].bar[1].dots[i] = R9[i];
+
+		lright[5].bar[0].dots[i] = R10[i];
+		lright[5].bar[1].dots[i] = R11[i];
+
+		lright[6].bar[0].dots[i] = R12[i];
+		lright[6].bar[1].dots[i] = R13[i];
 	}
 }
 
