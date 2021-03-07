@@ -65,26 +65,12 @@ static void exStrobe(void)
 	HAL_GPIO_WritePin(MS_STROBE_GPIO_Port, MS_STROBE_Pin, GPIO_PIN_RESET);
 }
 
-static void sFin(void)
-{
-	assrt(mT.gS == eFin);
-	tStart(&mT.cycleTime);
-	tReset(&mT.initTime);
-	mT.cycle = 0u;
-}
-
-static void exFin(void)
-{
-	assrt(mT.gS == eFin);
-	tStart(&mT.cycleTime);
-	tReset(&mT.initTime);
-	mT.cycle = 0u;
-}
-
 static void sStart(void)
 {
 	assrt(mT.gS == eStart);
 	tStart(&mT.initTime);
+	tStart(&mT.cycleTime);
+	mT.cycle = 0u;
 }
 
 static void sAdc(void)
@@ -128,7 +114,8 @@ void msgeq_ticker(void)
 		}
 		else
 		{
-			sInit();
+			if(!mT.initTime.started)
+				sInit();
 		}
 		break;
 	// reset to strobe delay 72uS
@@ -139,7 +126,8 @@ void msgeq_ticker(void)
 		}
 		else
 		{
-			sStart();
+			if(!mT.initTime.started)
+				sStart();
 		}
 
 		break;
@@ -153,12 +141,12 @@ void msgeq_ticker(void)
 		}
 		else
 		{
-			sStrobe();
+			if(!mT.strobeTime.started)
+				sStrobe();
 		}
 		break;
 	// min output settling time 36uS
 	case eAdcStart:
-
 		if (tElapsed(&mT.strobeTime) > 2uL)
 		{
 			sAdc();
@@ -170,16 +158,19 @@ void msgeq_ticker(void)
 		{
 			++mT.cycle;
 			if(mT.cycle == 7u)
+			{
 				mT.gS = eFin;
+			}
 			else
 				mT.gS = eStrobe;
 		}
 		break;
 	case eFin:
-		if(tElapsed(&mT.cycleTime) > mT.cycleTarget)
-			mT.gS = eStrobe;
-		if(tElapsed(&mT.cycleTime) == 0u)
-			sFin();
+		if(tElapsed(&mT.cycleTime) >= mT.cycleTarget)
+		{
+			mT.gS = eStart;
+			tReset(&mT.initTime);
+		}
 
 		break;
 	default:
