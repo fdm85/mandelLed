@@ -25,11 +25,11 @@ typedef struct mT_s
 	uint32_t cycleTarget;
 	time_t strobeTime;
 	uint32_t strobeTarget;
-	uint32_t adcChan1;
-	uint32_t adcChan2;
+	uint32_t adcChan1[eMax];
+	uint32_t adcChan2[eMax];
 	volatile uint8_t actChan;
 	volatile uint8_t chan2;
-	volatile uint8_t cycle;
+	volatile msgeq7Freq cycle;
 	gS_t gS;
 } mT_t;
 
@@ -70,7 +70,7 @@ static void sStart(void)
 	assrt(mT.gS == eStart);
 	tStart(&mT.initTime);
 	tStart(&mT.cycleTime);
-	mT.cycle = 0u;
+	mT.cycle = e63Hz;
 }
 
 static void sAdc(void)
@@ -78,6 +78,7 @@ static void sAdc(void)
 	assrt(mT.gS == eAdcStart);
 	uint32_t adcState = HAL_ADC_GetState(&hadc1);
 	bool rdy = ((adcState & HAL_ADC_STATE_READY) != 0uL);
+	assrt(rdy);
 	mT.actChan = 1u;
 	tReset(&mT.strobeTime);
 	HAL_ADC_Start_IT(&hadc1);
@@ -157,7 +158,7 @@ void msgeq_ticker(void)
 		if (mT.actChan == 3uL)
 		{
 			++mT.cycle;
-			if(mT.cycle == 7u)
+			if(mT.cycle == eMax)
 			{
 				mT.gS = eFin;
 			}
@@ -178,24 +179,17 @@ void msgeq_ticker(void)
 	}
 }
 
-static uint32_t adcVal;
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
 	(void) hadc;
-	volatile uint32_t adcState = HAL_ADC_GetState(&hadc1);
-	volatile bool rdy = ((adcState & HAL_ADC_STATE_READY) != 0uL);
 	if(mT.actChan == 1u)
 	{
-		mT.adcChan1 = HAL_ADC_GetValue(&hadc1);
+		mT.adcChan1[mT.cycle] = HAL_ADC_GetValue(&hadc1);
 		HAL_ADC_Start_IT(&hadc1);
 	}
 	else
-		mT.adcChan2 = HAL_ADC_GetValue(&hadc1);
+		mT.adcChan2[mT.cycle] = HAL_ADC_GetValue(&hadc1);
 
 	++mT.actChan;
 }
 
-uint32_t getAdcVal(void)
-{
-	return adcVal;
-}
