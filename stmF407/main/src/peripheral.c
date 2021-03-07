@@ -33,7 +33,6 @@ void initPeripherals(void)
 	MX_CRC_Init();
 	MX_USART2_UART_Init();
 	MX_ADC1_Init();
-	HAL_ADC_Start_IT(&hadc1);
 }
 
 void greenLedToggle(void)
