@@ -21,43 +21,84 @@ static void mtrx_InitL(void)
 {
 	uint8_t L0[8] = { 254u, 191u, 190u, 127u, 126u, 64u, 63u, 0u };
 	uint8_t L1[8] = { 253u, 192u, 189u, 128u, 125u, 65u, 62u, 1u };
+
 	uint8_t L2[8] = { 252u, 193u, 188u, 129u, 124u, 66u, 61u, 2u };
 	uint8_t L3[8] = { 251u, 194u, 187u, 130u, 123u, 67u, 60u, 3u };
+
 	uint8_t L4[8] = { 250u, 195u, 186u, 131u, 122u, 68u, 59u, 4u };
 	uint8_t L5[8] = { 249u, 196u, 185u, 132u, 121u, 69u, 58u, 5u };
+
+	uint8_t L6[8] = { 248u, 197u, 184u, 133u, 120u, 70u, 57u, 6u };
+	uint8_t L7[8] = { 247u, 198u, 183u, 134u, 119u, 71u, 56u, 7u };
+
+	uint8_t L8[8] = { 246u, 199u, 182u, 135u, 118u, 72u, 55u, 8u };
+	uint8_t L9[8] = { 245u, 200u, 181u, 136u, 117u, 73u, 54u, 9u };
+
+	uint8_t L10[8] = { 244u, 201u, 180u, 137u, 116u, 74u, 53u, 10u };
+	uint8_t L11[8] = { 243u, 202u, 179u, 138u, 115u, 75u, 52u, 11u };
+
+	uint8_t L12[8] = { 242u, 203u, 178u, 139u, 114u, 76u, 51u, 12u };
+	uint8_t L13[8] = { 241u, 204u, 177u, 140u, 113u, 77u, 50u, 13u };
 
 	for (uint8_t i = 0; i < barHeigth; ++i) {
 		left[0].bar[0].dots[i] = L0[i];
 		left[0].bar[1].dots[i] = L1[i];
+
 		left[1].bar[0].dots[i] = L2[i];
 		left[1].bar[1].dots[i] = L3[i];
+
 		left[2].bar[0].dots[i] = L4[i];
 		left[2].bar[1].dots[i] = L5[i];
+
+		left[3].bar[0].dots[i] = L6[i];
+		left[3].bar[1].dots[i] = L7[i];
+
+		left[4].bar[0].dots[i] = L8[i];
+		left[4].bar[1].dots[i] = L9[i];
+
+		left[5].bar[0].dots[i] = L10[i];
+		left[5].bar[1].dots[i] = L11[i];
+
+		left[6].bar[0].dots[i] = L12[i];
+		left[6].bar[1].dots[i] = L13[i];
 	}
-//	left.bar[0].dots[] = { 254u, 191u, 190u, 127u, 126u, 64u, 63u, 0u };
-//	left.bar[0].dots[7] = 0u;
-//	left.bar[0].dots[6] = 63u;
-//	left.bar[0].dots[5] = 64u;
-//	left.bar[0].dots[4] = 126u;
-//	left.bar[0].dots[3] = 127u;
-//	left.bar[0].dots[2] = 190u;
-//	left.bar[0].dots[1] = 191u;
-//	left.bar[0].dots[0] = 254u;
+}
+
+static void mtrx_InitR(void)
+{
+	uint8_t R0[8] = { 223u, 222u, 159u, 158u, 96u, 95u, 32u, 31u };
+	uint8_t R1[8] = { 224u, 221u, 160u, 157u, 97u, 94u, 33u, 30u };
+
+	for (uint8_t i = 0; i < barHeigth; ++i) {
+		lright[0].bar[0].dots[i] = R0[i];
+		lright[0].bar[1].dots[i] = R1[i];
+
+//		lright[1].bar[0].dots[i] = R2[i];
+//		lright[1].bar[1].dots[i] = R3[i];
 //
-//	left.bar[1].dots[7] = 1u;
-//	left.bar[1].dots[6] = 62u;
-//	left.bar[1].dots[5] = 65u;
-//	left.bar[1].dots[4] = 125u;
-//	left.bar[1].dots[3] = 128u;
-//	left.bar[1].dots[2] = 189u;
-//	left.bar[1].dots[1] = 192u;
-//	left.bar[1].dots[0] = 253u;
+//		lright[2].bar[0].dots[i] = R4[i];
+//		lright[2].bar[1].dots[i] = R5[i];
+//
+//		lright[3].bar[0].dots[i] = R6[i];
+//		lright[3].bar[1].dots[i] = R7[i];
+//
+//		lright[4].bar[0].dots[i] = R8[i];
+//		lright[4].bar[1].dots[i] = R9[i];
+//
+//		lright[5].bar[0].dots[i] = R10[i];
+//		lright[5].bar[1].dots[i] = R11[i];
+//
+//		lright[6].bar[0].dots[i] = R12[i];
+//		lright[6].bar[1].dots[i] = R13[i];
+	}
 }
 
 void mtrx_Init(void)
 {
 	mtrx_InitL();
+	mtrx_InitR();
 }
+
 void mtrx_setLeds(channel_t* chan, uint8_t r, uint8_t g, uint8_t b)
 {
 	for (uint8_t i = 0; i < barHeigth; ++i) {

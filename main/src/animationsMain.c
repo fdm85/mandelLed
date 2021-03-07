@@ -292,6 +292,11 @@ void anim_CyclicCall(void)
 		mtrx_setLeds(&left[0], 0u, color, color);
 		mtrx_setLeds(&left[1], color, 0u, color);
 		mtrx_setLeds(&left[2], color, color, 0u);
+		mtrx_setLeds(&left[3], 0u, color, 0u);
+		mtrx_setLeds(&left[4], 0u, 0u, color);
+		mtrx_setLeds(&left[5], color, 0u, 0u);
+		mtrx_setLeds(&left[6], color, color, color);
+		mtrx_setLeds(&lright[0], 0u, color, color);
 		++count;
 		if(count > 100u)
 		{
