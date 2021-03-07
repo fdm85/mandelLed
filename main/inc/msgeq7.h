@@ -22,5 +22,6 @@ typedef enum {
 }msgeq7Freq;
 
 void msgeq_ticker(void);
-
+uint32_t getLChanVal(msgeq7Freq freq);
+uint32_t getRChanVal(msgeq7Freq freq);
 #endif /* MSGEQ7_H_ */

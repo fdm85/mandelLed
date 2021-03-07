@@ -111,8 +111,8 @@ int main(void)
 	initClock();
 	initPeripherals();
 	anim_setMode(anim_SpecGraph);
-//	led_setBrightnessTruncation(32uL, 255uL);
-	led_setBrightnessTruncation(0x1uL, 0x1uL);
+	led_setBrightnessTruncation(32uL, 255uL);
+//	led_setBrightnessTruncation(0x1uL, 0x1uL);
 	mtrx_Init();
 	led_initDataRaw();
 	__enable_irq();

@@ -26,5 +26,5 @@ extern channel_t left[channelWidth];
 extern channel_t lright[channelWidth];
 void mtrx_Init(void);
 void mtrx_setLeds(channel_t* chan, uint8_t r, uint8_t g, uint8_t b);
-
+void mtrx_setLedsScaled(channel_t* chan, uint32_t val, uint8_t r, uint8_t g, uint8_t b);
 #endif /* MATRIX_H_ */

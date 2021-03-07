@@ -13,6 +13,8 @@
 #include "assrt.h"
 #include "adc.h"
 
+#define OFFSET_ADC	300uL
+
 typedef enum
 {
 	eInit = 0u, eStart, eStrobe, eAdcStart, eAdcFin, eFin,
@@ -38,7 +40,7 @@ static mT_t mT;
 static void sInit(void)
 {
 	assrt(mT.gS == eInit);
-	mT.cycleTarget = 100uL;
+	mT.cycleTarget = 50uL;
 	mT.strobeTarget = 1uL;
 	tStart(&mT.initTime);
 	HAL_GPIO_WritePin(MS_RESET_GPIO_Port, MS_RESET_Pin, GPIO_PIN_SET);
@@ -193,3 +195,13 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 	++mT.actChan;
 }
 
+uint32_t getLChanVal(msgeq7Freq freq)
+{
+	uint32_t ret = (mT.adcChan1[freq] > OFFSET_ADC) ? (mT.adcChan1[freq] - OFFSET_ADC) : 0uL;
+	return ret;
+}
+uint32_t getRChanVal(msgeq7Freq freq)
+{
+	uint32_t ret = (mT.adcChan2[freq] > OFFSET_ADC) ? (mT.adcChan2[freq] - OFFSET_ADC) : 0uL;
+	return ret;
+}

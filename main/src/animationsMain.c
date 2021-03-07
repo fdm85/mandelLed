@@ -10,6 +10,7 @@
 #include "ledData.h"
 #include "physic.h"
 #include "matrix.h"
+#include "msgeq7.h"
 
 static anim_mode_e currMode = anim_cR2;
 static uint8_t brightness = 255u;
@@ -286,31 +287,22 @@ void anim_CyclicCall(void)
 		break;
 	case anim_SpecGraph:
 	{
-		static uint8_t color = 1u;
-		static uint8_t count = 0u;
+		static uint8_t color = 80u;
 		led_setAllLedsToColor(0,0,0);
-		mtrx_setLeds(&left[0], 0u, color, color);
-		mtrx_setLeds(&left[1], color, 0u, color);
-		mtrx_setLeds(&left[2], color, color, 0u);
-		mtrx_setLeds(&left[3], 0u, color, 0u);
-		mtrx_setLeds(&left[4], 0u, 0u, color);
-		mtrx_setLeds(&left[5], color, 0u, 0u);
-		mtrx_setLeds(&left[6], color, color, color);
-		mtrx_setLeds(&lright[0], 0u, color, color);
-		mtrx_setLeds(&lright[1], color, 0u, color);
-		mtrx_setLeds(&lright[2], color, color, 0u);
-		mtrx_setLeds(&lright[3], 0u, color, 0u);
-		mtrx_setLeds(&lright[4], 0u, 0u, color);
-		mtrx_setLeds(&lright[5], color, 0u, 0u);
-		mtrx_setLeds(&lright[6], color, color, color);
-		++count;
-		if(count > 100u)
-		{
-			count = 0u;
-			color = (uint8_t)( (0xFF & (color << 1)) + 1u);
-			if(color > 253)
-				color = 1u;
-		}
+		mtrx_setLedsScaled(&left[0], getLChanVal(e63Hz), 0u, color, color);
+		mtrx_setLedsScaled(&left[1], getLChanVal(e160Hz), color, 0u, color);
+		mtrx_setLedsScaled(&left[2], getLChanVal(e400Hz), color, color, 0u);
+		mtrx_setLedsScaled(&left[3], getLChanVal(e1kHz), 0u, color, 0u);
+		mtrx_setLedsScaled(&left[4], getLChanVal(e2_5kHz), 0u, 0u, color);
+		mtrx_setLedsScaled(&left[5], getLChanVal(e6_25kHz), color, 0u, 0u);
+		mtrx_setLedsScaled(&left[6], getLChanVal(e16kHz), color, color, color);
+		mtrx_setLedsScaled(&lright[0], getRChanVal(e63Hz), 0u, color, color);
+		mtrx_setLedsScaled(&lright[1], getRChanVal(e160Hz), color, 0u, color);
+		mtrx_setLedsScaled(&lright[2], getRChanVal(e400Hz), color, color, 0u);
+		mtrx_setLedsScaled(&lright[3], getRChanVal(e1kHz), 0u, color, 0u);
+		mtrx_setLedsScaled(&lright[4], getRChanVal(e2_5kHz), 0u, 0u, color);
+		mtrx_setLedsScaled(&lright[5], getRChanVal(e6_25kHz), color, 0u, 0u);
+		mtrx_setLedsScaled(&lright[6], getRChanVal(e16kHz), color, color, color);
 
 		break;
 	}
