@@ -13,6 +13,8 @@
 #include "cmsis_compiler.h"
 #include "stm32f3xx_hal.h"
 #include "msgeq7.h"
+#include "matrix.h"
+
 static void maintainStatusLeds(void)
 {
 	static const uint32_t blueLedToggleTimeMs = 200uL;
@@ -108,9 +110,10 @@ int main(void)
 {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_cR2);
-	led_setBrightnessTruncation(32uL, 255uL);
-
+	anim_setMode(anim_SpecGraph);
+//	led_setBrightnessTruncation(32uL, 255uL);
+	led_setBrightnessTruncation(0x1uL, 0x1uL);
+	mtrx_Init();
 	led_initDataRaw();
 	__enable_irq();
 	for (;;)

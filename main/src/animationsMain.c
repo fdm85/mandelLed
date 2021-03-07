@@ -9,6 +9,7 @@
 #include "assrt.h"
 #include "ledData.h"
 #include "physic.h"
+#include "matrix.h"
 
 static anim_mode_e currMode = anim_cR2;
 static uint8_t brightness = 255u;
@@ -283,6 +284,24 @@ void anim_CyclicCall(void)
 	case anim_layers:
 		layers();
 		break;
+	case anim_SpecGraph:
+	{
+		static uint8_t color = 1u;
+		static uint8_t count = 0u;
+		led_setAllLedsToColor(0,0,0);
+		mtrx_setLeds(&left.bar, color, color, color);
+//		led_setLedToColor(count, color, color, color);
+		++count;
+		if(count > 100u)
+		{
+			count = 0u;
+			color = (uint8_t)( (0xFF & (color << 1)) + 1u);
+			if(color > 253)
+				color = 1u;
+		}
+
+		break;
+	}
 	default:
 		assrt(false);
 		break;
