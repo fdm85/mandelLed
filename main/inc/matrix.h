@@ -9,7 +9,8 @@
 #define MATRIX_H_
 
 #define barHeigth 8
-#define channelWidth 2
+#define barWidth 2
+#define channelWidth 7
 
 #include <stdint.h>
 
@@ -18,12 +19,12 @@ typedef struct bar_tag {
 }bar_t;
 
 typedef struct channel_tag {
-	bar_t bar;
+	bar_t bar[barWidth];
 }channel_t;
 
-extern channel_t left;
-extern channel_t lright;
+extern channel_t left[channelWidth];
+extern channel_t lright[channelWidth];
 void mtrx_Init(void);
-void mtrx_setLeds(bar_t* bar, uint8_t r, uint8_t g, uint8_t b);
+void mtrx_setLeds(channel_t* chan, uint8_t r, uint8_t g, uint8_t b);
 
 #endif /* MATRIX_H_ */

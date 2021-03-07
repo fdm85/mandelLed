@@ -289,8 +289,9 @@ void anim_CyclicCall(void)
 		static uint8_t color = 1u;
 		static uint8_t count = 0u;
 		led_setAllLedsToColor(0,0,0);
-		mtrx_setLeds(&left.bar, color, color, color);
-//		led_setLedToColor(count, color, color, color);
+		mtrx_setLeds(&left[0], 0u, color, color);
+		mtrx_setLeds(&left[1], color, 0u, color);
+		mtrx_setLeds(&left[2], color, color, 0u);
 		++count;
 		if(count > 100u)
 		{
