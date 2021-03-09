@@ -288,7 +288,7 @@ void anim_CyclicCall(void)
 	case anim_SpecGraph:
 	{
 		static uint8_t color = 80u;
-		led_setAllLedsToColor(0,0,0);
+		led_setAllLedsToColor(15,15,15);
 		mtrx_setLedsScaled(&left[0], getLChanVal(e63Hz), 0u, color, color);
 		mtrx_setLedsScaled(&left[1], getLChanVal(e160Hz), color, 0u, color);
 		mtrx_setLedsScaled(&left[2], getLChanVal(e400Hz), color, color, 0u);

@@ -9,6 +9,7 @@
 
 #include "matrix.h"
 #include "ledData.h"
+#include "assrt.h"
 
 typedef struct {
 
@@ -128,13 +129,11 @@ void mtrx_setLeds(channel_t* chan, uint8_t r, uint8_t g, uint8_t b)
 void mtrx_setLedsScaled(channel_t* chan, uint32_t val, uint8_t r, uint8_t g, uint8_t b)
 {
 	static const uint32_t max = 0xFFFuL;
-	uint32_t scaled = (0xFF * val) / max;
+	uint32_t scaled = (barHeigth * val) / max;
 
-	uint8_t lMax = (uint8_t)( scaled / 8u);
-	if(lMax > 8)
-		lMax = 8u;
+	assrt(scaled <= barHeigth);
 
-	for (uint8_t i = 0; i < lMax; ++i) {
+	for (uint8_t i = 0; i < scaled; ++i) {
 		led_setLedToColor(chan->bar[0].dots[i], r, g, b);
 		led_setLedToColor(chan->bar[1].dots[i], r, g, b);
 	}
