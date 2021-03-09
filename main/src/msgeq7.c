@@ -84,6 +84,7 @@ static void sAdc(void)
 	mT.actChan = 1u;
 	tReset(&mT.strobeTime);
 	HAL_ADC_Start_IT(&hadc1);
+	HAL_ADC_Start_IT(&hadc2);
 }
 
 
@@ -184,15 +185,22 @@ void msgeq_ticker(void)
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
 	(void) hadc;
-	if(mT.actChan == 1u)
-	{
+	static uint32_t count = 0uL;
+	static uint32_t over = 0uL;
+	if(hadc == &hadc1)
 		mT.adcChan1[mT.cycle] = HAL_ADC_GetValue(&hadc1);
-		HAL_ADC_Start_IT(&hadc1);
-	}
 	else
-		mT.adcChan2[mT.cycle] = HAL_ADC_GetValue(&hadc1);
+		mT.adcChan2[mT.cycle] = HAL_ADC_GetValue(&hadc2);
 
 	++mT.actChan;
+
+	if(mT.actChan == 3)
+	{
+		++count;
+		if((mT.adcChan1[mT.cycle] > 3000uL) || mT.adcChan2[mT.cycle] >3000uL)
+			++over;
+	}
+
 }
 
 uint32_t getLChanVal(msgeq7Freq freq)
