@@ -24,19 +24,6 @@ static void maintainStatusLeds(void)
 	{
 		blueLedToggle();
 		lastToggle = HAL_GetTick();
-
-		static uint8_t swCount = 0u;
-		if (!getModeSwitch())
-		{
-			++swCount;
-			if (swCount > 5u)
-			{
-				swCount = 0u;
-				orangeLedToggle();
-				led_initDataRaw();
-//				anim_nextMode();
-			}
-		}
 	}
 }
 
