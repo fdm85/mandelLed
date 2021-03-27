@@ -6,3 +6,7 @@
 /DebugF407/
 /DebugF303/
 /DebugL476/
+
+doc/*
+
+**/*.autosave
