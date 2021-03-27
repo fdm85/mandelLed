@@ -92,12 +92,12 @@ void anim_addBrightness(int8_t add)
 	}
 }
 
+#ifdef STM32F407xx
 typedef enum
 {
 	init, blueSpawn, greenSpawn, redSpawn, whiteSpawn, fullWhite, done,
 } puState_t;
 static puState_t puS = init;
-
 static void powerUp(void)
 {
 	static uint8_t breaker = 0u;
@@ -200,6 +200,7 @@ static void powerUp(void)
 		break;
 	}
 }
+#endif
 
 static void layers(void)
 {
@@ -224,11 +225,13 @@ static void layers(void)
 
 void anim_CyclicCall(void)
 {
-//	if (puS != done)
-//	{
-//		powerUp();
-//		return;
-//	}
+#ifdef STM32F407xx
+	if (puS != done)
+	{
+		powerUp();
+		return;
+	}
+#endif
 	switch (currMode)
 	{
 	case anim_cR1:
@@ -237,7 +240,6 @@ void anim_CyclicCall(void)
 	case anim_cR2:
 		riderBlanker(&rider1);
 		riderFiller(&rider1);
-//		led_setAllLedsToColor(5, 0, 0);
 		break;
 	case anim_rnd1:
 		anim_random1();

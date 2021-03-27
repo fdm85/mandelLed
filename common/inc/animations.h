@@ -44,11 +44,12 @@ typedef struct rider
 	_iq posIq;
 	uint32_t posMin;
 	uint32_t posMax;
-	Led_Led_t c;
 	_iq step;
+	Led_Led_t c;
 	uint8_t length;
 	uint8_t blanks;
 	uint8_t iteration;
+	uint16_t padd;
 }rider_t;
 void anim_initPuRide(rider_t* arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir);
 void rideOnceFiller(rider_t* arg);
