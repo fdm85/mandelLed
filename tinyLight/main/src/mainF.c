@@ -113,11 +113,9 @@ int main(void)
 	led_initDataRaw();
 	outputEnableLvlShifter();
 	__enable_irq();
-	com_enableRx();
 	for (;;)
 	{
 		maintainStatusLeds();
 		cyclicReSend();
-		com_parse();
 	}
 }
