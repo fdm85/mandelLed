@@ -52,20 +52,20 @@ typedef struct lRawCont_tag
 
 #define resLength 41u
 #define lRawContainer(name, ledCnt) \
-	static struct lRawContainer_##name_tag \
+	static struct \
 	{ \
 		uint32_t rI[resLength]; \
 		LedRaw converterLed[1]; \
 		LedRaw ledRaw[ledCnt]; \
 		uint32_t rO[resLength]; \
-	} lRawContainer_##name_t; \
+	} lRawContainer_##name; \
 	const lRawCont_t lRawCont_##name = { \
-			.rI = &lRawContainer_##name_t.rI[0], \
-			.rO = &lRawContainer_##name_t.rO[0], \
-			.lConverterLed = &lRawContainer_##name_t.converterLed[0], \
-			.lRaw = &lRawContainer_##name_t.ledRaw[0], \
+			.rI = &lRawContainer_##name.rI[0], \
+			.rO = &lRawContainer_##name.rO[0], \
+			.lConverterLed = &lRawContainer_##name.converterLed[0], \
+			.lRaw = &lRawContainer_##name.ledRaw[0], \
 			.ledCount = ledCnt, \
-			.txCountInUi32 = (sizeof(lRawContainer_##name_t)/sizeof(uint32_t)), \
+			.txCountInUi32 = (sizeof(lRawContainer_##name)/sizeof(uint32_t)), \
 	}
 
 #define lLogicContainer(name, ledCnt)\

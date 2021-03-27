@@ -31,7 +31,9 @@ void initPeripherals(void)
 	MX_TIM3_Init();
 	MX_RNG_Init();
 	MX_CRC_Init();
-	MX_ADC1_Init();
+//	MX_ADC1_Init();
+	MX_ADC2_Init();
+	MX_ADC3_Init();
 }
 
 void greenLedToggle(void)
@@ -47,13 +49,6 @@ void orangeLedToggle(void)
 void blueLedToggle(void)
 {
 	HAL_GPIO_TogglePin(LD6_GPIO_Port, LD6_Pin);
-}
-
-
-void outputEnableLvlShifter(void)
-{
-	  // write gpio E0 to low, output-enable of levelshifter --> on
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_0, GPIO_PIN_SET);
 }
 
 bool getModeSwitch(void)
@@ -73,19 +68,19 @@ void brightnessAdc(void)
 		if ((HAL_GetTick() - lastToggle) > triggerTimeMs)
 		{
 			lastToggle = HAL_GetTick();
-			HAL_ADC_Start_IT(&hadc1);
+//			HAL_ADC_Start_IT(&hadc1);
 		}
 
 	}
 }
 
-static uint32_t adcVal;
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
-{
-	(void)hadc;
-	adcVal = HAL_ADC_GetValue(&hadc1);
-
-}
+static uint32_t adcVal = 0xFFFuL;
+//void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+//{
+//	(void)hadc;
+//	adcVal = HAL_ADC_GetValue(&hadc1);
+//
+//}
 
 uint32_t getAdcVal(void)
 {

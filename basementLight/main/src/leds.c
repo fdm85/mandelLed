@@ -18,4 +18,8 @@ lRawContainer(main, 619);
 lLogicContainer(main, 619);
 lChainDesc(main, htim3, TIM_CHANNEL_3, lRawOn, lRawOff);
 
+lRawContainer(matrix, 256);
+lLogicContainer(matrix, 256);
+lChainDesc(matrix, htim4, TIM_CHANNEL_2, lRawOn, lRawOff);
+
 

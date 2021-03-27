@@ -116,7 +116,6 @@ int main(void)
 	led_setBrightnessTruncation(&lcd_main, 1u, 1u);
 
 	led_initDataRaw(&lcd_main);
-	outputEnableLvlShifter();
 	__enable_irq();
 	for (;;)
 	{

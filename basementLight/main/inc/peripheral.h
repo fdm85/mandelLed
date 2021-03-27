@@ -16,7 +16,6 @@ void initPeripherals(void);
 void blueLedToggle(void);
 void greenLedToggle(void);
 void orangeLedToggle(void);
-void outputEnableLvlShifter(void);
 bool getModeSwitch(void);
 void brightnessAdc(void);
 uint32_t getAdcVal(void);

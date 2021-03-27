@@ -70,6 +70,10 @@ void SystemClock_Config(void);
 #define PH1_OSC_OUT_GPIO_Port GPIOH
 #define OTG_FS_PowerSwitchOn_Pin GPIO_PIN_0
 #define OTG_FS_PowerSwitchOn_GPIO_Port GPIOC
+#define MS_A_LEFT_Pin GPIO_PIN_1
+#define MS_A_LEFT_GPIO_Port GPIOC
+#define MS_A_RIGHT_Pin GPIO_PIN_2
+#define MS_A_RIGHT_GPIO_Port GPIOC
 #define PDM_OUT_Pin GPIO_PIN_3
 #define PDM_OUT_GPIO_Port GPIOC
 #define B1_Pin GPIO_PIN_0
@@ -82,6 +86,10 @@ void SystemClock_Config(void);
 #define SPI1_MISO_GPIO_Port GPIOA
 #define SPI1_MOSI_Pin GPIO_PIN_7
 #define SPI1_MOSI_GPIO_Port GPIOA
+#define MS_STROBE_Pin GPIO_PIN_4
+#define MS_STROBE_GPIO_Port GPIOC
+#define MS_RESET_Pin GPIO_PIN_5
+#define MS_RESET_GPIO_Port GPIOC
 #define BOOT1_Pin GPIO_PIN_2
 #define BOOT1_GPIO_Port GPIOB
 #define CLK_IN_Pin GPIO_PIN_10
@@ -124,8 +132,6 @@ void SystemClock_Config(void);
 #define But1_GPIO_Port GPIOB
 #define Audio_SDA_Pin GPIO_PIN_9
 #define Audio_SDA_GPIO_Port GPIOB
-#define LS_outputEnable_Pin GPIO_PIN_0
-#define LS_outputEnable_GPIO_Port GPIOE
 #define MEMS_INT2_Pin GPIO_PIN_1
 #define MEMS_INT2_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */

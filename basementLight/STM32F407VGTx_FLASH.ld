@@ -52,7 +52,7 @@
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-_Min_Heap_Size = 0x100;      /* required amount of heap  */
+_Min_Heap_Size = 0x0;      /* required amount of heap  */
 _Min_Stack_Size = 0x600; /* required amount of stack */
 _Min_Stack_Reserve_InFault = 0x20;
 _Ram_orig = 0x20000000;
