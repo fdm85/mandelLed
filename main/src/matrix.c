@@ -128,8 +128,13 @@ void mtrx_setLeds(channel_t* chan, uint8_t r, uint8_t g, uint8_t b)
 
 void mtrx_setLedsScaled(channel_t* chan, uint32_t val, uint8_t r, uint8_t g, uint8_t b)
 {
-	static const uint32_t max = 0xFFFuL;
-	uint32_t scaled = (barHeigth * val) / max;
+	static const uint32_t max = 3100uL;
+	static const uint32_t round = max/2uL;
+
+	uint32_t scaled = ((barHeigth * val) + round) / max;
+
+	if(scaled >barHeigth)
+		scaled = barHeigth;
 
 	assrt(scaled <= barHeigth);
 
