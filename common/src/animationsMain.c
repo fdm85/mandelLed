@@ -287,6 +287,7 @@ void anim_CyclicCall(void)
 		break;
 	case anim_SpecGraph:
 	{
+#ifdef STM32F303xE
 		static uint8_t color = 80u;
 		led_setAllLedsToColor(15,15,15);
 		mtrx_setLedsScaled(&left[0], getLChanVal(e63Hz), 0u, color, color);
@@ -303,7 +304,7 @@ void anim_CyclicCall(void)
 		mtrx_setLedsScaled(&lright[4], getRChanVal(e2_5kHz), 0u, 0u, color);
 		mtrx_setLedsScaled(&lright[5], getRChanVal(e6_25kHz), color, 0u, 0u);
 		mtrx_setLedsScaled(&lright[6], getRChanVal(e16kHz), color, color, color);
-
+#endif
 		break;
 	}
 	default:
