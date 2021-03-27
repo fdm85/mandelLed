@@ -38,7 +38,7 @@ rider_t *rPu3[] =
 rider_t *rPu4[] =
 { &rPu04, &rPu14, NULL };
 
-void anim_setMode(anim_mode_e set)
+void anim_setMode(const LedChainDesc_t* lcd, anim_mode_e set)
 {
 	assrt(set < anim_enumAssrt);
 	currMode = set;
@@ -48,13 +48,13 @@ void anim_setMode(anim_mode_e set)
 	}
 	if ((set == anim_cR2) || (set == anim_layers))
 	{
-		anim_initRedRider(&rider1);
-		anim_initRedRider2(&rider2);
-		anim_initRedRider3(&rider3);
+		anim_initRedRider(lcd, &rider1);
+		anim_initRedRider2(lcd, &rider2);
+		anim_initRedRider3(lcd, &rider3);
 	}
 }
 
-void anim_nextMode(void)
+void anim_nextMode(const LedChainDesc_t* lcd)
 {
 	++currMode;
 
@@ -63,9 +63,9 @@ void anim_nextMode(void)
 		currMode = anim_cR1;
 	}
 	anim_r23Init();
-	anim_initRedRider(&rider1);
-	anim_initRedRider2(&rider2);
-	anim_initRedRider3(&rider3);
+	anim_initRedRider(lcd, &rider1);
+	anim_initRedRider2(lcd, &rider2);
+	anim_initRedRider3(lcd, &rider3);
 }
 
 void anim_setBrightness(uint8_t set)
@@ -202,7 +202,7 @@ static void powerUp(void)
 }
 #endif
 
-static void layers(void)
+static void layers(const LedChainDesc_t* lcd)
 {
 	anim_random3();
 	for (uint8_t i = 0; rA[i + 1] != NULL; ++i)
@@ -215,15 +215,15 @@ static void layers(void)
 	}
 	for (uint8_t i = 0; rA[i] != NULL; ++i)
 	{
-		riderBlanker(rA[i]);
+		riderBlanker(lcd, rA[i]);
 	}
 	for (uint8_t i = 0; rA[i] != NULL; ++i)
 	{
-		riderFiller(rA[i]);
+		riderFiller(lcd, rA[i]);
 	}
 }
 
-void anim_CyclicCall(void)
+void anim_CyclicCall(const LedChainDesc_t* lcd)
 {
 #ifdef STM32F407xx
 	if (puS != done)
@@ -235,11 +235,11 @@ void anim_CyclicCall(void)
 	switch (currMode)
 	{
 	case anim_cR1:
-		anim_circularRun1(brightness);
+		anim_circularRun1(lcd, brightness);
 		break;
 	case anim_cR2:
-		riderBlanker(&rider1);
-		riderFiller(&rider1);
+		riderBlanker(lcd, &rider1);
+		riderFiller(lcd, &rider1);
 		break;
 	case anim_rnd1:
 		anim_random1();
@@ -251,16 +251,16 @@ void anim_CyclicCall(void)
 		anim_random3();
 		break;
 	case anim_white:
-		led_setAllLedsToColor(brightness, brightness, brightness);
+		led_setAllLedsToColor(lcd, brightness, brightness, brightness);
 		break;
 	case anim_red:
-		led_setAllLedsToColor(brightness, 0, 0);
+		led_setAllLedsToColor(lcd, brightness, 0, 0);
 		break;
 	case anim_green:
-		led_setAllLedsToColor(0, brightness, 0);
+		led_setAllLedsToColor(lcd, 0, brightness, 0);
 		break;
 	case anim_blue:
-		led_setAllLedsToColor(0, 0, brightness);
+		led_setAllLedsToColor(lcd, 0, 0, brightness);
 		break;
 	case anim_cycleColors:
 	{
@@ -268,30 +268,30 @@ void anim_CyclicCall(void)
 		switch (z++)
 		{
 		case 0:
-			led_setAllLedsToColor(brightness, brightness, brightness);
+			led_setAllLedsToColor(lcd, brightness, brightness, brightness);
 			break;
 		case 1:
-			led_setAllLedsToColor(brightness, 0, 0);
+			led_setAllLedsToColor(lcd, brightness, 0, 0);
 			break;
 		case 2:
-			led_setAllLedsToColor(0, brightness, 0);
+			led_setAllLedsToColor(lcd, 0, brightness, 0);
 			break;
 		case 3:
 		default:
-			led_setAllLedsToColor(0, 0, brightness);
+			led_setAllLedsToColor(lcd, 0, 0, brightness);
 			z = 0u;
 			break;
 		}
 		break;
 	}
 	case anim_layers:
-		layers();
+		layers(lcd);
 		break;
 	case anim_SpecGraph:
 	{
 #ifdef STM32F303xE
 		static uint8_t color = 80u;
-		led_setAllLedsToColor(15,15,15);
+		led_setAllLedsToColor(lcd, 15,15,15);
 		mtrx_setLedsScaled(&left[0], getLChanVal(e63Hz), 0u, color, color);
 		mtrx_setLedsScaled(&left[1], getLChanVal(e160Hz), color, 0u, color);
 		mtrx_setLedsScaled(&left[2], getLChanVal(e400Hz), color, color, 0u);

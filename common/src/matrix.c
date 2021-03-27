@@ -8,12 +8,8 @@
  ******************************************************************************/
 
 #include "matrix.h"
-#include "ledData.h"
+#include "leds.h"
 #include "assrt.h"
-
-typedef struct {
-
-} undef;
 
 channel_t left[channelWidth];
 channel_t lright[channelWidth];
@@ -121,8 +117,8 @@ void mtrx_Init(void)
 void mtrx_setLeds(channel_t* chan, uint8_t r, uint8_t g, uint8_t b)
 {
 	for (uint8_t i = 0; i < barHeigth; ++i) {
-		led_setLedToColor(chan->bar[0].dots[i], r, g, b);
-		led_setLedToColor(chan->bar[1].dots[i], r, g, b);
+		led_setLedToColor(&lcd_matrix, chan->bar[0].dots[i], r, g, b);
+		led_setLedToColor(&lcd_matrix, chan->bar[1].dots[i], r, g, b);
 	}
 }
 
@@ -139,7 +135,7 @@ void mtrx_setLedsScaled(channel_t* chan, uint32_t val, uint8_t r, uint8_t g, uin
 	assrt(scaled <= barHeigth);
 
 	for (uint8_t i = 0; i < scaled; ++i) {
-		led_setLedToColor(chan->bar[0].dots[i], r, g, b);
-		led_setLedToColor(chan->bar[1].dots[i], r, g, b);
+		led_setLedToColor(&lcd_matrix, chan->bar[0].dots[i], r, g, b);
+		led_setLedToColor(&lcd_matrix, chan->bar[1].dots[i], r, g, b);
 	}
 }

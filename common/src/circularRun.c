@@ -19,22 +19,22 @@ void anim_setCirc(bool shrt)
 	cycleCount = (shrt) ? cycleShort : cycle;
 }
 
-void anim_circularRun1(uint8_t brightness)
+void anim_circularRun1(const LedChainDesc_t* lcd, uint8_t brightness)
 {
 	static uint32_t index = 0u;
 	if (!cycleCount)
 	{
 
-		led_setAllLedsToUniColors(brightness);
-		led_setLedToColor(index, 0u, 0u, brightness);
-		led_setLedToColor((index + 1u), 0u, brightness, 0u);
-		led_setLedToColor((index + 2u), brightness, 0u, 0u);
-		led_setLedToColor(index + 20u, 0u, 0u, brightness);
-		led_setLedToColor((index + 21u), 0u, brightness, 0u);
-		led_setLedToColor((index + 22u), brightness, 0u, 0u);
-		led_setLedToColor(index + 40u, 0u, 0u, brightness);
-		led_setLedToColor((index + 41u), 0u, brightness, 0u);
-		led_setLedToColor((index + 42u), brightness, 0u, 0u);
+		led_setAllLedsToUniColors(lcd, brightness);
+		led_setLedToColor(lcd, index, 0u, 0u, brightness);
+		led_setLedToColor(lcd, (index + 1u), 0u, brightness, 0u);
+		led_setLedToColor(lcd, (index + 2u), brightness, 0u, 0u);
+		led_setLedToColor(lcd, index + 20u, 0u, 0u, brightness);
+		led_setLedToColor(lcd, (index + 21u), 0u, brightness, 0u);
+		led_setLedToColor(lcd, (index + 22u), brightness, 0u, 0u);
+		led_setLedToColor(lcd, index + 40u, 0u, 0u, brightness);
+		led_setLedToColor(lcd, (index + 41u), 0u, brightness, 0u);
+		led_setLedToColor(lcd, (index + 42u), brightness, 0u, 0u);
 
 		++index;
 		cycleCount = cycle;
@@ -45,7 +45,7 @@ void anim_circularRun1(uint8_t brightness)
 	}
 }
 
-void anim_initRedRider(rider_t *arg)
+void anim_initRedRider(const LedChainDesc_t* lcd, rider_t *arg)
 {
 	arg->pos = 0uL;
 	arg->posMin = 0uL;
@@ -59,10 +59,10 @@ void anim_initRedRider(rider_t *arg)
 	arg->posIq = _IQG(arg->pos);
 }
 
-void anim_initRedRider2(rider_t *arg)
+void anim_initRedRider2(const LedChainDesc_t* lcd, rider_t *arg)
 {
 	arg->posMin = 0uL;
-	arg->posMax = getLedCount();
+	arg->posMax = getLedCount(lcd);
 	arg->pos = arg->posMax / 2uL;
 	arg->c.r = 100u;
 	arg->c.g = 200u;
@@ -73,10 +73,10 @@ void anim_initRedRider2(rider_t *arg)
 	arg->posIq = _IQG(arg->pos);
 }
 
-void anim_initRedRider3(rider_t *arg)
+void anim_initRedRider3(const LedChainDesc_t* lcd, rider_t *arg)
 {
 	arg->posMin = 0uL;
-	arg->posMax = getLedCount();
+	arg->posMax = getLedCount(lcd);
 	arg->c.r = 0u;
 	arg->c.g = 0u;
 	arg->c.b = 255u;
@@ -87,22 +87,22 @@ void anim_initRedRider3(rider_t *arg)
 	arg->posIq = _IQG(arg->pos);
 }
 
-void anim_initPuRide(rider_t *arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir)
+void anim_initPuRide(const LedChainDesc_t* lcd, rider_t *arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir)
 {
 	arg->posMin = 0uL;
-	arg->posMax = getLedCount();
+	arg->posMax = getLedCount(lcd);
 	arg->c.r = r;
 	arg->c.g = g;
 	arg->c.b = b;
 	arg->step = dir ? _IQG(-15) : _IQG(15);
 	arg->length = 8u;
-	arg->pos = getLedCount() / 2uL;
+	arg->pos = getLedCount(lcd) / 2uL;
 	arg->blanks = 4;
 	arg->posIq = _IQG(arg->pos);
 	arg->iteration = 1u;
 }
 
-void riderBlanker(rider_t *arg)
+void riderBlanker(const LedChainDesc_t* lcd, rider_t *arg)
 {
 	if (!((arg->pos > arg->posMin) && (arg->pos < arg->posMax)))
 		return;
@@ -110,22 +110,22 @@ void riderBlanker(rider_t *arg)
 	{
 
 		if ((int32_t) arg->pos - i >= (int32_t) arg->posMin)
-			led_setLedToColor(arg->pos - i, 0u, 0u, 0u);
+			led_setLedToColor(lcd, arg->pos - i, 0u, 0u, 0u);
 	}
 	for (uint8_t i = 0; i < arg->blanks; ++i)
 	{
 
 		if (arg->pos + (uint32_t) (arg->length + i) <= arg->posMax)
-			led_setLedToColor(arg->pos + (uint32_t) (arg->length + i), 0u, 0u,
+			led_setLedToColor(lcd, arg->pos + (uint32_t) (arg->length + i), 0u, 0u,
 					0u);
 	}
 }
 
-void riderFiller(rider_t *arg)
+void riderFiller(const LedChainDesc_t* lcd, rider_t *arg)
 {
 	for (uint8_t i = 0; i < arg->length; ++i)
 	{
-		led_setLedToColor((arg->pos + i), arg->c.r, arg->c.g, arg->c.b);
+		led_setLedToColor(lcd, (arg->pos + i), arg->c.r, arg->c.g, arg->c.b);
 	}
 	if ((arg->pos >= (arg->posMax - arg->length)) && (arg->step > 0))
 	{
@@ -142,7 +142,7 @@ void riderFiller(rider_t *arg)
 
 }
 
-void rideOnceFiller(rider_t *arg)
+void rideOnceFiller(const LedChainDesc_t* lcd, rider_t *arg)
 {
 	if (!arg->length)
 		return;
@@ -164,7 +164,7 @@ void rideOnceFiller(rider_t *arg)
 
 	for (uint8_t i = 0; i < arg->length; ++i)
 	{
-		led_setLedToColor((arg->pos + i), arg->iteration & arg->c.r,
+		led_setLedToColor(lcd, (arg->pos + i), arg->iteration & arg->c.r,
 				arg->iteration & arg->c.g, arg->iteration & arg->c.b);
 	}
 

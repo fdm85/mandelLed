@@ -12,96 +12,48 @@
 #include "tim.h"
 
 
-#ifdef STM32F407xx
-#define PWM_TIM		htim3
-#define PWM_CHAN	TIM_CHANNEL_3
-#define PWM_RAW		104uL
-#endif
 
-#ifdef STM32L476xx
-#define PWM_TIM		htim4
-#define PWM_CHAN	TIM_CHANNEL_1
-#define PWM_RAW		101uL
-#endif
-
-#ifdef STM32F303xE
-#define PWM_TIM		htim2
-#define PWM_CHAN	TIM_CHANNEL_1
-#define PWM_RAW		101uL
-#endif
-
-
-#define ledRawSize (3u * 8u)
-#define resLength 41u
-#define lRawTotalCount (ledRawSize * D_LED_COUNT)
-#define lRawOn ((2uL * PWM_RAW)/3uL)
-#define lRawOff ((1uL * PWM_RAW)/3uL)
-#define lRawTotalLength ((41 * 2) + (D_LED_COUNT * 24))
-
-typedef struct LedRaw
-{
-	uint32_t g[8];
-	uint32_t r[8];
-	uint32_t b[8];
-} LedRaw;
-
-typedef struct Lf
-{
-	uint32_t rI[resLength];
-#ifdef LVL_CONVERTER_LED
-	LedRaw converterLed[1];
-#endif
-	LedRaw ledRaw[D_LED_COUNT];
-	uint32_t rO[resLength];
-} Lf;
-
-static Led_Led_t __attribute__((section (".ccmram"))) leds[D_LED_COUNT];
-static Lf f1;
 static uint32_t btMult = 1u;
 static uint32_t btDiv = 1u;
 
-const uint32_t led_count = D_LED_COUNT;
-
-uint32_t getLedCount(void)
+uint32_t getLedCount(const LedChainDesc_t* lcd)
 {
-	return led_count;
+	return lcd->lRaw->ledCount;
 }
 
 /// raw bits are stored MSB first, order is green, red, blue
-static void led_convertLed(Led_Led_t *l, LedRaw *r)
+static void led_convertLed(const LedChainDesc_t* lcd, LedLogic_t *l, LedRaw *r)
 {
 	for (uint8_t i = 0; i < 8u; ++i)
 	{
-		r->g[i] = (l->g & (0x80u >> i)) ? lRawOn : lRawOff;
-		r->r[i] = (l->r & (0x80u >> i)) ? lRawOn : lRawOff;
-		r->b[i] = (l->b & (0x80u >> i)) ? lRawOn : lRawOff;
+		r->g[i] = (l->g & (0x80u >> i)) ? lcd->rawOn : lcd->rawOff;
+		r->r[i] = (l->r & (0x80u >> i)) ? lcd->rawOn : lcd->rawOff;
+		r->b[i] = (l->b & (0x80u >> i)) ? lcd->rawOn : lcd->rawOff;
 	}
 }
 
-void led_initDataRaw(void)
+void led_initDataRaw(const LedChainDesc_t* lcd)
 {
-	f1.rI[0] = 0uL;
-	f1.rO[0] = 0uL;
-#ifdef LVL_CONVERTER_LED
-	Led_Led_t init = {12u, 0u, 0u};
-	led_convertLed(&init, &f1.converterLed[0]);
-#endif
+	lcd->lRaw->rI[0] = 0uL;
+	lcd->lRaw->rO[0] = 0uL;
+	LedLogic_t init = {12u, 0u, 0u};
+	led_convertLed(lcd, &init, lcd->lRaw->lConverterLed);
 	for (uint16_t i = 1; i < resLength; ++i)
 	{
-		f1.rI[i] = 0;
-		f1.rO[i] = 0;
+		lcd->lRaw->rI[i] = 0;
+		lcd->lRaw->rO[i] = 0;
 	}
-	led_setAllLedsToUniColors(0u);
-	led_pasteData();
+	led_setAllLedsToUniColors(lcd, 0u);
+	led_pasteData(lcd);
 }
 
-void led_setBrightnessTruncation(uint32_t mult, uint32_t div)
+void led_setBrightnessTruncation(const LedChainDesc_t* lcd, uint32_t mult, uint32_t div)
 {
 	btMult = mult;
 	btDiv = div;
 }
 
-static void led_setLedColors(Led_Led_t *led, uint8_t r, uint8_t g, uint8_t b)
+static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b)
 {
 	uint32_t rOut = (uint32_t) (r * btMult) / btDiv;
 	uint32_t gOut = (uint32_t) (g * btMult) / btDiv;
@@ -115,51 +67,51 @@ static void led_setLedColors(Led_Led_t *led, uint8_t r, uint8_t g, uint8_t b)
 	led->b = (uint8_t) bOut;
 }
 
-void led_setLedToColor(uint32_t i, uint8_t r, uint8_t g, uint8_t b)
+void led_setLedToColor(const LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b)
 {
-	if(i > D_LED_COUNT)
-		__BKPT(0);
-	uint16_t iM = (uint16_t) (i % D_LED_COUNT);
-	led_setLedColors(&leds[iM], r, g, b);
+	if(i > lcd->lRaw->ledCount)
+		assrt(false);
+	led_setLedColors(&lcd->lLogic[i], r, g, b);
 }
 
-void led_getLedColor(uint32_t i, Led_Led_t *l)
+void led_getLedColor(const LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l)
 {
 	assrt(l);
-	uint16_t iM = (uint8_t) (i % D_LED_COUNT);
-	l->b = leds[iM].b;
-	l->g = leds[iM].g;
-	l->r = leds[iM].r;
+	if(i > lcd->lRaw->ledCount)
+		assrt(false);
+	l->b = lcd->lLogic[i].b;
+	l->g = lcd->lLogic[i].g;
+	l->r = lcd->lLogic[i].r;
 }
 
-void led_setAllLedsToColor(uint8_t r, uint8_t g, uint8_t b)
+void led_setAllLedsToColor(const LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b)
 {
 	for (uint16_t i = 0; i < D_LED_COUNT; ++i)
 	{
-		led_setLedColors(&leds[i], r, g, b);
+		led_setLedColors(&lcd->lLogic[i], r, g, b);
 	}
 }
 
-void led_setAllLedsToUniColors(uint8_t brightness)
+void led_setAllLedsToUniColors(const LedChainDesc_t* lcd, uint8_t brightness)
 {
 	for (uint16_t i = 0; i < D_LED_COUNT; ++i)
 	{
-		led_setLedColors(&leds[i], brightness, brightness, brightness);
+		led_setLedColors(&lcd->lLogic[i], brightness, brightness, brightness);
 	}
 }
 
-void led_pasteData(void)
+void led_pasteData(const LedChainDesc_t* lcd)
 {
 	for (uint16_t i = 0; i < D_LED_COUNT; ++i)
 	{
-		led_convertLed(&leds[i], &f1.ledRaw[i]);
+		led_convertLed(lcd, &lcd->lLogic[i], &lcd->lRaw->lRaw[i]);
 	}
 }
 
-void led_transmitData(void)
+void led_transmitData(const LedChainDesc_t* lcd)
 {
 	volatile HAL_StatusTypeDef result;
-	result = HAL_TIM_PWM_Start_DMA(&PWM_TIM, PWM_CHAN, &f1.rI[0], lRawTotalLength);
+	result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel, &lcd->lRaw->rI[0], lcd->lRaw->txCountInUi32);
 	assrt(result == HAL_OK);
 	(void) result;
 }

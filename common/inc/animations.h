@@ -30,34 +30,39 @@ typedef enum  {
 }anim_mode_e;
 
 void anim_setCirc(bool shrt);
-void anim_CyclicCall(void);
-void anim_setMode(anim_mode_e set);
+void anim_CyclicCall(const LedChainDesc_t* lcd);
+void anim_setMode(const LedChainDesc_t* lcd, anim_mode_e set);
 void anim_setBrightness(uint8_t set);
 void anim_addBrightness(int8_t add);
-void anim_nextMode(void);
+void anim_nextMode(const LedChainDesc_t* lcd);
 
-void anim_circularRun1(uint8_t brightness);
+void anim_circularRun1(const LedChainDesc_t* lcd, uint8_t brightness);
 
-typedef struct rider
+typedef struct rider rider_t;
+typedef void (*riderInit)(rider_t*);
+struct rider
 {
+	riderInit fpInit;
 	uint32_t pos;
 	_iq posIq;
 	uint32_t posMin;
 	uint32_t posMax;
 	_iq step;
-	Led_Led_t c;
+	LedLogic_t c;
 	uint8_t length;
 	uint8_t blanks;
 	uint8_t iteration;
 	uint16_t padd;
-}rider_t;
-void anim_initPuRide(rider_t* arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir);
-void rideOnceFiller(rider_t* arg);
-void riderBlanker(rider_t* arg);
-void riderFiller(rider_t* arg);
-void anim_initRedRider(rider_t* arg);
-void anim_initRedRider2(rider_t* arg);
-void anim_initRedRider3(rider_t* arg);
+};
+
+
+void anim_initPuRide(const LedChainDesc_t* lcd, rider_t* arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir);
+void rideOnceFiller(const LedChainDesc_t* lcd, rider_t* arg);
+void riderBlanker(const LedChainDesc_t* lcd, rider_t* arg);
+void riderFiller(const LedChainDesc_t* lcd, rider_t* arg);
+void anim_initRedRider(const LedChainDesc_t* lcd, rider_t* arg);
+void anim_initRedRider2(const LedChainDesc_t* lcd, rider_t* arg);
+void anim_initRedRider3(const LedChainDesc_t* lcd, rider_t* arg);
 
 #ifndef STM32F303xE
 void anim_random1(void);
