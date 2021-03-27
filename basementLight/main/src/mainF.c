@@ -6,7 +6,7 @@
  */
 
 #include "peripheral.h"
-#include "ledData.h"
+#include "leds.h"
 #include "animations.h"
 #include "com.h"
 #include "cmsis_compiler.h"
@@ -31,8 +31,8 @@ static void maintainStatusLeds(void)
 			{
 				swCount = 0u;
 				orangeLedToggle();
-				led_initDataRaw();
-				anim_nextMode();
+				led_initDataRaw(&lcd_main);
+				anim_nextMode(&lcd_main);
 			}
 		}
 	}
@@ -59,7 +59,7 @@ static void cyclicReSend(void)
 	case e_render:
 		a = HAL_GetTick();
 		brightnessAdc();
-		anim_CyclicCall();
+		anim_CyclicCall(&lcd_main);
 		b = HAL_GetTick() - a;
 		state = e_waitTxCplt;
 		break;
@@ -76,11 +76,11 @@ static void cyclicReSend(void)
 		sendLock = true;
 		c = HAL_GetTick();
 		uint32_t brightness = (uint32_t)(0xFFFuL & getAdcVal());
-		led_setBrightnessTruncation(0xFFFu, brightness);
-		led_pasteData();
+		led_setBrightnessTruncation(&lcd_main, 0xFFFu, brightness);
+		led_pasteData(&lcd_main);
 		d = HAL_GetTick() - c;
 		e = HAL_GetTick();
-		led_transmitData();
+		led_transmitData(&lcd_main);
 
 		lastToggle = HAL_GetTick();
 
@@ -112,17 +112,15 @@ int main(void)
 {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_layers);
-	led_setBrightnessTruncation(1u, 1u);
+	anim_setMode(&lcd_main, anim_layers);
+	led_setBrightnessTruncation(&lcd_main, 1u, 1u);
 
-	led_initDataRaw();
+	led_initDataRaw(&lcd_main);
 	outputEnableLvlShifter();
 	__enable_irq();
-	com_enableRx();
 	for (;;)
 	{
 		maintainStatusLeds();
 		cyclicReSend();
-		com_parse();
 	}
 }

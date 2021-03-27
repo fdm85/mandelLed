@@ -35,9 +35,9 @@ static uint8_t dimMult = 3u;
 static uint8_t dimDiv = 4u;
 static _iq dimFactor;
 
-void anim_r23Init(void)
+void anim_r23Init(const LedChainDesc_t* lcd)
 {
-	for (uint32_t i = 0; i < led_count; ++i)
+	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
 		prog_r23[i].r = 0L;
 		prog_r23[i].g = 0L;
@@ -53,13 +53,13 @@ void anim_r23Init(void)
 	dimFactor = _IQdiv(dimMult, dimDiv);
 }
 
-void anim_random1(void)
+void anim_random1(const LedChainDesc_t* lcd)
 {
-	for (uint32_t i = 0; i < led_count; ++i)
+	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
 		rand_u r;
 		HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
-		led_setLedToColor(i, r.a, r.b, r.c);
+		led_setLedToColor(lcd, i, r.a, r.b, r.c);
 	}
 }
 
@@ -68,12 +68,12 @@ void anim_setRandom2CycleCount(uint16_t c)
 	cycleMin_r23 = c;
 }
 
-static void anim_Diff(uint32_t i, bool isR3)
+static void anim_Diff(const LedChainDesc_t* lcd, uint32_t i, bool isR3)
 {
 	rand_u r;
-	Led_Led_t l;
+	LedLogic_t l;
 	HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
-	led_getLedColor(i, &l);
+	led_getLedColor(lcd, i, &l);
 
 	_iq div;
 
@@ -104,7 +104,7 @@ static void anim_Diff(uint32_t i, bool isR3)
 	prog_r23[i].bP = _IQdiv(_IQ((int16_t )r.c - l.b), div);
 }
 
-static void anim_render(uint32_t i)
+static void anim_render(const LedChainDesc_t* lcd, uint32_t i)
 {
 
 	prog_r23[i].r += prog_r23[i].rP;
@@ -122,47 +122,47 @@ static void anim_render(uint32_t i)
 	assrt(gOut >= 0L);
 	assrt(bOut >= 0L);
 
-	led_setLedToColor(i, (uint8_t) rOut, (uint8_t) gOut, (uint8_t) bOut);
+	led_setLedToColor(lcd, i, (uint8_t) rOut, (uint8_t) gOut, (uint8_t) bOut);
 }
-static void anim_r2Diff(void)
+static void anim_r2Diff(const LedChainDesc_t* lcd)
 {
-	for (uint32_t i = 0; i < led_count; ++i)
+	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
-		anim_Diff(i, false);
+		anim_Diff(lcd, i, false);
 	}
 }
 
-static void anim_r2CalcAndSet(void)
+static void anim_r2CalcAndSet(const LedChainDesc_t* lcd)
 {
-	for (uint32_t i = 0; i < led_count; ++i)
+	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
-		anim_render(i);
+		anim_render(lcd, i);
 	}
 }
 
-void anim_random2(void)
+void anim_random2(const LedChainDesc_t* lcd)
 {
 	if (it_r2 == cycleMin_r23)
 	{
 		it_r2 = 0u;
-		anim_r2Diff();
+		anim_r2Diff(lcd);
 	}
 
-	anim_r2CalcAndSet();
+	anim_r2CalcAndSet(lcd);
 	++it_r2;
 }
 
-void anim_random3(void)
+void anim_random3(const LedChainDesc_t* lcd)
 {
-	for (uint32_t i = 0; i < led_count; ++i)
+	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
 
 		if (prog_r23[i].itCur == prog_r23[i].itMax)
 		{
-			anim_Diff(i, true);
+			anim_Diff(lcd, i, true);
 		}
 
-		anim_render(i);
+		anim_render(lcd, i);
 		++prog_r23[i].itCur;
 	}
 }

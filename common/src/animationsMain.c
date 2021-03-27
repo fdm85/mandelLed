@@ -44,7 +44,7 @@ void anim_setMode(const LedChainDesc_t* lcd, anim_mode_e set)
 	currMode = set;
 	if ((set == anim_rnd2) || (set == anim_rnd3) || (set == anim_layers))
 	{
-		anim_r23Init();
+		anim_r23Init(lcd);
 	}
 	if ((set == anim_cR2) || (set == anim_layers))
 	{
@@ -62,7 +62,7 @@ void anim_nextMode(const LedChainDesc_t* lcd)
 	{
 		currMode = anim_cR1;
 	}
-	anim_r23Init();
+	anim_r23Init(lcd);
 	anim_initRedRider(lcd, &rider1);
 	anim_initRedRider2(lcd, &rider2);
 	anim_initRedRider3(lcd, &rider3);
@@ -98,30 +98,30 @@ typedef enum
 	init, blueSpawn, greenSpawn, redSpawn, whiteSpawn, fullWhite, done,
 } puState_t;
 static puState_t puS = init;
-static void powerUp(void)
+static void powerUp(const LedChainDesc_t* lcd)
 {
 	static uint8_t breaker = 0u;
 	static uint32_t ledCount = 0uL;
 	switch (puS)
 	{
 	case init:
-		ledCount = getLedCount();
-		led_setAllLedsToColor(0, 0, 0);
-		anim_initPuRide(&rPu01, 0u, 0u, 255u, 0u);
-		anim_initPuRide(&rPu11, 0u, 0u, 255u, 1u);
-		anim_initPuRide(&rPu02, 0u, 255u, 0u, 0u);
-		anim_initPuRide(&rPu12, 0u, 255u, 0u, 1u);
-		anim_initPuRide(&rPu03, 255u, 0u, 0u, 0u);
-		anim_initPuRide(&rPu13, 255u, 0u, 0u, 1u);
-		anim_initPuRide(&rPu04, 255u, 255u, 255u, 0u);
-		anim_initPuRide(&rPu14, 255u, 255u, 255u, 1u);
+		ledCount = getLedCount(lcd);
+		led_setAllLedsToColor(lcd, 0, 0, 0);
+		anim_initPuRide(lcd, &rPu01, 0u, 0u, 255u, 0u);
+		anim_initPuRide(lcd, &rPu11, 0u, 0u, 255u, 1u);
+		anim_initPuRide(lcd, &rPu02, 0u, 255u, 0u, 0u);
+		anim_initPuRide(lcd, &rPu12, 0u, 255u, 0u, 1u);
+		anim_initPuRide(lcd, &rPu03, 255u, 0u, 0u, 0u);
+		anim_initPuRide(lcd, &rPu13, 255u, 0u, 0u, 1u);
+		anim_initPuRide(lcd, &rPu04, 255u, 255u, 255u, 0u);
+		anim_initPuRide(lcd, &rPu14, 255u, 255u, 255u, 1u);
 		puS = blueSpawn;
 		break;
 	case blueSpawn:
 		for (uint8_t i = 0; i < 2u; ++i)
 		{
-			riderBlanker(rPu1[i]);
-			rideOnceFiller(rPu1[i]);
+			riderBlanker(lcd, rPu1[i]);
+			rideOnceFiller(lcd, rPu1[i]);
 		}
 		if (rPu01.iteration > 32u)
 			puS = greenSpawn;
@@ -129,10 +129,10 @@ static void powerUp(void)
 	case greenSpawn:
 		for (uint8_t i = 0; i < 2u; ++i)
 		{
-			riderBlanker(rPu1[i]);
-			rideOnceFiller(rPu1[i]);
-			riderBlanker(rPu2[i]);
-			rideOnceFiller(rPu2[i]);
+			riderBlanker(lcd, rPu1[i]);
+			rideOnceFiller(lcd, rPu1[i]);
+			riderBlanker(lcd, rPu2[i]);
+			rideOnceFiller(lcd, rPu2[i]);
 		}
 		if (rPu02.iteration > 32u)
 			puS = redSpawn;
@@ -140,12 +140,12 @@ static void powerUp(void)
 	case redSpawn:
 		for (uint8_t i = 0; i < 2u; ++i)
 		{
-			riderBlanker(rPu1[i]);
-			rideOnceFiller(rPu1[i]);
-			riderBlanker(rPu2[i]);
-			rideOnceFiller(rPu2[i]);
-			riderBlanker(rPu3[i]);
-			rideOnceFiller(rPu3[i]);
+			riderBlanker(lcd, rPu1[i]);
+			rideOnceFiller(lcd, rPu1[i]);
+			riderBlanker(lcd, rPu2[i]);
+			rideOnceFiller(lcd, rPu2[i]);
+			riderBlanker(lcd, rPu3[i]);
+			rideOnceFiller(lcd, rPu3[i]);
 		}
 		if (rPu03.iteration > 32u)
 			puS = whiteSpawn;
@@ -153,23 +153,23 @@ static void powerUp(void)
 	case whiteSpawn:
 		for (uint8_t i = 0; i < 2u; ++i)
 		{
-			riderBlanker(rPu1[i]);
-			rideOnceFiller(rPu1[i]);
-			riderBlanker(rPu2[i]);
-			rideOnceFiller(rPu2[i]);
-			riderBlanker(rPu3[i]);
-			rideOnceFiller(rPu3[i]);
-			rideOnceFiller(rPu4[i]);
+			riderBlanker(lcd, rPu1[i]);
+			rideOnceFiller(lcd, rPu1[i]);
+			riderBlanker(lcd, rPu2[i]);
+			rideOnceFiller(lcd, rPu2[i]);
+			riderBlanker(lcd, rPu3[i]);
+			rideOnceFiller(lcd, rPu3[i]);
+			rideOnceFiller(lcd, rPu4[i]);
 		}
 		if (!rPu04.length)
 			puS = fullWhite;
 		break;
 	case fullWhite:
 	{
-		Led_Led_t l;
+		LedLogic_t l;
 		++breaker;
 		for (uint32_t i = 0; i < ledCount; ++i) {
-			led_getLedColor(i, &l);
+			led_getLedColor(lcd, i, &l);
 
 			if( (l.r + 40u) < UINT8_MAX)
 				l.r = (uint8_t)(l.r + 20u);
@@ -186,7 +186,7 @@ static void powerUp(void)
 			else
 				l.b = UINT8_MAX;
 
-			led_setLedToColor(i, l.r, l.g, l.b);
+			led_setLedToColor(lcd, i, l.r, l.g, l.b);
 		}
 		if(breaker > 12)
 			puS = done;
@@ -204,7 +204,7 @@ static void powerUp(void)
 
 static void layers(const LedChainDesc_t* lcd)
 {
-	anim_random3();
+	anim_random3(lcd);
 	for (uint8_t i = 0; rA[i + 1] != NULL; ++i)
 	{
 		if (phy_doesCollide(rA[i], rA[i + 1]))
@@ -228,7 +228,7 @@ void anim_CyclicCall(const LedChainDesc_t* lcd)
 #ifdef STM32F407xx
 	if (puS != done)
 	{
-		powerUp();
+		powerUp(lcd);
 		return;
 	}
 #endif
@@ -242,13 +242,13 @@ void anim_CyclicCall(const LedChainDesc_t* lcd)
 		riderFiller(lcd, &rider1);
 		break;
 	case anim_rnd1:
-		anim_random1();
+		anim_random1(lcd);
 		break;
 	case anim_rnd2:
-		anim_random2();
+		anim_random2(lcd);
 		break;
 	case anim_rnd3:
-		anim_random3();
+		anim_random3(lcd);
 		break;
 	case anim_white:
 		led_setAllLedsToColor(lcd, brightness, brightness, brightness);

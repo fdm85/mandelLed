@@ -41,7 +41,7 @@ void com_parse(void) {
 	if (doParse) {
 		switch (rxBuf[0]) {
 		case 'm':
-			anim_nextMode();
+			anim_nextMode(lcd);
 			break;
 		case 'h':
 			anim_addBrightness(15);

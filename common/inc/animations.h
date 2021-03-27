@@ -65,22 +65,22 @@ void anim_initRedRider2(const LedChainDesc_t* lcd, rider_t* arg);
 void anim_initRedRider3(const LedChainDesc_t* lcd, rider_t* arg);
 
 #ifndef STM32F303xE
-void anim_random1(void);
+void anim_random1(const LedChainDesc_t* lcd);
 void anim_setRandom2CycleCount(uint16_t c);
-void anim_random2(void);
-void anim_random3(void);
-void anim_r23Init(void);
+void anim_random2(const LedChainDesc_t* lcd);
+void anim_random3(const LedChainDesc_t* lcd);
+void anim_r23Init(const LedChainDesc_t* lcd);
 
 void anim_layerRedRider(uint32_t pos);
 
 #else
-#define anim_random1()
-#define anim_setRandom2CycleCount()
-#define anim_random2()
-#define anim_random3()
-#define anim_r23Init()
+#define anim_random1(x)
+#define anim_setRandom2CycleCount(x)
+#define anim_random2(x)
+#define anim_random3(x)
+#define anim_r23Init(x)
 
-#define anim_layerRedRider()
+#define anim_layerRedRider(x)
 
 #endif
 
