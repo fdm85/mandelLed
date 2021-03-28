@@ -11,6 +11,6 @@
 #include "ledData.h"
 
 
-extern const LedChainDesc_t lcd_main;
-extern const LedChainDesc_t lcd_matrix;
+extern LedChainDesc_t lcd_main;
+extern LedChainDesc_t lcd_matrix;
 #endif /* LEDS_H_ */

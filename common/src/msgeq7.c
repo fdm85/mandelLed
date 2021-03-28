@@ -190,12 +190,17 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 	(void) hadc;
 	static uint32_t count = 0uL;
 	static uint32_t over = 0uL;
+
 	if(hadc == &hadc2)
 		mT.adcChan1[mT.cycle] = HAL_ADC_GetValue(&hadc2);
 	else if(hadc == &hadc3)
 		mT.adcChan2[mT.cycle] = HAL_ADC_GetValue(&hadc3);
 	else
+	{
+		if(hadc == &hadc1)
+			ADC_ConvCpltCallback(hadc);
 		return;
+	}
 
 	++mT.actChan;
 

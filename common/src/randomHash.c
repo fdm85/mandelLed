@@ -32,9 +32,9 @@ typedef union
 Led_progColor_t __attribute__((section (".ccmram"))) prog_r23[619];
 static uint16_t cycleMin_r23 = 100u;
 static uint16_t it_r2 = 100u;
-static uint8_t dimMult = 3u;
-static uint8_t dimDiv = 4u;
-static _iq dimFactor;
+//static uint8_t dimMult = 3u;
+//static uint8_t dimDiv = 4u;
+//static _iq dimFactor;
 
 void anim_r23Init(const LedChainDesc_t* lcd)
 {
@@ -51,7 +51,7 @@ void anim_r23Init(const LedChainDesc_t* lcd)
 		prog_r23[i].itCur = 0u;
 		prog_r23[i].itMax = 0u;
 	}
-	dimFactor = _IQdiv(dimMult, dimDiv);
+//	dimFactor = _IQdiv(dimMult, dimDiv);
 }
 
 void anim_random1(const LedChainDesc_t* lcd)

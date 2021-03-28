@@ -72,7 +72,7 @@ typedef struct lRawCont_tag
 	static LedLogic_t __attribute__((section (".ccmram"))) ledsLog_##name[ledCnt]
 
 #define lChainDesc(name, timerN, tChan, rOn, rOff) \
-	const LedChainDesc_t lcd_##name = { \
+	LedChainDesc_t lcd_##name = { \
 			.lLogic = &ledsLog_##name[0], \
 			.lRaw = &lRawCont_##name, \
 			.timer = &timerN, \
@@ -90,16 +90,18 @@ typedef struct LedChainDesc_tag
 	uint32_t timChannel;
 	uint32_t rawOn;
 	uint32_t rawOff;
+	uint32_t btMult;
+	uint32_t btDiv;
 } LedChainDesc_t;
 
-void led_initDataRaw(const LedChainDesc_t* lcd);
-void led_setAllLedsToUniColors(const LedChainDesc_t* lcd, uint8_t brightness);
-void led_setLedToColor(const LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b);
-void led_getLedColor(const LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l);
-void led_pasteData(const LedChainDesc_t* lcd);
-void led_transmitData(const LedChainDesc_t* lcd);
-void led_setBrightnessTruncation(const LedChainDesc_t* lcd, uint32_t mult, uint32_t div);
-void led_setAllLedsToColor(const LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b);
-uint32_t getLedCount(const LedChainDesc_t* lcd);
+void led_initDataRaw(LedChainDesc_t* lcd);
+void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness);
+void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b);
+void led_getLedColor(LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l);
+void led_pasteData(LedChainDesc_t* lcd);
+void led_transmitData(LedChainDesc_t* lcd);
+void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div);
+void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b);
+uint32_t getLedCount(LedChainDesc_t* lcd);
 
 #endif /* LEDDATA_H_ */

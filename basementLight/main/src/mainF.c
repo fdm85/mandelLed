@@ -50,7 +50,6 @@ static void cyclicReSend(mAnim_t *ctx)
 	{
 	case e_render:
 		ctx->a = HAL_GetTick();
-//		brightnessAdc();
 		ctx->fpRend(ctx);
 		ctx->b = HAL_GetTick() - ctx->a;
 		ctx->state = e_waitTxCplt;
@@ -67,8 +66,6 @@ static void cyclicReSend(mAnim_t *ctx)
 //		greenLedToggle();
 		ctx->sendLock = 0x55aa55aauL;
 		ctx->c = HAL_GetTick();
-//		uint32_t brightness = (uint32_t)(0xFFFuL & getAdcVal());
-//		led_setBrightnessTruncation(&lcd_main, 0xFFFu, brightness);
 		led_pasteData(ctx->lcd_ctx);
 		ctx->d = HAL_GetTick() - ctx->c;
 		ctx->e = HAL_GetTick();
@@ -111,12 +108,14 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 
 int main(void)
 {
+	static uint32_t brightnessOld;
+	static uint32_t brightness;
 	initClock();
 	initPeripherals();
 
 	anim_setMode(&lcd_main, anim_layers);
-	led_setBrightnessTruncation(&lcd_main, 4u, 2u);
 	led_initDataRaw(&lcd_main);
+	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
 
 	mtrx_Init();
 	led_setBrightnessTruncation(&lcd_matrix, 32uL, 255uL);
@@ -127,6 +126,13 @@ int main(void)
 	{
 		maintainStatusLeds();
 		msgeq_ticker();
+		brightnessAdc();
+		brightness = (uint32_t)(0xFFuL & getAdcVal());
+		if(brightnessOld != brightness)
+		{
+			led_setBrightnessTruncation(&lcd_main, brightness, 0xFFu );
+			brightnessOld = brightness;
+		}
 		cyclicReSend(&anim_main);
 		cyclicReSend(&anim_matrix);
 	}

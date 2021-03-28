@@ -19,4 +19,5 @@ void orangeLedToggle(void);
 bool getModeSwitch(void);
 void brightnessAdc(void);
 uint32_t getAdcVal(void);
+void ADC_ConvCpltCallback(void* hadc);
 #endif /* PERIPHERAL_H_ */

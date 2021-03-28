@@ -153,15 +153,6 @@ void mtrx_Init(void)
 	mtrx_InitR();
 }
 
-static void mtrx_setLeds(const LedChainDesc_t *lcd, channel_t *chan, uint8_t r, uint8_t g, uint8_t b)
-{
-	for (uint8_t i = 0; i < barHeigth; ++i)
-	{
-		led_setLedToColor(lcd, chan->bar[0].dots[i], r, g, b);
-		led_setLedToColor(lcd, chan->bar[1].dots[i], r, g, b);
-	}
-}
-
 static void mtrx_setLedsScaled(const LedChainDesc_t *lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g,
 		uint8_t b)
 {
