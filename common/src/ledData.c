@@ -86,7 +86,7 @@ void led_getLedColor(const LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l)
 
 void led_setAllLedsToColor(const LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b)
 {
-	for (uint16_t i = 0; i < D_LED_COUNT; ++i)
+	for (uint16_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
 		led_setLedColors(&lcd->lLogic[i], r, g, b);
 	}
@@ -94,7 +94,7 @@ void led_setAllLedsToColor(const LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint
 
 void led_setAllLedsToUniColors(const LedChainDesc_t* lcd, uint8_t brightness)
 {
-	for (uint16_t i = 0; i < D_LED_COUNT; ++i)
+	for (uint16_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
 		led_setLedColors(&lcd->lLogic[i], brightness, brightness, brightness);
 	}
@@ -102,7 +102,7 @@ void led_setAllLedsToUniColors(const LedChainDesc_t* lcd, uint8_t brightness)
 
 void led_pasteData(const LedChainDesc_t* lcd)
 {
-	for (uint16_t i = 0; i < D_LED_COUNT; ++i)
+	for (uint16_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
 		led_convertLed(lcd, &lcd->lLogic[i], &lcd->lRaw->lRaw[i]);
 	}

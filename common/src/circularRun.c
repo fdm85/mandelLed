@@ -49,7 +49,7 @@ void anim_initRedRider(const LedChainDesc_t* lcd, rider_t *arg)
 {
 	arg->pos = 0uL;
 	arg->posMin = 0uL;
-	arg->posMax = (uint32_t) D_LED_COUNT;
+	arg->posMax = getLedCount(lcd);
 	arg->c.r = 255u;
 	arg->c.g = 0u;
 	arg->c.b = 0u;

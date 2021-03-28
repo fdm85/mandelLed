@@ -25,12 +25,36 @@ typedef enum  {
 	anim_blue,
 	anim_cycleColors,
 	anim_layers,
-	anim_SpecGraph,
 	anim_enumAssrt
 }anim_mode_e;
 
+typedef enum
+{
+	init, blueSpawn, greenSpawn, redSpawn, whiteSpawn, fullWhite, done,
+} puState_t;
+
+typedef enum
+{
+	e_render, e_waitTxCplt, e_paste
+} eSm;
+
+typedef struct mAnim_tag mAnim_t;
+typedef void (*fpRender)(mAnim_t* ctx);
+struct mAnim_tag
+{
+	fpRender fpRend;
+	const LedChainDesc_t *lcd_ctx;
+	const uint32_t triggerTimeMs;
+	uint32_t lastToggle;
+	volatile uint32_t sendLock;
+	volatile uint32_t a, b, c, d, e, f;
+	eSm state;
+	puState_t puState;
+	uint16_t padd2;
+};
+
 void anim_setCirc(bool shrt);
-void anim_CyclicCall(const LedChainDesc_t* lcd);
+void anim_CyclicCall(mAnim_t* ctx);
 void anim_setMode(const LedChainDesc_t* lcd, anim_mode_e set);
 void anim_setBrightness(uint8_t set);
 void anim_addBrightness(int8_t add);

@@ -28,7 +28,8 @@ typedef union
 	};
 } rand_u;
 
-Led_progColor_t __attribute__((section (".ccmram"))) prog_r23[D_LED_COUNT];
+// todo fix this, create factory macro to allocate
+Led_progColor_t __attribute__((section (".ccmram"))) prog_r23[619];
 static uint16_t cycleMin_r23 = 100u;
 static uint16_t it_r2 = 100u;
 static uint8_t dimMult = 3u;

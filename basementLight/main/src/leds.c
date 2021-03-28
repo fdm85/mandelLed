@@ -14,12 +14,12 @@
 #define lRawOn ((2uL * PWM_RAW)/3uL)
 #define lRawOff ((1uL * PWM_RAW)/3uL)
 
-lRawContainer(main, 619);
 lLogicContainer(main, 619);
+lRawContainer(main, 619);
 lChainDesc(main, htim3, TIM_CHANNEL_3, lRawOn, lRawOff);
 
-lRawContainer(matrix, 256);
 lLogicContainer(matrix, 256);
+lRawContainer(matrix, 256);
 lChainDesc(matrix, htim4, TIM_CHANNEL_2, lRawOn, lRawOff);
 
 
