@@ -17,7 +17,7 @@
 
 static void maintainStatusLeds(void)
 {
-	static const uint32_t blueLedToggleTimeMs = 50uL;
+	static const uint32_t blueLedToggleTimeMs = 100uL;
 	static uint32_t lastToggle = 0uL;
 
 	if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
