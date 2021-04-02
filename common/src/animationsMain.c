@@ -38,23 +38,23 @@ rider_t *rPu3[] =
 rider_t *rPu4[] =
 { &rPu04, &rPu14, NULL };
 
-void anim_setMode(anim_mode_e set)
+void anim_setMode(LedChainDesc_t *const lcd, anim_mode_e set)
 {
 	assrt(set < anim_enumAssrt);
 	currMode = set;
 	if ((set == anim_rnd2) || (set == anim_rnd3) || (set == anim_layers))
 	{
-		anim_r23Init();
+		anim_r23Init(lcd);
 	}
 	if ((set == anim_cR2) || (set == anim_layers))
 	{
-		anim_initRedRider(&rider1);
-		anim_initRedRider2(&rider2);
-		anim_initRedRider3(&rider3);
+		anim_initRedRider(lcd, &rider1);
+		anim_initRedRider2(lcd, &rider2);
+		anim_initRedRider3(lcd, &rider3);
 	}
 }
 
-void anim_nextMode(void)
+void anim_nextMode(LedChainDesc_t *const lcd)
 {
 	++currMode;
 
@@ -62,10 +62,10 @@ void anim_nextMode(void)
 	{
 		currMode = anim_cR1;
 	}
-	anim_r23Init();
-	anim_initRedRider(&rider1);
-	anim_initRedRider2(&rider2);
-	anim_initRedRider3(&rider3);
+	anim_r23Init(lcd);
+	anim_initRedRider(lcd, &rider1);
+	anim_initRedRider2(lcd, &rider2);
+	anim_initRedRider3(lcd, &rider3);
 }
 
 void anim_setBrightness(uint8_t set)
@@ -91,85 +91,78 @@ void anim_addBrightness(int8_t add)
 		brightness = 0u;
 	}
 }
-
-#ifdef STM32F407xx
-typedef enum
-{
-	init, blueSpawn, greenSpawn, redSpawn, whiteSpawn, fullWhite, done,
-} puState_t;
-static puState_t puS = init;
-static void powerUp(void)
+static void powerUp(mAnim_t* ctx)
 {
 	static uint8_t breaker = 0u;
 	static uint32_t ledCount = 0uL;
-	switch (puS)
+	switch (ctx->puState)
 	{
 	case init:
-		ledCount = getLedCount();
-		led_setAllLedsToColor(0, 0, 0);
-		anim_initPuRide(&rPu01, 0u, 0u, 255u, 0u);
-		anim_initPuRide(&rPu11, 0u, 0u, 255u, 1u);
-		anim_initPuRide(&rPu02, 0u, 255u, 0u, 0u);
-		anim_initPuRide(&rPu12, 0u, 255u, 0u, 1u);
-		anim_initPuRide(&rPu03, 255u, 0u, 0u, 0u);
-		anim_initPuRide(&rPu13, 255u, 0u, 0u, 1u);
-		anim_initPuRide(&rPu04, 255u, 255u, 255u, 0u);
-		anim_initPuRide(&rPu14, 255u, 255u, 255u, 1u);
-		puS = blueSpawn;
+		ledCount = getLedCount(ctx->lcd_ctx);
+		led_setAllLedsToColor(ctx->lcd_ctx, 0, 0, 0);
+		anim_initPuRide(ctx->lcd_ctx, &rPu01, 0u, 0u, 255u, 0u);
+		anim_initPuRide(ctx->lcd_ctx, &rPu11, 0u, 0u, 255u, 1u);
+		anim_initPuRide(ctx->lcd_ctx, &rPu02, 0u, 255u, 0u, 0u);
+		anim_initPuRide(ctx->lcd_ctx, &rPu12, 0u, 255u, 0u, 1u);
+		anim_initPuRide(ctx->lcd_ctx, &rPu03, 255u, 0u, 0u, 0u);
+		anim_initPuRide(ctx->lcd_ctx, &rPu13, 255u, 0u, 0u, 1u);
+		anim_initPuRide(ctx->lcd_ctx, &rPu04, 255u, 255u, 255u, 0u);
+		anim_initPuRide(ctx->lcd_ctx, &rPu14, 255u, 255u, 255u, 1u);
+		ctx->puState = blueSpawn;
 		break;
 	case blueSpawn:
 		for (uint8_t i = 0; i < 2u; ++i)
 		{
-			riderBlanker(rPu1[i]);
-			rideOnceFiller(rPu1[i]);
+			riderBlanker(ctx->lcd_ctx, rPu1[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu1[i]);
 		}
 		if (rPu01.iteration > 32u)
-			puS = greenSpawn;
+			ctx->puState = greenSpawn;
 		break;
 	case greenSpawn:
 		for (uint8_t i = 0; i < 2u; ++i)
 		{
-			riderBlanker(rPu1[i]);
-			rideOnceFiller(rPu1[i]);
-			riderBlanker(rPu2[i]);
-			rideOnceFiller(rPu2[i]);
+			riderBlanker(ctx->lcd_ctx, rPu1[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu1[i]);
+			riderBlanker(ctx->lcd_ctx, rPu2[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu2[i]);
 		}
 		if (rPu02.iteration > 32u)
-			puS = redSpawn;
+			ctx->puState = redSpawn;
 		break;
 	case redSpawn:
 		for (uint8_t i = 0; i < 2u; ++i)
 		{
-			riderBlanker(rPu1[i]);
-			rideOnceFiller(rPu1[i]);
-			riderBlanker(rPu2[i]);
-			rideOnceFiller(rPu2[i]);
-			riderBlanker(rPu3[i]);
-			rideOnceFiller(rPu3[i]);
+			riderBlanker(ctx->lcd_ctx, rPu1[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu1[i]);
+			riderBlanker(ctx->lcd_ctx, rPu2[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu2[i]);
+			riderBlanker(ctx->lcd_ctx, rPu3[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu3[i]);
 		}
 		if (rPu03.iteration > 32u)
-			puS = whiteSpawn;
+			ctx->puState = whiteSpawn;
 		break;
 	case whiteSpawn:
 		for (uint8_t i = 0; i < 2u; ++i)
 		{
-			riderBlanker(rPu1[i]);
-			rideOnceFiller(rPu1[i]);
-			riderBlanker(rPu2[i]);
-			rideOnceFiller(rPu2[i]);
-			riderBlanker(rPu3[i]);
-			rideOnceFiller(rPu3[i]);
-			rideOnceFiller(rPu4[i]);
+			riderBlanker(ctx->lcd_ctx, rPu1[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu1[i]);
+			riderBlanker(ctx->lcd_ctx, rPu2[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu2[i]);
+			riderBlanker(ctx->lcd_ctx, rPu3[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu3[i]);
+			rideOnceFiller(ctx->lcd_ctx, rPu4[i]);
 		}
 		if (!rPu04.length)
-			puS = fullWhite;
+			ctx->puState = fullWhite;
 		break;
 	case fullWhite:
 	{
-		Led_Led_t l;
+		LedLogic_t l;
 		++breaker;
 		for (uint32_t i = 0; i < ledCount; ++i) {
-			led_getLedColor(i, &l);
+			led_getLedColor(ctx->lcd_ctx, i, &l);
 
 			if( (l.r + 40u) < UINT8_MAX)
 				l.r = (uint8_t)(l.r + 20u);
@@ -186,10 +179,10 @@ static void powerUp(void)
 			else
 				l.b = UINT8_MAX;
 
-			led_setLedToColor(i, l.r, l.g, l.b);
+			led_setLedToColor(ctx->lcd_ctx, i, l.r, l.g, l.b);
 		}
 		if(breaker > 12)
-			puS = done;
+			ctx->puState = done;
 		break;
 	}
 
@@ -200,11 +193,10 @@ static void powerUp(void)
 		break;
 	}
 }
-#endif
 
-static void layers(void)
+static void layers(LedChainDesc_t *const lcd)
 {
-	anim_random3();
+	anim_random3(lcd);
 	for (uint8_t i = 0; rA[i + 1] != NULL; ++i)
 	{
 		if (phy_doesCollide(rA[i], rA[i + 1]))
@@ -215,52 +207,50 @@ static void layers(void)
 	}
 	for (uint8_t i = 0; rA[i] != NULL; ++i)
 	{
-		riderBlanker(rA[i]);
+		riderBlanker(lcd, rA[i]);
 	}
 	for (uint8_t i = 0; rA[i] != NULL; ++i)
 	{
-		riderFiller(rA[i]);
+		riderFiller(lcd, rA[i]);
 	}
 }
 
-void anim_CyclicCall(void)
+void anim_CyclicCall(mAnim_t* ctx)
 {
-#ifdef STM32F407xx
-	if (puS != done)
+	if (ctx->puState != done)
 	{
-		powerUp();
+		powerUp(ctx);
 		return;
 	}
-#endif
 	switch (currMode)
 	{
 	case anim_cR1:
-		anim_circularRun1(brightness);
+		anim_circularRun1(ctx->lcd_ctx, brightness);
 		break;
 	case anim_cR2:
-		riderBlanker(&rider1);
-		riderFiller(&rider1);
+		riderBlanker(ctx->lcd_ctx, &rider1);
+		riderFiller(ctx->lcd_ctx, &rider1);
 		break;
 	case anim_rnd1:
-		anim_random1();
+		anim_random1(ctx->lcd_ctx);
 		break;
 	case anim_rnd2:
-		anim_random2();
+		anim_random2(ctx->lcd_ctx);
 		break;
 	case anim_rnd3:
-		anim_random3();
+		anim_random3(ctx->lcd_ctx);
 		break;
 	case anim_white:
-		led_setAllLedsToColor(brightness, brightness, brightness);
+		led_setAllLedsToColor(ctx->lcd_ctx, brightness, brightness, brightness);
 		break;
 	case anim_red:
-		led_setAllLedsToColor(brightness, 0, 0);
+		led_setAllLedsToColor(ctx->lcd_ctx, brightness, 0, 0);
 		break;
 	case anim_green:
-		led_setAllLedsToColor(0, brightness, 0);
+		led_setAllLedsToColor(ctx->lcd_ctx, 0, brightness, 0);
 		break;
 	case anim_blue:
-		led_setAllLedsToColor(0, 0, brightness);
+		led_setAllLedsToColor(ctx->lcd_ctx, 0, 0, brightness);
 		break;
 	case anim_cycleColors:
 	{
@@ -268,47 +258,25 @@ void anim_CyclicCall(void)
 		switch (z++)
 		{
 		case 0:
-			led_setAllLedsToColor(brightness, brightness, brightness);
+			led_setAllLedsToColor(ctx->lcd_ctx, brightness, brightness, brightness);
 			break;
 		case 1:
-			led_setAllLedsToColor(brightness, 0, 0);
+			led_setAllLedsToColor(ctx->lcd_ctx, brightness, 0, 0);
 			break;
 		case 2:
-			led_setAllLedsToColor(0, brightness, 0);
+			led_setAllLedsToColor(ctx->lcd_ctx, 0, brightness, 0);
 			break;
 		case 3:
 		default:
-			led_setAllLedsToColor(0, 0, brightness);
+			led_setAllLedsToColor(ctx->lcd_ctx, 0, 0, brightness);
 			z = 0u;
 			break;
 		}
 		break;
 	}
 	case anim_layers:
-		layers();
+		layers(ctx->lcd_ctx);
 		break;
-	case anim_SpecGraph:
-	{
-#ifdef STM32F303xE
-		static uint8_t color = 80u;
-		led_setAllLedsToColor(15,15,15);
-		mtrx_setLedsScaled(&left[0], getLChanVal(e63Hz), 0u, color, color);
-		mtrx_setLedsScaled(&left[1], getLChanVal(e160Hz), color, 0u, color);
-		mtrx_setLedsScaled(&left[2], getLChanVal(e400Hz), color, color, 0u);
-		mtrx_setLedsScaled(&left[3], getLChanVal(e1kHz), 0u, color, 0u);
-		mtrx_setLedsScaled(&left[4], getLChanVal(e2_5kHz), 0u, 0u, color);
-		mtrx_setLedsScaled(&left[5], getLChanVal(e6_25kHz), color, 0u, 0u);
-		mtrx_setLedsScaled(&left[6], getLChanVal(e16kHz), color, color, color);
-		mtrx_setLedsScaled(&lright[0], getRChanVal(e63Hz), 0u, color, color);
-		mtrx_setLedsScaled(&lright[1], getRChanVal(e160Hz), color, 0u, color);
-		mtrx_setLedsScaled(&lright[2], getRChanVal(e400Hz), color, color, 0u);
-		mtrx_setLedsScaled(&lright[3], getRChanVal(e1kHz), 0u, color, 0u);
-		mtrx_setLedsScaled(&lright[4], getRChanVal(e2_5kHz), 0u, 0u, color);
-		mtrx_setLedsScaled(&lright[5], getRChanVal(e6_25kHz), color, 0u, 0u);
-		mtrx_setLedsScaled(&lright[6], getRChanVal(e16kHz), color, color, color);
-#endif
-		break;
-	}
 	default:
 		assrt(false);
 		break;

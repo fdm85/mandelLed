@@ -7,7 +7,7 @@
 
 
 #include "peripheral.h"
-#include "ledData.h"
+#include "leds.h"
 #include "animations.h"
 #include "com.h"
 #include "cmsis_compiler.h"
@@ -45,7 +45,7 @@ static void cyclicReSend(void)
 	{
 	case e_render:
 		a = HAL_GetTick();
-		anim_CyclicCall();
+		anim_CyclicCall(&lcd_matrix);
 		b = HAL_GetTick() - a;
 		state = e_waitTxCplt;
 		break;
@@ -62,10 +62,10 @@ static void cyclicReSend(void)
 		greenLedToggle();
 		sendLock = true;
 		c = HAL_GetTick();
-		led_pasteData();
+		led_pasteData(&lcd_matrix);
 		d = HAL_GetTick() - c;
 		e = HAL_GetTick();
-		led_transmitData();
+		led_transmitData(&lcd_matrix);
 
 		lastToggle = HAL_GetTick();
 
@@ -97,11 +97,11 @@ int main(void)
 {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_SpecGraph);
-	led_setBrightnessTruncation(32uL, 255uL);
+	anim_setMode(&lcd_matrix, anim_SpecGraph);
+	led_setBrightnessTruncation(&lcd_matrix, 32uL, 255uL);
 //	led_setBrightnessTruncation(0x1uL, 0x1uL);
 	mtrx_Init();
-	led_initDataRaw();
+	led_initDataRaw(&lcd_matrix);
 	__enable_irq();
 	for (;;)
 	{
