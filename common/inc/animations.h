@@ -43,7 +43,7 @@ typedef void (*fpRender)(mAnim_t* ctx);
 struct mAnim_tag
 {
 	fpRender fpRend;
-	const LedChainDesc_t *lcd_ctx;
+	LedChainDesc_t *const lcd_ctx;
 	const uint32_t triggerTimeMs;
 	uint32_t lastToggle;
 	volatile uint32_t sendLock;
@@ -55,12 +55,12 @@ struct mAnim_tag
 
 void anim_setCirc(bool shrt);
 void anim_CyclicCall(mAnim_t* ctx);
-void anim_setMode(const LedChainDesc_t* lcd, anim_mode_e set);
+void anim_setMode(LedChainDesc_t *const lcd, anim_mode_e set);
 void anim_setBrightness(uint8_t set);
 void anim_addBrightness(int8_t add);
-void anim_nextMode(const LedChainDesc_t* lcd);
+void anim_nextMode(LedChainDesc_t *const lcd);
 
-void anim_circularRun1(const LedChainDesc_t* lcd, uint8_t brightness);
+void anim_circularRun1(LedChainDesc_t *const lcd, uint8_t brightness);
 
 typedef struct rider rider_t;
 typedef void (*riderInit)(rider_t*);
@@ -80,20 +80,20 @@ struct rider
 };
 
 
-void anim_initPuRide(const LedChainDesc_t* lcd, rider_t* arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir);
-void rideOnceFiller(const LedChainDesc_t* lcd, rider_t* arg);
-void riderBlanker(const LedChainDesc_t* lcd, rider_t* arg);
-void riderFiller(const LedChainDesc_t* lcd, rider_t* arg);
-void anim_initRedRider(const LedChainDesc_t* lcd, rider_t* arg);
-void anim_initRedRider2(const LedChainDesc_t* lcd, rider_t* arg);
-void anim_initRedRider3(const LedChainDesc_t* lcd, rider_t* arg);
+void anim_initPuRide(LedChainDesc_t *const lcd, rider_t* arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir);
+void rideOnceFiller(LedChainDesc_t *const lcd, rider_t* arg);
+void riderBlanker(LedChainDesc_t *const lcd, rider_t* arg);
+void riderFiller(LedChainDesc_t *const lcd, rider_t* arg);
+void anim_initRedRider(LedChainDesc_t *const lcd, rider_t* arg);
+void anim_initRedRider2(LedChainDesc_t *const lcd, rider_t* arg);
+void anim_initRedRider3(LedChainDesc_t *const lcd, rider_t* arg);
 
 #ifndef STM32F303xE
-void anim_random1(const LedChainDesc_t* lcd);
+void anim_random1(LedChainDesc_t *const lcd);
 void anim_setRandom2CycleCount(uint16_t c);
-void anim_random2(const LedChainDesc_t* lcd);
-void anim_random3(const LedChainDesc_t* lcd);
-void anim_r23Init(const LedChainDesc_t* lcd);
+void anim_random2(LedChainDesc_t *const lcd);
+void anim_random3(LedChainDesc_t *const lcd);
+void anim_r23Init(LedChainDesc_t *const lcd);
 
 void anim_layerRedRider(uint32_t pos);
 

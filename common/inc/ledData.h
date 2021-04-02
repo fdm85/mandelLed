@@ -31,6 +31,12 @@ typedef struct Led_diffColor{
 	uint16_t itMax;
 }Led_progColor_t;
 
+typedef struct diffRunnerCtx_tag
+{
+	Led_progColor_t * lDc;
+	uint32_t size;
+}diffRunnerCtx_t;
+
 // raw led data for DMA to timer transfer
 typedef struct LedRaw
 {

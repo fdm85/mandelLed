@@ -19,7 +19,7 @@ void anim_setCirc(bool shrt)
 	cycleCount = (shrt) ? cycleShort : cycle;
 }
 
-void anim_circularRun1(const LedChainDesc_t* lcd, uint8_t brightness)
+void anim_circularRun1(LedChainDesc_t* lcd, uint8_t brightness)
 {
 	static uint32_t index = 0u;
 	if (!cycleCount)
@@ -45,7 +45,7 @@ void anim_circularRun1(const LedChainDesc_t* lcd, uint8_t brightness)
 	}
 }
 
-void anim_initRedRider(const LedChainDesc_t* lcd, rider_t *arg)
+void anim_initRedRider(LedChainDesc_t *const lcd, rider_t *arg)
 {
 	arg->pos = 0uL;
 	arg->posMin = 0uL;
@@ -59,7 +59,7 @@ void anim_initRedRider(const LedChainDesc_t* lcd, rider_t *arg)
 	arg->posIq = _IQG(arg->pos);
 }
 
-void anim_initRedRider2(const LedChainDesc_t* lcd, rider_t *arg)
+void anim_initRedRider2(LedChainDesc_t *const lcd, rider_t *arg)
 {
 	arg->posMin = 0uL;
 	arg->posMax = getLedCount(lcd);
@@ -73,7 +73,7 @@ void anim_initRedRider2(const LedChainDesc_t* lcd, rider_t *arg)
 	arg->posIq = _IQG(arg->pos);
 }
 
-void anim_initRedRider3(const LedChainDesc_t* lcd, rider_t *arg)
+void anim_initRedRider3(LedChainDesc_t *const lcd, rider_t *arg)
 {
 	arg->posMin = 0uL;
 	arg->posMax = getLedCount(lcd);
@@ -87,7 +87,7 @@ void anim_initRedRider3(const LedChainDesc_t* lcd, rider_t *arg)
 	arg->posIq = _IQG(arg->pos);
 }
 
-void anim_initPuRide(const LedChainDesc_t* lcd, rider_t *arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir)
+void anim_initPuRide(LedChainDesc_t *const lcd, rider_t *arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir)
 {
 	arg->posMin = 0uL;
 	arg->posMax = getLedCount(lcd);
@@ -102,7 +102,7 @@ void anim_initPuRide(const LedChainDesc_t* lcd, rider_t *arg, uint8_t r, uint8_t
 	arg->iteration = 1u;
 }
 
-void riderBlanker(const LedChainDesc_t* lcd, rider_t *arg)
+void riderBlanker(LedChainDesc_t *const lcd, rider_t *arg)
 {
 	if (!((arg->pos > arg->posMin) && (arg->pos < arg->posMax)))
 		return;
@@ -121,7 +121,7 @@ void riderBlanker(const LedChainDesc_t* lcd, rider_t *arg)
 	}
 }
 
-void riderFiller(const LedChainDesc_t* lcd, rider_t *arg)
+void riderFiller(LedChainDesc_t *const lcd, rider_t *arg)
 {
 	for (uint8_t i = 0; i < arg->length; ++i)
 	{
@@ -142,7 +142,7 @@ void riderFiller(const LedChainDesc_t* lcd, rider_t *arg)
 
 }
 
-void rideOnceFiller(const LedChainDesc_t* lcd, rider_t *arg)
+void rideOnceFiller(LedChainDesc_t *const lcd, rider_t *arg)
 {
 	if (!arg->length)
 		return;

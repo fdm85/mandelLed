@@ -153,7 +153,7 @@ void mtrx_Init(void)
 	mtrx_InitR();
 }
 
-static void mtrx_setLedsScaled(const LedChainDesc_t *lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g,
+static void mtrx_setLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g,
 		uint8_t b)
 {
 	static const uint32_t max = 3100uL;

@@ -38,7 +38,7 @@ rider_t *rPu3[] =
 rider_t *rPu4[] =
 { &rPu04, &rPu14, NULL };
 
-void anim_setMode(const LedChainDesc_t* lcd, anim_mode_e set)
+void anim_setMode(LedChainDesc_t *const lcd, anim_mode_e set)
 {
 	assrt(set < anim_enumAssrt);
 	currMode = set;
@@ -54,7 +54,7 @@ void anim_setMode(const LedChainDesc_t* lcd, anim_mode_e set)
 	}
 }
 
-void anim_nextMode(const LedChainDesc_t* lcd)
+void anim_nextMode(LedChainDesc_t *const lcd)
 {
 	++currMode;
 
@@ -194,7 +194,7 @@ static void powerUp(mAnim_t* ctx)
 	}
 }
 
-static void layers(const LedChainDesc_t* lcd)
+static void layers(LedChainDesc_t *const lcd)
 {
 	anim_random3(lcd);
 	for (uint8_t i = 0; rA[i + 1] != NULL; ++i)

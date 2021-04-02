@@ -70,7 +70,7 @@ void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, ui
 	led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
 }
 
-void led_getLedColor(LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l)
+void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l)
 {
 	assrt(l);
 	if(i > lcd->lRaw->ledCount)
