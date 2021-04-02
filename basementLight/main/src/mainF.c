@@ -17,7 +17,7 @@
 
 static void maintainStatusLeds(void)
 {
-	static const uint32_t blueLedToggleTimeMs = 200uL;
+	static const uint32_t blueLedToggleTimeMs = 50uL;
 	static uint32_t lastToggle = 0uL;
 
 	if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
@@ -41,7 +41,7 @@ static void maintainStatusLeds(void)
 }
 
 mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 22uL, .puState = init};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 22uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
 
 static void cyclicReSend(mAnim_t *ctx)
 {

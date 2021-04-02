@@ -94,7 +94,7 @@ void anim_setRandom2CycleCount(uint16_t c);
 void anim_random2(LedChainDesc_t *const lcd);
 void anim_random3(LedChainDesc_t *const lcd);
 void anim_r23Init(LedChainDesc_t *const lcd);
-
+void anim_r23DeInit(LedChainDesc_t *const lcd);
 void anim_layerRedRider(uint32_t pos);
 
 #else

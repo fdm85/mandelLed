@@ -30,27 +30,38 @@ typedef union
 } rand_u;
 
 // todo fix this, create factory macro to allocate
-//Led_progColor_t __attribute__((section (".ccmram"))) prog_r23[619];
-diffRunnerCtx_t *diff;
+Led_progColor_t __attribute__((section (".ccmram"))) prog_r23[619];
+diffRunnerCtx_t diff = {.lDc = &prog_r23[0], .size = 619uL};
 static uint16_t cycleMin_r23 = 100u;
 static uint16_t it_r2 = 100u;
 
 void anim_r23Init(LedChainDesc_t *const lcd)
 {
-	diff->lDc = malloc(sizeof(Led_progColor_t) * diff->size);
-	for (uint32_t i = 0; i < diff->size; ++i)
+//	if(!diff.lDc)
+//		diff.lDc = malloc(sizeof(Led_progColor_t) * diff.size);
+
+	for (uint32_t i = 0; i < diff.size; ++i)
 	{
-		diff->lDc[i].r = 0L;
-		diff->lDc[i].g = 0L;
-		diff->lDc[i].b = 0L;
+		diff.lDc[i].r = 0L;
+		diff.lDc[i].g = 0L;
+		diff.lDc[i].b = 0L;
 
-		diff->lDc[i].rP = 0L;
-		diff->lDc[i].gP = 0L;
-		diff->lDc[i].bP = 0L;
+		diff.lDc[i].rP = 0L;
+		diff.lDc[i].gP = 0L;
+		diff.lDc[i].bP = 0L;
 
-		diff->lDc[i].itCur = 0u;
-		diff->lDc[i].itMax = 0u;
+		diff.lDc[i].itCur = 0u;
+		diff.lDc[i].itMax = 0u;
 	}
+}
+
+void anim_r23DeInit(LedChainDesc_t *const lcd)
+{
+//	if(diff.lDc)
+//	{
+//		free(diff.lDc);
+//		diff.lDc = NULL;
+//	}
 }
 
 void anim_random1(LedChainDesc_t *const lcd)
@@ -79,15 +90,15 @@ static void anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
 
 	if (isR3)
 	{
-		diff->lDc[i].itCur = 0u;
-		diff->lDc[i].itMax = r.d;
+		diff.lDc[i].itCur = 0u;
+		diff.lDc[i].itMax = r.d;
 
-		if (diff->lDc[i].itMax == 0u)
+		if (diff.lDc[i].itMax == 0u)
 		{
-			++diff->lDc[i].itMax;
+			++diff.lDc[i].itMax;
 		}
 
-		div = _IQ(diff->lDc[i].itMax);
+		div = _IQ(diff.lDc[i].itMax);
 
 	}
 	else
@@ -95,25 +106,25 @@ static void anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
 		div = _IQ(cycleMin_r23);
 	}
 
-	diff->lDc[i].r = _IQ(l.r);
-	diff->lDc[i].g = _IQ(l.g);
-	diff->lDc[i].b = _IQ(l.b);
+	diff.lDc[i].r = _IQ(l.r);
+	diff.lDc[i].g = _IQ(l.g);
+	diff.lDc[i].b = _IQ(l.b);
 
-	diff->lDc[i].rP = _IQdiv(_IQ((int16_t )r.a - l.r), div);
-	diff->lDc[i].gP = _IQdiv(_IQ((int16_t )r.b - l.g), div);
-	diff->lDc[i].bP = _IQdiv(_IQ((int16_t )r.c - l.b), div);
+	diff.lDc[i].rP = _IQdiv(_IQ((int16_t )r.a - l.r), div);
+	diff.lDc[i].gP = _IQdiv(_IQ((int16_t )r.b - l.g), div);
+	diff.lDc[i].bP = _IQdiv(_IQ((int16_t )r.c - l.b), div);
 }
 
 static void anim_render(LedChainDesc_t *const lcd, uint32_t i)
 {
 
-	diff->lDc[i].r += diff->lDc[i].rP;
-	diff->lDc[i].g += diff->lDc[i].gP;
-	diff->lDc[i].b += diff->lDc[i].bP;
+	diff.lDc[i].r += diff.lDc[i].rP;
+	diff.lDc[i].g += diff.lDc[i].gP;
+	diff.lDc[i].b += diff.lDc[i].bP;
 
-	int32_t rOut = _IQint(diff->lDc[i].r);
-	int32_t gOut = _IQint(diff->lDc[i].g);
-	int32_t bOut = _IQint(diff->lDc[i].b);
+	int32_t rOut = _IQint(diff.lDc[i].r);
+	int32_t gOut = _IQint(diff.lDc[i].g);
+	int32_t bOut = _IQint(diff.lDc[i].b);
 
 	assrt(rOut <= UINT8_MAX);
 	assrt(gOut <= UINT8_MAX);
@@ -157,12 +168,12 @@ void anim_random3(LedChainDesc_t *const lcd)
 	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
 
-		if (diff->lDc[i].itCur == diff->lDc[i].itMax)
+		if (diff.lDc[i].itCur == diff.lDc[i].itMax)
 		{
 			anim_Diff(lcd, i, true);
 		}
 
 		anim_render(lcd, i);
-		++diff->lDc[i].itCur;
+		++diff.lDc[i].itCur;
 	}
 }
