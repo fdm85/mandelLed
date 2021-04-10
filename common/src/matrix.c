@@ -213,17 +213,22 @@ static void mtrx_setAuxLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, ui
 	static const uint32_t max = (8 * 3100uL);
 	static const uint32_t round = max / 2uL;
 
-	uint32_t scaled = ((barHeigth * val) + round) / max;
+	volatile uint32_t scaled = (((barHeigth/2) * val) + round) / max;
 
-	if (scaled > barHeigth)
-		scaled = barHeigth;
+	if (scaled > (barHeigth/2))
+		scaled = (barHeigth/2);
 
-	assrt(scaled <= barHeigth);
+	assrt(scaled <= (barHeigth/2));
 
-	for (uint8_t i = 0; i < scaled; ++i)
+	for (uint8_t i = (barHeigth/2u); i < ((barHeigth/2) + scaled); ++i)
 	{
-		led_setLedToColor(lcd, chan->bar[0].dots[inverted ? i : (barHeigth - (i + 1))], r, g, b);
-		led_setLedToColor(lcd, chan->bar[1].dots[inverted ? i : (barHeigth - (i + 1))], r, g, b);
+		led_setLedToColor(lcd, chan->bar[0].dots[i], r, g, b);
+		led_setLedToColor(lcd, chan->bar[1].dots[i], r, g, b);
+	}
+	for (uint8_t i = (barHeigth/2u) - 1; i > (((barHeigth/2) - 1u) - scaled); --i)
+	{
+		led_setLedToColor(lcd, chan->bar[0].dots[i], r, g, b);
+		led_setLedToColor(lcd, chan->bar[1].dots[i], r, g, b);
 	}
 }
 
@@ -236,8 +241,8 @@ void mtrx_anim(mAnim_t* ctx)
 	auxLeft = getLChanVal(e63Hz) + getLChanVal(e160Hz) + getLChanVal(e400Hz) + getLChanVal(e1kHz)  + getLChanVal(e2_5kHz) + getLChanVal(e6_25kHz) + getLChanVal(e16kHz);
 	auxRight = getRChanVal(e63Hz) + getRChanVal(e160Hz) + getRChanVal(e400Hz) + getRChanVal(e1kHz)  + getRChanVal(e2_5kHz) + getRChanVal(e6_25kHz) + getRChanVal(e16kHz);
 	led_setAllLedsToColor(ctx->lcd_ctx, 15, 15, 15);
-	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], auxLeft, color, color, color);
-	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], auxRight, color, color, color);
+	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], auxLeft, color/3, color/3, color/2);
+	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], auxRight, color/3, color/3, color/2);
 
 	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[0], getLChanVal(e63Hz), 0u, color, color);
 	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[1], getLChanVal(e160Hz), color, 0u, color);
