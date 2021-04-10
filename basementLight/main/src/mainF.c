@@ -22,7 +22,7 @@ static void maintainStatusLeds(void)
 
 	if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
 	{
-		blueLedToggle();
+//		blueLedToggle();
 		lastToggle = HAL_GetTick();
 
 		static uint8_t swCount = 0u;
