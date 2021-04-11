@@ -118,7 +118,7 @@ int main(void)
 	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
 
 	mtrx_Init();
-	led_setBrightnessTruncation(&lcd_matrix, 32uL, 255uL);
+	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
 	led_initDataRaw(&lcd_matrix);
 
 	__enable_irq();

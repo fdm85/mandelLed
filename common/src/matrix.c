@@ -11,14 +11,15 @@
 #include "msgeq7.h"
 #include "assrt.h"
 
-
-typedef struct bar_tag {
+typedef struct bar_tag
+{
 	uint8_t dots[barHeigth];
-}bar_t;
+} bar_t;
 
-typedef struct channel_tag {
+typedef struct channel_tag
+{
 	bar_t bar[barWidth];
-}channel_t;
+} channel_t;
 
 static channel_t lLeft[channelWidth];
 static channel_t lRight[channelWidth];
@@ -187,8 +188,7 @@ void mtrx_Init(void)
 	mtrx_InitAuxR();
 }
 
-static void mtrx_setLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g,
-		uint8_t b)
+static void mtrx_setLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g, uint8_t b)
 {
 	static const uint32_t max = 3100uL;
 	static const uint32_t round = max / 2uL;
@@ -207,56 +207,71 @@ static void mtrx_setLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, uint3
 	}
 }
 
-static void mtrx_setAuxLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g,
-		uint8_t b)
+static void mtrx_setAuxLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g, uint8_t b)
 {
 	static const uint32_t max = (8 * 3100uL);
 	static const uint32_t round = max / 2uL;
 
-	volatile uint32_t scaled = (((barHeigth/2) * val) + round) / max;
+	volatile uint32_t scaled = (((barHeigth / 2) * val) + round) / max;
+	volatile uint32_t remainder = ((barHeigth / 2) * val) % max;
+	volatile uint32_t remainderFull = val % max;
+	volatile uint8_t remR = (uint8_t)(((uint32_t)(remainder * r) / max) + 1u);
+	volatile uint8_t remG = (uint8_t)(((uint32_t)(remainder * g) / max) + 1u);
+	volatile uint8_t remB = (uint8_t)(((uint32_t)(remainder * b) / max) + 1u);
+	volatile uint8_t remRF = (uint8_t)(((uint32_t)(remainderFull * r) / max) + 1u);
+	volatile uint8_t remGF = (uint8_t)(((uint32_t)(remainderFull * g) / max) + 1u);
+	volatile uint8_t remBF = (uint8_t)(((uint32_t)(remainderFull * b) / max) + 1u);
 
-	if (scaled > (barHeigth/2))
-		scaled = (barHeigth/2);
+	if (scaled > (barHeigth / 2))
+		scaled = (barHeigth / 2);
 
 	assrt(scaled <= (barHeigth/2));
-
-	for (uint8_t i = (barHeigth/2u); i < ((barHeigth/2) + scaled); ++i)
+	uint8_t i;
+	for (i = (barHeigth / 2u); i < ((barHeigth / 2) + scaled); ++i)
 	{
-		led_setLedToColor(lcd, chan->bar[0].dots[i], r, g, b);
 		led_setLedToColor(lcd, chan->bar[1].dots[i], r, g, b);
 	}
-	for (uint8_t i = (barHeigth/2u) - 1; i > (((barHeigth/2) - 1u) - scaled); --i)
+	uint8_t j;
+	for (j = 0; j < scaled; ++j)
 	{
-		led_setLedToColor(lcd, chan->bar[0].dots[i], r, g, b);
-		led_setLedToColor(lcd, chan->bar[1].dots[i], r, g, b);
+		led_setLedToColor(lcd, chan->bar[1].dots[((barHeigth / 2u) - 1) - j], r, g, b);
+	}
+	if(scaled < (barHeigth/2))
+	{
+		led_setLedToColor(lcd, chan->bar[0].dots[3], remRF, remGF, remBF);
+		led_setLedToColor(lcd, chan->bar[0].dots[4], remRF, remGF, remBF);
+//		led_setLedToColor(lcd, chan->bar[0].dots[i], r, g, b);
+//		led_setLedToColor(lcd, chan->bar[0].dots[i], r, g, b);
+		led_setLedToColor(lcd, chan->bar[1].dots[i], remR, remG, remB);
+		led_setLedToColor(lcd, chan->bar[1].dots[((barHeigth / 2u) - 1) - j], remR, remG, remB);
 	}
 }
 
-void mtrx_anim(mAnim_t* ctx)
+void mtrx_anim(mAnim_t *ctx)
 {
-	static uint8_t color = 80u;
+	static uint8_t color = 20u;
 	static uint32_t auxLeft = 0uL;
 	static uint32_t auxRight = 0uL;
 
-	auxLeft = getLChanVal(e63Hz) + getLChanVal(e160Hz) + getLChanVal(e400Hz) + getLChanVal(e1kHz)  + getLChanVal(e2_5kHz) + getLChanVal(e6_25kHz) + getLChanVal(e16kHz);
-	auxRight = getRChanVal(e63Hz) + getRChanVal(e160Hz) + getRChanVal(e400Hz) + getRChanVal(e1kHz)  + getRChanVal(e2_5kHz) + getRChanVal(e6_25kHz) + getRChanVal(e16kHz);
-	led_setAllLedsToColor(ctx->lcd_ctx, 15, 15, 15);
-	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], auxLeft, color/3, color/3, color/2);
-	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], auxRight, color/3, color/3, color/2);
+	auxLeft = getLChanVal(e63Hz) + getLChanVal(e160Hz) + getLChanVal(e400Hz) + getLChanVal(e1kHz) + getLChanVal(e2_5kHz) + getLChanVal(e6_25kHz) + getLChanVal(e16kHz);
+	auxRight = getRChanVal(e63Hz) + getRChanVal(e160Hz) + getRChanVal(e400Hz) + getRChanVal(e1kHz) + getRChanVal(e2_5kHz) + getRChanVal(e6_25kHz) + getRChanVal(e16kHz);
+	led_setAllLedsToColor(ctx->lcd_ctx, 2u, 2u, 2u);
+	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], auxLeft, 2u, 2u, color);
+	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], auxRight, 2u, 2u, color);
 
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[0], getLChanVal(e63Hz), 0u, color, color);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[1], getLChanVal(e160Hz), color, 0u, color);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[2], getLChanVal(e400Hz), color, color, 0u);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[3], getLChanVal(e1kHz), 0u, color, 0u);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[4], getLChanVal(e2_5kHz), 0u, 0u, color);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[5], getLChanVal(e6_25kHz), color, 0u, 0u);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[6], getLChanVal(e16kHz), color/2, color, color/2);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[0], getLChanVal(e63Hz), 2u, color, color);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[1], getLChanVal(e160Hz), color, 2u, color);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[2], getLChanVal(e400Hz), color, color, 2u);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[3], getLChanVal(e1kHz), 2u, color, 2u);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[4], getLChanVal(e2_5kHz), color / 2, color / 2, color);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[5], getLChanVal(e6_25kHz), color, 2u, 2u);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[6], getLChanVal(e16kHz), color / 2, color, color / 2);
 
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[0], getRChanVal(e63Hz), 0u, color, color);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[1], getRChanVal(e160Hz), color, 0u, color);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[2], getRChanVal(e400Hz), color, color, 0u);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[3], getRChanVal(e1kHz), 0u, color, 0u);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[4], getRChanVal(e2_5kHz), 0u, 0u, color);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[5], getRChanVal(e6_25kHz), color, 0u, 0u);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[6], getRChanVal(e16kHz), color/2, color, color/2);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[0], getRChanVal(e63Hz), 2u, color, color);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[1], getRChanVal(e160Hz), color, 2u, color);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[2], getRChanVal(e400Hz), color, color, 2u);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[3], getRChanVal(e1kHz), 2u, color, 2u);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[4], getRChanVal(e2_5kHz), color / 2, color / 2, color);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[5], getRChanVal(e6_25kHz), color, 2u, 2u);
+	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[6], getRChanVal(e16kHz), color / 2, color, color / 2);
 }
