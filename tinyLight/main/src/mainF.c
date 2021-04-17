@@ -6,7 +6,7 @@
  */
 
 #include "peripheral.h"
-#include "ledData.h"
+#include "leds.h"
 #include "animations.h"
 #include "com.h"
 #include "cmsis_compiler.h"
@@ -15,7 +15,7 @@
 
 static void maintainStatusLeds(void)
 {
-	static const uint32_t blueLedToggleTimeMs = 200uL;
+	static const uint32_t blueLedToggleTimeMs = 100uL;
 	static uint32_t lastToggle = 0uL;
 
 	if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
@@ -30,56 +30,46 @@ static void maintainStatusLeds(void)
 			if (swCount > 5u)
 			{
 				swCount = 0u;
-				orangeLedToggle();
-				led_initDataRaw();
-				anim_nextMode();
+				led_initDataRaw(&lcd_main);
+				anim_nextMode(&lcd_main);
 			}
 		}
 	}
 }
 
-typedef enum
-{
-	e_render, e_waitTxCplt, e_paste
-} eSm;
-static volatile bool sendLock = false;
-static volatile uint32_t a, b, c, d, e, f;
-static void cyclicReSend(void)
+mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 22uL, .puState = init};
+
+static void cyclicReSend(mAnim_t *ctx)
 {
 
-	static eSm state = e_render;
-
-	static const uint32_t triggerTimeMs = 22uL;
-	static uint32_t lastToggle = 0uL;
-
-	switch (state)
+	switch (ctx->state)
 	{
 	case e_render:
-		a = HAL_GetTick();
-		anim_CyclicCall();
-		b = HAL_GetTick() - a;
-		state = e_waitTxCplt;
+		ctx->a = HAL_GetTick();
+		ctx->fpRend(ctx);
+		ctx->b = HAL_GetTick() - ctx->a;
+		ctx->state = e_waitTxCplt;
 		break;
 
 	case e_waitTxCplt:
-		if (!sendLock && ((HAL_GetTick() - lastToggle) > triggerTimeMs))
+		if (!ctx->sendLock && ((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTimeMs))
 		{
-			state = e_paste;
+			ctx->state = e_paste;
 		}
 		break;
 
 	case e_paste:
-		greenLedToggle();
-		sendLock = true;
-		c = HAL_GetTick();
-		led_pasteData();
-		d = HAL_GetTick() - c;
-		e = HAL_GetTick();
-		led_transmitData();
+//		greenLedToggle();
+		ctx->sendLock = 0x55aa55aauL;
+		ctx->c = HAL_GetTick();
+		led_pasteData(ctx->lcd_ctx);
+		ctx->d = HAL_GetTick() - ctx->c;
+		ctx->e = HAL_GetTick();
+		led_transmitData(ctx->lcd_ctx);
 
-		lastToggle = HAL_GetTick();
+		ctx->lastToggle = HAL_GetTick();
 
-		state = e_render;
+		ctx->state = e_render;
 		break;
 
 	default:
@@ -93,10 +83,10 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 	/* Prevent unused argument(s) compilation warning */
 	UNUSED(htim);
 
-	sendLock = false;
-	e = HAL_GetTick() - e;
+	anim_main.sendLock = false;
+	anim_main.e = HAL_GetTick() - anim_main.e;
 
-	f = HAL_GetTick();
+	anim_main.f = HAL_GetTick();
 //  __BKPT(0);
 	/* NOTE : This function should not be modified, when the callback is needed,
 	 the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file
@@ -107,15 +97,15 @@ int main(void)
 {
 	initClock();
 	initPeripherals();
-	anim_setMode(anim_rnd3);
-	led_setBrightnessTruncation(1u, 1u);
 
-	led_initDataRaw();
-	outputEnableLvlShifter();
+	anim_setMode(&lcd_main, anim_white);
+	led_initDataRaw(&lcd_main);
+	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
+
 	__enable_irq();
 	for (;;)
 	{
 		maintainStatusLeds();
-		cyclicReSend();
+		cyclicReSend(&anim_main);
 	}
 }
