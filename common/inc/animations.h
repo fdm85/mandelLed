@@ -60,8 +60,6 @@ void anim_setBrightness(uint8_t set);
 void anim_addBrightness(int8_t add);
 void anim_nextMode(LedChainDesc_t *const lcd);
 
-void anim_circularRun1(LedChainDesc_t *const lcd, uint8_t brightness);
-
 typedef struct rider rider_t;
 typedef void (*riderInit)(rider_t*);
 struct rider
@@ -79,6 +77,8 @@ struct rider
 	uint16_t padd;
 };
 
+#if !(defined(STM32F103xB))
+void anim_circularRun1(LedChainDesc_t *const lcd, uint8_t brightness);
 
 void anim_initPuRide(LedChainDesc_t *const lcd, rider_t* arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir);
 void rideOnceFiller(LedChainDesc_t *const lcd, rider_t* arg);
@@ -88,7 +88,20 @@ void anim_initRedRider(LedChainDesc_t *const lcd, rider_t* arg);
 void anim_initRedRider2(LedChainDesc_t *const lcd, rider_t* arg);
 void anim_initRedRider3(LedChainDesc_t *const lcd, rider_t* arg);
 
-#ifndef STM32F303xE
+#else
+#define anim_initPuRide(a,b,c,d,e,f)
+#define rideOnceFiller(a,b)
+#define riderBlanker(a,b)
+#define riderFiller(a,b)
+#define anim_initRedRider(a,b)
+#define anim_initRedRider2(a,b)
+#define anim_initRedRider3(a,b)
+#define anim_circularRun1(a,b)
+
+#endif
+
+
+#if !( (defined(STM32F303xE) | defined(STM32F103xB)) )
 void anim_random1(LedChainDesc_t *const lcd);
 void anim_setRandom2CycleCount(uint16_t c);
 void anim_random2(LedChainDesc_t *const lcd);
@@ -104,6 +117,7 @@ void anim_layerRedRider(uint32_t pos);
 #define anim_random3(x)
 #define anim_r23Init(x)
 
+#define anim_r23DeInit(x)
 #define anim_layerRedRider(x)
 
 #endif

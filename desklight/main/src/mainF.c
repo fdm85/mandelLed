@@ -11,7 +11,7 @@
 #include "com.h"
 #include "cmsis_compiler.h"
 
-#include "stm32l4xx_hal.h"
+#include "stm32f1xx_hal_conf.h"
 
 static void maintainModeSwitch(void)
 {
@@ -36,7 +36,7 @@ static void maintainModeSwitch(void)
 	}
 }
 
-mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 2000uL, .puState = done};
+mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 100uL, .puState = done};
 
 static void cyclicReSend(mAnim_t *ctx)
 {
