@@ -17,12 +17,12 @@
 
 static void maintainStatusLeds(void)
 {
-	static const uint32_t blueLedToggleTimeMs = 200uL;
+	static const uint32_t blueLedToggleTimeMs = 100uL;
 	static uint32_t lastToggle = 0uL;
 
 	if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
 	{
-		blueLedToggle();
+//		blueLedToggle();
 		lastToggle = HAL_GetTick();
 
 		static uint8_t swCount = 0u;
@@ -41,7 +41,7 @@ static void maintainStatusLeds(void)
 }
 
 mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 22uL, .puState = init};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 22uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
 
 static void cyclicReSend(mAnim_t *ctx)
 {
@@ -118,7 +118,7 @@ int main(void)
 	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
 
 	mtrx_Init();
-	led_setBrightnessTruncation(&lcd_matrix, 32uL, 255uL);
+	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
 	led_initDataRaw(&lcd_matrix);
 
 	__enable_irq();

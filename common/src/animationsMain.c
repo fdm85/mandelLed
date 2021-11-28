@@ -42,30 +42,34 @@ void anim_setMode(LedChainDesc_t *const lcd, anim_mode_e set)
 {
 	assrt(set < anim_enumAssrt);
 	currMode = set;
-	if ((set == anim_rnd2) || (set == anim_rnd3) || (set == anim_layers))
+	if ((set == anim_rnd2) || (set == anim_rnd3))
 	{
 		anim_r23Init(lcd);
 	}
-	if ((set == anim_cR2) || (set == anim_layers))
+	else if ((set == anim_cR2) || (set == anim_layers))
 	{
+		anim_r23Init(lcd);
 		anim_initRedRider(lcd, &rider1);
 		anim_initRedRider2(lcd, &rider2);
 		anim_initRedRider3(lcd, &rider3);
+	}
+	else
+	{
+		anim_r23DeInit(lcd);
 	}
 }
 
 void anim_nextMode(LedChainDesc_t *const lcd)
 {
-	++currMode;
+	anim_mode_e set = currMode;
+	++set;
 
-	if (currMode == anim_enumAssrt)
+	if (set == anim_enumAssrt)
 	{
-		currMode = anim_cR1;
+		set = anim_cR1;
 	}
-	anim_r23Init(lcd);
-	anim_initRedRider(lcd, &rider1);
-	anim_initRedRider2(lcd, &rider2);
-	anim_initRedRider3(lcd, &rider3);
+
+	anim_setMode(lcd, set);
 }
 
 void anim_setBrightness(uint8_t set)

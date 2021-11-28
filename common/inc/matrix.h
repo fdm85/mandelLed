@@ -11,6 +11,7 @@
 #define barHeigth 8
 #define barWidth 2
 #define channelWidth 7
+#define auxChanWidth 1
 
 #include <stdint.h>
 #include "ledData.h"

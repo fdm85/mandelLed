@@ -41,7 +41,7 @@ static mT_t mT;
 static void sInit(void)
 {
 	assrt(mT.gS == eInit);
-	mT.cycleTarget = 50uL;
+	mT.cycleTarget = 40uL;
 	mT.strobeTarget = 1uL;
 	tStart(&mT.initTime);
 	HAL_GPIO_WritePin(MS_RESET_GPIO_Port, MS_RESET_Pin, GPIO_PIN_SET);

@@ -56,6 +56,7 @@ typedef struct lRawCont_tag
 	uint16_t padding;
 }lRawCont_t;
 
+
 #define resLength 41u
 #define lRawContainer(name, ledCnt) \
 	static struct \
@@ -75,7 +76,7 @@ typedef struct lRawCont_tag
 	}
 
 #define lLogicContainer(name, ledCnt)\
-	static LedLogic_t __attribute__((section (".ccmram"))) ledsLog_##name[ledCnt]
+	static LedLogic_t CCRAM_PLACING ledsLog_##name[ledCnt]
 
 #define lChainDesc(name, timerN, tChan, rOn, rOff) \
 	LedChainDesc_t lcd_##name = { \
