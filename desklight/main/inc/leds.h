@@ -8,6 +8,7 @@
 #ifndef LEDS_H_
 #define LEDS_H_
 
+#define CCRAM_PLACING
 #include "ledData.h"
 
 
