@@ -42,13 +42,13 @@ void anim_r23Init(LedChainDesc_t *const lcd)
 
 	for (uint32_t i = 0; i < diff.size; ++i)
 	{
-		diff.lDc[i].r = 0L;
-		diff.lDc[i].g = 0L;
-		diff.lDc[i].b = 0L;
+		diff.lDc[i].r.r = 0L;
+		diff.lDc[i].g.r = 0L;
+		diff.lDc[i].b.r = 0L;
 
-		diff.lDc[i].rP = 0L;
-		diff.lDc[i].gP = 0L;
-		diff.lDc[i].bP = 0L;
+		diff.lDc[i].rP.r = 0L;
+		diff.lDc[i].gP.r = 0L;
+		diff.lDc[i].bP.r = 0L;
 
 		diff.lDc[i].itCur = 0u;
 		diff.lDc[i].itMax = 0u;
@@ -86,7 +86,7 @@ static void anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
 	HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
 	led_getLedColor(lcd, i, &l);
 
-	_iq div;
+	fpa_t div = {.r = 0};
 
 	if (isR3)
 	{
@@ -98,33 +98,33 @@ static void anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
 			++diff.lDc[i].itMax;
 		}
 
-		div = _IQ(diff.lDc[i].itMax);
+		div.i = diff.lDc[i].itMax;
 
 	}
 	else
 	{
-		div = _IQ(cycleMin_r23);
+		div.i = cycleMin_r23;
 	}
 
-	diff.lDc[i].r = _IQ(l.r);
-	diff.lDc[i].g = _IQ(l.g);
-	diff.lDc[i].b = _IQ(l.b);
+	diff.lDc[i].r.i = l.r;
+	diff.lDc[i].g.i = l.g;
+	diff.lDc[i].b.i = l.b;
 
-	diff.lDc[i].rP = _IQdiv(_IQ((int16_t )r.a - l.r), div);
-	diff.lDc[i].gP = _IQdiv(_IQ((int16_t )r.b - l.g), div);
-	diff.lDc[i].bP = _IQdiv(_IQ((int16_t )r.c - l.b), div);
+	diff.lDc[i].rP = FPA_IntDivFpa(r.a - l.r, div);
+	diff.lDc[i].gP = FPA_IntDivFpa(r.b - l.g, div);
+	diff.lDc[i].bP = FPA_IntDivFpa(r.c - l.b, div);
 }
 
 static void anim_render(LedChainDesc_t *const lcd, uint32_t i)
 {
 
-	diff.lDc[i].r += diff.lDc[i].rP;
-	diff.lDc[i].g += diff.lDc[i].gP;
-	diff.lDc[i].b += diff.lDc[i].bP;
+	diff.lDc[i].r.r += diff.lDc[i].rP.r;
+	diff.lDc[i].g.r += diff.lDc[i].gP.r;
+	diff.lDc[i].b.r += diff.lDc[i].bP.r;
 
-	int32_t rOut = _IQint(diff.lDc[i].r);
-	int32_t gOut = _IQint(diff.lDc[i].g);
-	int32_t bOut = _IQint(diff.lDc[i].b);
+	int32_t rOut = diff.lDc[i].r.i;
+	int32_t gOut = diff.lDc[i].g.i;
+	int32_t bOut = diff.lDc[i].b.i;
 
 	assrt(rOut <= UINT8_MAX);
 	assrt(gOut <= UINT8_MAX);

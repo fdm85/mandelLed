@@ -35,28 +35,32 @@
 	#define Sz	(32)
 	#define iSz (Sz-FPA_FRAC)
 	typedef int32_t fpaT;
+	typedef uint32_t fpaTf;
 #else
 	#pragma warning fixed point arithmetic not defined
 #endif
 
-
-
 typedef union fpa_tag {
 	fpaT r;
 	struct {
+		fpaTf f:FPA_FRAC;
 		fpaT i:iSz;
-		fpaT f:FPA_FRAC;
 	};
 } fpa_t;
 
-static inline FPA_mult(fpa_t m1, fpa_t m2) {
+static inline fpa_t FPA_mult(fpa_t m1, fpa_t m2) {
 	int64_t t = m1.r * m2.r;
-	return ((fpa_t)(t >> FPA_FRAC));
+	return (fpa_t)((fpaT)(t >> FPA_FRAC));
 }
 
-static inline FPA_div(fpa_t d, fpa_t s) {
+static inline fpa_t FPA_div(fpa_t d, fpa_t s) {
 	int64_t t = ((int64_t)(d.r) << FPA_FRAC);
-	return ((fpa_t)(t / s.r));
+	return (fpa_t)((fpaT)(t / s.r));
+}
+
+static inline fpa_t FPA_IntDivFpa(int64_t d, fpa_t s) {
+	int64_t t = d << (2*FPA_FRAC);
+	return (fpa_t)((fpaT)(t / s.r));
 }
 
 #endif /* INC_FPA_H_ */
