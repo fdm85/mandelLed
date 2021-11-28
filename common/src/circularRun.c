@@ -7,7 +7,7 @@
 
 #include "animations.h"
 #include "ledData.h"
-#include "IQmathLib.h"
+#include "fpa.h"
 
 #define cycle 3u
 #define cycleShort 3u
@@ -53,10 +53,10 @@ void anim_initRedRider(LedChainDesc_t *const lcd, rider_t *arg)
 	arg->c.r = 255u;
 	arg->c.g = 0u;
 	arg->c.b = 0u;
-	arg->step = _IQG(2);
+	arg->step.r = _FPA_(2);
 	arg->length = 8u;
 	arg->blanks = 4u;
-	arg->posIq = _IQG(arg->pos);
+	arg->posIq.r = _FPA_(arg->pos);
 }
 
 void anim_initRedRider2(LedChainDesc_t *const lcd, rider_t *arg)
@@ -67,10 +67,10 @@ void anim_initRedRider2(LedChainDesc_t *const lcd, rider_t *arg)
 	arg->c.r = 100u;
 	arg->c.g = 200u;
 	arg->c.b = 0u;
-	arg->step = _IQG(3.25);
+	arg->step.r = _FPA_(3.25);
 	arg->length = 6u;
 	arg->blanks = 4u;
-	arg->posIq = _IQG(arg->pos);
+	arg->posIq.r = _FPA_(arg->pos);
 }
 
 void anim_initRedRider3(LedChainDesc_t *const lcd, rider_t *arg)
@@ -80,11 +80,11 @@ void anim_initRedRider3(LedChainDesc_t *const lcd, rider_t *arg)
 	arg->c.r = 0u;
 	arg->c.g = 0u;
 	arg->c.b = 255u;
-	arg->step = _IQG(-1.5);
+	arg->step.r = _FPA_(-1.5);
 	arg->length = 8u;
 	arg->pos = arg->posMax - arg->length;
 	arg->blanks = 4;
-	arg->posIq = _IQG(arg->pos);
+	arg->posIq.r = _FPA_(arg->pos);
 }
 
 void anim_initPuRide(LedChainDesc_t *const lcd, rider_t *arg, uint8_t r, uint8_t g, uint8_t b, uint8_t dir)
@@ -94,11 +94,11 @@ void anim_initPuRide(LedChainDesc_t *const lcd, rider_t *arg, uint8_t r, uint8_t
 	arg->c.r = r;
 	arg->c.g = g;
 	arg->c.b = b;
-	arg->step = dir ? _IQG(-15) : _IQG(15);
+	arg->step.r = dir ? _FPA_(-15) : _FPA_(15);
 	arg->length = 8u;
 	arg->pos = getLedCount(lcd) / 2uL;
 	arg->blanks = 4;
-	arg->posIq = _IQG(arg->pos);
+	arg->posIq.r = _FPA_(arg->pos);
 	arg->iteration = 1u;
 }
 
@@ -127,18 +127,18 @@ void riderFiller(LedChainDesc_t *const lcd, rider_t *arg)
 	{
 		led_setLedToColor(lcd, (arg->pos + i), arg->c.r, arg->c.g, arg->c.b);
 	}
-	if ((arg->pos >= (arg->posMax - arg->length)) && (arg->step > 0))
+	if ((arg->pos >= (arg->posMax - arg->length)) && (arg->step.i > 0))
 	{
-		arg->step *= -1;
+		arg->step.r *= -1;
 	}
-	if ((arg->pos <= (arg->posMin + arg->length)) && (arg->step < 0))
+	if ((arg->pos <= (arg->posMin + arg->length)) && (arg->step.i < 0))
 	{
-		arg->step *= -1;
+		arg->step.r *= -1;
 	}
 
-	arg->posIq += arg->step;
+	arg->posIq.r += arg->step.r;
 
-	arg->pos = (uint32_t) _IQint(arg->posIq);
+	arg->pos = (uint32_t)arg->posIq.i;
 
 }
 
@@ -153,11 +153,11 @@ void rideOnceFiller(LedChainDesc_t *const lcd, rider_t *arg)
 	}
 	arg->iteration = (uint8_t) ((arg->iteration << 1u) + 1);
 
-	if ((arg->pos >= (arg->posMax - arg->length)) && (arg->step > 0))
+	if ((arg->pos >= (arg->posMax - arg->length)) && (arg->step.i > 0))
 	{
 		arg->length = 0;
 	}
-	if ((arg->pos <= (arg->posMin + arg->length)) && (arg->step < 0))
+	if ((arg->pos <= (arg->posMin + arg->length)) && (arg->step.i < 0))
 	{
 		arg->length = 0;
 	}
@@ -170,8 +170,8 @@ void rideOnceFiller(LedChainDesc_t *const lcd, rider_t *arg)
 
 	if (arg->length)
 	{
-		arg->posIq += arg->step;
-		arg->pos = (uint32_t) _IQint(arg->posIq);
+		arg->posIq.r += arg->step.r;
+		arg->pos = (uint32_t)arg->posIq.i;
 	}
 }
 

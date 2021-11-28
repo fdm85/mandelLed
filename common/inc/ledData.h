@@ -9,7 +9,6 @@
 #define LEDDATA_H_
 
 #include "stdint.h"
-#include "IQmathLib.h"
 #include "fpa.h"
 #include "tim.h"
 

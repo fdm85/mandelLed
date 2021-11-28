@@ -40,6 +40,11 @@
 	#pragma warning fixed point arithmetic not defined
 #endif
 
+#define _FPA_R(I) {.r = (fpaT)((I) * (1 << FPA_FRAC))}
+#define _FPA_(I) ((fpaT)((I) * (1 << FPA_FRAC)))
+#define _FPA_M2(F) ((F) << 1)
+#define _FPA_M4(F) ((F) << 2)
+
 typedef union fpa_tag {
 	fpaT r;
 	struct {
@@ -52,6 +57,10 @@ static inline fpa_t FPA_mult(fpa_t m1, fpa_t m2) {
 	int64_t t = m1.r * m2.r;
 	return (fpa_t)((fpaT)(t >> FPA_FRAC));
 }
+static inline fpa_t FPA_IntMultFpa(int64_t m1, fpa_t m2) {
+	int64_t t = (m1 << FPA_FRAC) * m2.r;
+	return (fpa_t)((fpaT)(t >> FPA_FRAC));
+}
 
 static inline fpa_t FPA_div(fpa_t d, fpa_t s) {
 	int64_t t = ((int64_t)(d.r) << FPA_FRAC);
@@ -62,5 +71,7 @@ static inline fpa_t FPA_IntDivFpa(int64_t d, fpa_t s) {
 	int64_t t = d << (2*FPA_FRAC);
 	return (fpa_t)((fpaT)(t / s.r));
 }
+
+
 
 #endif /* INC_FPA_H_ */

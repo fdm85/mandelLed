@@ -106,42 +106,6 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 	 */
 }
 
-#include "fpa.h"
-#include "IQmathLib.h"
-#include "assrt.h"
-static uint8_t testFpa(void)
-{
-	volatile fpa_t a = {.i = 1};
-	volatile fpa_t aa = {.i = 2};
-	volatile fpa_t b = {.r = 1};
-	volatile fpa_t c = {.f = 1};
-
-	volatile _iq id = _IQ(1);
-	volatile _iq i2 = _IQ(2);
-	volatile _iq i3 = _IQdiv(id, i2);
-	volatile _iq i4 = _IQdiv(i2, id);
-
-	volatile uint8_t aaa = _IQint(i4);
-
-	volatile fpa_t d = FPA_IntDivFpa(2, a);
-	volatile fpa_t e = FPA_IntDivFpa(1, aa);
-
-
-	volatile fpa_t f = { .r = (d.r + 2*e.r)};
-
-	uint8_t dummy;
-	if(f.i > e.i)
-	{
-		dummy = (uint8_t)b.i;
-	}
-	else
-	{
-		dummy = (uint8_t)c.f;
-	}
-
-	return dummy;
-}
-
 int main(void)
 {
 	static uint32_t brightnessOld;
@@ -159,10 +123,6 @@ int main(void)
 
 	__enable_irq();
 
-	if(testFpa() != 0u)
-	{
-		assrt(false);
-	}
 	for (;;)
 	{
 		maintainStatusLeds();
