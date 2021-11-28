@@ -13,7 +13,6 @@
 
 #if !(defined(STM32F103xB))
 bool phy_doesCollide(rider_t* a, rider_t* b);
-void phy_perfElasticImpact(rider_t* a, rider_t* b);
 void phy_perfSimpleImpact(rider_t* a, rider_t* b);
 void phy_swapColors(rider_t* a, rider_t* b);
 

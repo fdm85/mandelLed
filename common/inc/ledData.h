@@ -9,7 +9,7 @@
 #define LEDDATA_H_
 
 #include "stdint.h"
-#include "IQmathLib.h"
+#include "fpa.h"
 #include "tim.h"
 
 // logical led container
@@ -21,12 +21,12 @@ typedef struct LedLogic_tag{
 
 // led color transition descriptor
 typedef struct Led_diffColor{
-	_iq g;
-	_iq r;
-	_iq b;
-	_iq gP;
-	_iq rP;
-	_iq bP;
+	fpa_t g;
+	fpa_t r;
+	fpa_t b;
+	fpa_t gP;
+	fpa_t rP;
+	fpa_t bP;
 	uint16_t itCur;
 	uint16_t itMax;
 }Led_progColor_t;

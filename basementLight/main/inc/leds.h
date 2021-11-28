@@ -8,8 +8,9 @@
 #ifndef LEDS_H_
 #define LEDS_H_
 
-#include "ledData.h"
 
+#define CCRAM_PLACING __attribute__((section (".ccmram")))
+#include "ledData.h"
 
 extern LedChainDesc_t lcd_main;
 extern LedChainDesc_t lcd_matrix;

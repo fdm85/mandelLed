@@ -66,10 +66,10 @@ struct rider
 {
 	riderInit fpInit;
 	uint32_t pos;
-	_iq posIq;
+	fpa_t posIq;
 	uint32_t posMin;
 	uint32_t posMax;
-	_iq step;
+	fpa_t step;
 	LedLogic_t c;
 	uint8_t length;
 	uint8_t blanks;

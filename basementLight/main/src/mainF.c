@@ -122,6 +122,7 @@ int main(void)
 	led_initDataRaw(&lcd_matrix);
 
 	__enable_irq();
+
 	for (;;)
 	{
 		maintainStatusLeds();
