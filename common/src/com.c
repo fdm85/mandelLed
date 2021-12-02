@@ -36,26 +36,7 @@ void com_enableRx(void) {
 	HAL_UART_Receive_IT(&huart2, (uint8_t*) &rxBuf[0], 1u);
 }
 
-void com_parse(void) {
 
-	if (doParse) {
-		switch (rxBuf[0]) {
-		case 'm':
-			anim_nextMode(lcd);
-			break;
-		case 'h':
-			anim_addBrightness(15);
-			break;
-		case 'd':
-			anim_addBrightness(-15);
-			break;
-
-		default:
-			break;
-		}
-		com_enableRx();
-	}
-}
 
 /**
  * @brief  Rx Transfer completed callbacks.

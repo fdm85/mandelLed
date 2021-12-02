@@ -12,5 +12,6 @@
 #include <stdbool.h>
 
 #define assrt(b) if((b)==false) __BKPT(0)
+#define assrtRet(b) if((b)==false) return
 
 #endif /* ASSRT_H_ */

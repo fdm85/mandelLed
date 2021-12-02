@@ -10,7 +10,7 @@
 #include "fpa.h"
 
 #define cycle 3u
-#define cycleShort 3u
+#define cycleShort 0u
 //static uint8_t cycleCount = cycle;
 static uint8_t cycleCount = cycleShort;
 
@@ -22,10 +22,11 @@ void anim_setCirc(bool shrt)
 void anim_circularRun1(LedChainDesc_t* lcd, uint8_t brightness)
 {
 	static uint32_t index = 0u;
+	static int32_t sign = 1;
 	if (!cycleCount)
 	{
 
-		led_setAllLedsToUniColors(lcd, brightness);
+		led_setAllLedsToUniColors(lcd, 0);
 		led_setLedToColor(lcd, index, 0u, 0u, brightness);
 		led_setLedToColor(lcd, (index + 1u), 0u, brightness, 0u);
 		led_setLedToColor(lcd, (index + 2u), brightness, 0u, 0u);
@@ -36,8 +37,10 @@ void anim_circularRun1(LedChainDesc_t* lcd, uint8_t brightness)
 		led_setLedToColor(lcd, (index + 41u), 0u, brightness, 0u);
 		led_setLedToColor(lcd, (index + 42u), brightness, 0u, 0u);
 
-		++index;
-		cycleCount = cycle;
+		index += sign;
+		if((index + 43 == lcd->lRaw->ledCount) || (index == 0))
+			sign *= -1;
+		cycleCount = cycleShort;
 	}
 	else
 	{
