@@ -93,22 +93,6 @@ static void sAdc(void)
 
 void msgeq_ticker(void)
 {
-//	uint32_t adcState = HAL_ADC_GetState(&hadc1);
-//	static const uint32_t triggerTimeMs = 50uL;
-//	static uint32_t lastToggle = 0uL;
-//
-//	if (adcState & HAL_ADC_STATE_READY)
-//	{
-//		if ((HAL_GetTick() - lastToggle) > triggerTimeMs)
-//		{
-//			HAL_GPIO_WritePin(MS_STROBE_GPIO_Port, MS_STROBE_Pin, GPIO_PIN_SET);
-//			lastToggle = HAL_GetTick();
-//			HAL_ADC_Start_IT(&hadc1);
-//			HAL_GPIO_WritePin(MS_STROBE_GPIO_Port, MS_STROBE_Pin,
-//					GPIO_PIN_RESET);
-//		}
-//
-//	}
 
 	switch (mT.gS)
 	{
