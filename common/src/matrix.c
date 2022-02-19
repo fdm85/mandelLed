@@ -212,15 +212,15 @@ static void mtrx_setAuxLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, ui
 	static const uint32_t max = (8 * 3100uL);
 	static const uint32_t round = max / 2uL;
 
-	volatile uint32_t scaled = (((barHeigth / 2) * val) + round) / max;
-	volatile uint32_t remainder = ((barHeigth / 2) * val) % max;
-	volatile uint32_t remainderFull = val % max;
-	volatile uint8_t remR = (uint8_t)(((uint32_t)(remainder * r) / max) + 1u);
-	volatile uint8_t remG = (uint8_t)(((uint32_t)(remainder * g) / max) + 1u);
-	volatile uint8_t remB = (uint8_t)(((uint32_t)(remainder * b) / max) + 1u);
-	volatile uint8_t remRF = (uint8_t)(((uint32_t)(remainderFull * r) / max) + 1u);
-	volatile uint8_t remGF = (uint8_t)(((uint32_t)(remainderFull * g) / max) + 1u);
-	volatile uint8_t remBF = (uint8_t)(((uint32_t)(remainderFull * b) / max) + 1u);
+	uint32_t scaled = (((barHeigth / 2) * val) + round) / max;
+	uint32_t remainder = ((barHeigth / 2) * val) % max;
+	uint32_t remainderFull = val % max;
+	uint8_t remR = (uint8_t)(((uint32_t)(remainder * r) / max) + 1u);
+	uint8_t remG = (uint8_t)(((uint32_t)(remainder * g) / max) + 1u);
+	uint8_t remB = (uint8_t)(((uint32_t)(remainder * b) / max) + 1u);
+	uint8_t remRF = (uint8_t)(((uint32_t)(remainderFull * r) / max) + 1u);
+	uint8_t remGF = (uint8_t)(((uint32_t)(remainderFull * g) / max) + 1u);
+	uint8_t remBF = (uint8_t)(((uint32_t)(remainderFull * b) / max) + 1u);
 
 	if (scaled > (barHeigth / 2))
 		scaled = (barHeigth / 2);
@@ -240,8 +240,6 @@ static void mtrx_setAuxLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, ui
 	{
 		led_setLedToColor(lcd, chan->bar[0].dots[3], remRF, remGF, remBF);
 		led_setLedToColor(lcd, chan->bar[0].dots[4], remRF, remGF, remBF);
-//		led_setLedToColor(lcd, chan->bar[0].dots[i], r, g, b);
-//		led_setLedToColor(lcd, chan->bar[0].dots[i], r, g, b);
 		led_setLedToColor(lcd, chan->bar[1].dots[i], remR, remG, remB);
 		led_setLedToColor(lcd, chan->bar[1].dots[((barHeigth / 2u) - 1) - j], remR, remG, remB);
 	}

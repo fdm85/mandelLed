@@ -99,6 +99,7 @@ static void powerUp(mAnim_t* ctx)
 {
 	static uint8_t breaker = 0u;
 	static uint32_t ledCount = 0uL;
+
 	switch (ctx->puState)
 	{
 	case init:

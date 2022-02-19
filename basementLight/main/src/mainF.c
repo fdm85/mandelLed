@@ -22,7 +22,6 @@ static void maintainStatusLeds(void)
 
 	if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
 	{
-//		blueLedToggle();
 		lastToggle = HAL_GetTick();
 
 		static uint8_t swCount = 0u;
@@ -63,7 +62,6 @@ static void cyclicReSend(mAnim_t *ctx)
 		break;
 
 	case e_paste:
-//		greenLedToggle();
 		ctx->sendLock = 0x55aa55aauL;
 		ctx->c = HAL_GetTick();
 		led_pasteData(ctx->lcd_ctx);
@@ -100,10 +98,6 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 	ctx->e = HAL_GetTick() - ctx->e;
 
 	ctx->f = HAL_GetTick();
-//  __BKPT(0);
-	/* NOTE : This function should not be modified, when the callback is needed,
-	 the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file
-	 */
 }
 
 int main(void)
