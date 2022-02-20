@@ -14,7 +14,7 @@
 #include "adc.h"
 
 #define OFFSET_ADC	300uL
-#define MAX_OUT		3100uL
+
 
 typedef enum
 {

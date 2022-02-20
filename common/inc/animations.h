@@ -25,7 +25,8 @@ typedef enum  {
 	anim_blue,
 	anim_cycleColors,
 	anim_layers,
-	anim_enumAssrt
+	anim_enumAssrt,
+	anim_msqDrv
 }anim_mode_e;
 
 typedef enum
@@ -109,6 +110,20 @@ void anim_random3(LedChainDesc_t *const lcd);
 void anim_r23Init(LedChainDesc_t *const lcd);
 void anim_r23DeInit(LedChainDesc_t *const lcd);
 void anim_layerRedRider(uint32_t pos);
+
+#include "msgeq7.h"
+
+typedef struct frqBand {
+	gChanVal gCv;
+	uint32_t pSt;
+	uint32_t pL;
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	msgeq7Freq band;
+} frqBand_t;
+
+void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB);
 
 #else
 #define anim_random1(x)

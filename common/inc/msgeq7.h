@@ -10,6 +10,8 @@
 
 #include "peripheral.h"
 
+#define MAX_OUT		3100uL
+
 typedef enum {
 	e63Hz = 0u,
 	e160Hz,
@@ -20,6 +22,8 @@ typedef enum {
 	e16kHz,
 	eMax
 }msgeq7Freq;
+
+typedef uint32_t (*gChanVal)(msgeq7Freq freq);
 
 void msgeq_ticker(void);
 uint32_t getLChanVal(msgeq7Freq freq);
