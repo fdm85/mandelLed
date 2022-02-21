@@ -282,6 +282,12 @@ void anim_CyclicCall(mAnim_t* ctx)
 	case anim_layers:
 		layers(ctx->lcd_ctx);
 		break;
+	case anim_msqDrv:
+		led_setAllLedsToColor(ctx->lcd_ctx, 100u, 100u, 100u);
+		for (uint8_t i = 0; l[i] != NULL; ++i) {
+			anim_frqDrv(ctx->lcd_ctx, l[i]);
+		}
+		break;
 	default:
 		assrt(false);
 		break;
