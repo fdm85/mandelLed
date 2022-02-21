@@ -14,11 +14,8 @@
 
 typedef enum  {
 	anim_powerUp = 0,
-	anim_cR1,
-	anim_cR2,
-	anim_rnd1,
-	anim_rnd2,
-	anim_rnd3,
+	anim_min = 1,
+	anim_rnd3 = 1,
 	anim_white,
 	anim_red,
 	anim_green,
@@ -27,6 +24,10 @@ typedef enum  {
 	anim_layers,
 	anim_msqDrv,
 	anim_enumAssrt,
+	anim_cR1,
+	anim_cR2,
+	anim_rnd1,
+	anim_rnd2,
 }anim_mode_e;
 
 typedef enum
@@ -123,7 +124,7 @@ typedef struct frqBand {
 	msgeq7Freq band;
 } frqBand_t;
 
-extern const frqBand_t *l[];
+extern const frqBand_t *frqB[];
 void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB);
 
 #else

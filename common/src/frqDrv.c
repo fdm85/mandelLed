@@ -37,7 +37,7 @@ static const frqBand_t bl5 = {.gCv = getLChanVal, .pSt = 130u, .pL = 26u, .r = c
 static const frqBand_t br5 = {.gCv = getRChanVal, .pSt = (618u -180), .pL = 30u, .r = colorSetVal, .g = 1u, .b = 1u, .band = e6_25kHz};
 static const frqBand_t bl6 = {.gCv = getLChanVal, .pSt = 156u, .pL = 26u, .r = colorSetVal/2, .g = colorSetVal, .b = colorSetVal/2, .band = e16kHz};
 static const frqBand_t br6 = {.gCv = getRChanVal, .pSt = (618u -210), .pL = 30u, .r = colorSetVal/2, .g = colorSetVal, .b = colorSetVal/2, .band = e16kHz};
-const frqBand_t *l[] = {&bl0, &br0, &bl1, &br1, &bl2, &br2, &bl3, &br3, &bl4, &br4, &bl5, &br5, &bl6, &br6, NULL};
+const frqBand_t *frqB[] = {&bl0, &br0, &bl1, &br1, &bl2, &br2, &bl3, &br3, &bl4, &br4, &bl5, &br5, &bl6, &br6, NULL};
 
 void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB)
 {
