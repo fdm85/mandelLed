@@ -123,6 +123,7 @@ typedef struct frqBand {
 	uint32_t pL;
 	uint32_t pM;
 	uint32_t hL;
+	uint32_t max;
 	uint8_t r;
 	uint8_t g;
 	uint8_t b;
@@ -130,8 +131,9 @@ typedef struct frqBand {
 } frqBand_t;
 
 extern const frqBand_t *frqB[];
+extern const frqBand_t *frqR[];
 void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB);
-
+void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB);
 #else
 #define anim_random1(x)
 #define anim_setRandom2CycleCount(x)

@@ -287,6 +287,9 @@ void anim_CyclicCall(mAnim_t* ctx)
 		for (uint8_t i = 0; frqB[i] != NULL; ++i) {
 			anim_frqDrv(ctx->lcd_ctx, frqB[i]);
 		}
+		for (uint8_t i = 0; frqR[i] != NULL; ++i) {
+		   anim_frqFrvRem(ctx->lcd_ctx, frqR[i]);
+		}
 		break;
 	default:
 		assrt(false);

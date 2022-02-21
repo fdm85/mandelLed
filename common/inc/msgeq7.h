@@ -29,6 +29,6 @@ void msgeq_ticker(void);
 uint32_t getLChanVal(msgeq7Freq freq);
 uint32_t getRChanVal(msgeq7Freq freq);
 #define SUM_MAX (8 * MAX_OUT)
-uint32_t getLSum(void);
-uint32_t getLSum(void);
+uint32_t getLSum(msgeq7Freq freq);
+uint32_t getRSum(msgeq7Freq freq);
 #endif /* MSGEQ7_H_ */
