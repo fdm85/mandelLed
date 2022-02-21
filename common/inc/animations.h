@@ -14,7 +14,9 @@
 
 typedef enum  {
 	anim_powerUp = 0,
+
 	anim_min = 1,
+
 	anim_rnd3 = 1,
 	anim_white,
 	anim_red,
@@ -24,6 +26,7 @@ typedef enum  {
 	anim_layers,
 	anim_msqDrv,
 	anim_enumAssrt,
+
 	anim_cR1,
 	anim_cR2,
 	anim_rnd1,
@@ -118,6 +121,8 @@ typedef struct frqBand {
 	gChanVal gCv;
 	uint32_t pSt;
 	uint32_t pL;
+	uint32_t pM;
+	uint32_t hL;
 	uint8_t r;
 	uint8_t g;
 	uint8_t b;

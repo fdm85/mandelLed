@@ -207,3 +207,16 @@ uint32_t getRChanVal(msgeq7Freq freq)
 	uint32_t ret = (mT.adcChan2[freq] > OFFSET_ADC) ? (mT.adcChan2[freq] - OFFSET_ADC) : 0uL;
 	return ret;
 }
+
+uint32_t getLSum(void)
+{
+   return (getLChanVal(e63Hz) + getLChanVal(e160Hz) + getLChanVal(e400Hz)
+         + getLChanVal(e1kHz) + getLChanVal(e2_5kHz) + getLChanVal(e6_25kHz)
+         + getLChanVal(e16kHz));
+}
+uint32_t getRSum(void)
+{
+   return (getRChanVal(e63Hz) + getRChanVal(e160Hz) + getRChanVal(e400Hz)
+         + getRChanVal(e1kHz) + getRChanVal(e2_5kHz) + getRChanVal(e6_25kHz)
+         + getRChanVal(e16kHz));
+}
