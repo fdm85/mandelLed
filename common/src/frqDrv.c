@@ -23,20 +23,24 @@
 #define colorSetVal 140u
 #include "animations.h"
 
-static const frqBand_t bl0 = {.gCv = getLChanVal, .pSt = 0u, .pL = 26u, .r = 1, .g = colorSetVal, .b = colorSetVal, .band = e63Hz};
-static const frqBand_t br0 = {.gCv = getRChanVal, .pSt = (618u -30), .pL = 30u, .r = 1, .g =colorSetVal, .b = colorSetVal, .band = e63Hz};
-static const frqBand_t bl1 = {.gCv = getLChanVal, .pSt = 26u, .pL = 26u, .r = colorSetVal, .g = 2u, .b = colorSetVal, .band = e160Hz};
-static const frqBand_t br1 = {.gCv = getRChanVal, .pSt = (618u -60), .pL = 30u, .r = colorSetVal, .g = 2u, .b = colorSetVal, .band = e160Hz};
-static const frqBand_t bl2 = {.gCv = getLChanVal, .pSt = 52u, .pL = 26u, .r = colorSetVal, .g = colorSetVal, .b = 1u, .band = e400Hz};
-static const frqBand_t br2 = {.gCv = getRChanVal, .pSt = (618u -90), .pL = 30u, .r = colorSetVal, .g = colorSetVal, .b = 1u, .band = e400Hz};
-static const frqBand_t bl3 = {.gCv = getLChanVal, .pSt = 78u, .pL = 26u, .r = 1u, .g = colorSetVal, .b = 1u, .band = e1kHz};
-static const frqBand_t br3 = {.gCv = getRChanVal, .pSt = (618u -120), .pL = 30u, .r = 1u, .g = colorSetVal, .b = 1u, .band = e1kHz};
-static const frqBand_t bl4 = {.gCv = getLChanVal, .pSt = 104u, .pL = 26u, .r = colorSetVal/2, .g = colorSetVal/2, .b = colorSetVal, .band = e2_5kHz};
-static const frqBand_t br4 = {.gCv = getRChanVal, .pSt = (618u -150), .pL = 30u, .r = colorSetVal/2, .g = colorSetVal/2, .b = colorSetVal, .band = e2_5kHz};
-static const frqBand_t bl5 = {.gCv = getLChanVal, .pSt = 130u, .pL = 26u, .r = colorSetVal, .g = 1u, .b = 1u, .band = e6_25kHz};
-static const frqBand_t br5 = {.gCv = getRChanVal, .pSt = (618u -180), .pL = 30u, .r = colorSetVal, .g = 1u, .b = 1u, .band = e6_25kHz};
-static const frqBand_t bl6 = {.gCv = getLChanVal, .pSt = 156u, .pL = 26u, .r = colorSetVal/2, .g = colorSetVal, .b = colorSetVal/2, .band = e16kHz};
-static const frqBand_t br6 = {.gCv = getRChanVal, .pSt = (618u -210), .pL = 30u, .r = colorSetVal/2, .g = colorSetVal, .b = colorSetVal/2, .band = e16kHz};
+#define fm_frqBand(name, gf, str, len, rr, gg, bb, bnd)\
+	static const frqBand_t name = {.gCv = gf, .pSt = str, .pL = len, .r = rr, .g = gg, .b = bb, .band = bnd}
+
+fm_frqBand(bl0, getLChanVal, 0u, 26u, 1u, colorSetVal, colorSetVal, e63Hz);
+fm_frqBand(br0, getRChanVal, (618u -30), 30u, 1u, colorSetVal, colorSetVal, e63Hz);
+fm_frqBand(bl1, getLChanVal, 26u, 26u, 1u, colorSetVal, colorSetVal, e160Hz);
+fm_frqBand(br1, getRChanVal, (618u -60), 30u, 1u, colorSetVal, colorSetVal, e160Hz);
+fm_frqBand(bl2, getLChanVal, 52u, 26u, colorSetVal, colorSetVal, 1u, e400Hz);
+fm_frqBand(br2, getRChanVal, (618u -90), 30u, colorSetVal, colorSetVal, 1u, e400Hz);
+fm_frqBand(bl3, getLChanVal, 78u, 26u, 1u, colorSetVal, 1u, e1kHz);
+fm_frqBand(br3, getRChanVal, (618u -120), 30u, 1u, colorSetVal, 1u, e1kHz);
+fm_frqBand(bl4, getLChanVal, 104u, 26u, colorSetVal/2, colorSetVal/2, colorSetVal, e2_5kHz);
+fm_frqBand(br4, getRChanVal, (618u -150), 30u, colorSetVal/2, colorSetVal/2, colorSetVal, e2_5kHz);
+fm_frqBand(bl5, getLChanVal, 130u, 26u, colorSetVal, 1u, 1u, e6_25kHz);
+fm_frqBand(br5, getRChanVal, (618u -180), 30u, colorSetVal, 1u, 1u, e6_25kHz);
+fm_frqBand(bl6, getLChanVal, 156u, 26u, colorSetVal/2, colorSetVal, colorSetVal/2, e16kHz);
+fm_frqBand(br6, getRChanVal, (618u -210), 30u, colorSetVal/2, colorSetVal, colorSetVal/2, e16kHz);
+
 const frqBand_t *frqB[] = {&bl0, &br0, &bl1, &br1, &bl2, &br2, &bl3, &br3, &bl4, &br4, &bl5, &br5, &bl6, &br6, NULL};
 
 void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB)
