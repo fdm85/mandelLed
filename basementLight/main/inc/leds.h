@@ -9,7 +9,7 @@
 #define LEDS_H_
 
 
-#define CCRAM_PLACING __attribute__((section (".ccmram")))
+
 #include "ledData.h"
 
 extern LedChainDesc_t lcd_main;

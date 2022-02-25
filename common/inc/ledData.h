@@ -8,7 +8,8 @@
 #ifndef LEDDATA_H_
 #define LEDDATA_H_
 
-#include "stdint.h"
+#include <stdint.h>
+#include "lm.h"
 #include "fpa.h"
 #include "tim.h"
 

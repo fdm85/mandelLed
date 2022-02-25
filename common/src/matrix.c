@@ -166,6 +166,34 @@ static void mtrx_setLedsScaled(LedChainDesc_t *const lcd, channel_t *chan,
 				b);
 	}
 }
+static void mtrx_setLedsScaled2(LedChainDesc_t *const lcd, channel_t *chan,
+		uint32_t val1, uint32_t val2, uint8_t r, uint8_t g, uint8_t b) {
+	static const uint32_t max = 3100uL;
+	static const uint32_t round = max / 2uL;
+
+	uint32_t scaled1 = ((barHeigth * val1) + round) / max;
+	uint32_t scaled2 = ((barHeigth * val2) + round) / max;
+
+	if (scaled1 > barHeigth)
+		scaled1 = barHeigth;
+
+	assrt(scaled1 <= barHeigth);
+	if (scaled2 > barHeigth)
+		scaled2 = barHeigth;
+
+	assrt(scaled2 <= barHeigth);
+
+	for (uint8_t i = 0; i < scaled1; ++i) {
+		led_setLedToColor(lcd,
+				chan->bar[0].dots[inverted ? (barHeigth - (i + 1)) : i], r, g,
+				b);
+	}
+	for (uint8_t i = 0; i < scaled2; ++i) {
+       led_setLedToColor(lcd,
+               chan->bar[1].dots[inverted ? (barHeigth - (i + 1)) : i], r, g,
+               b);
+	}
+}
 
 static void mtrx_setAuxLedsScaled(LedChainDesc_t *const lcd, channel_t *chan,
 		uint32_t val, uint8_t r, uint8_t g, uint8_t b) {
@@ -234,7 +262,7 @@ void mtrx_anim(mAnim_t *ctx) {
 	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], auxLeft, 3u, 3u, color);
 	mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], auxRight, 3u, 3u, color);
 
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[0], getLChanVal(e63Hz), 2u, color,
+	mtrx_setLedsScaled2(ctx->lcd_ctx, &lLeft[0], getLChanVal(e63Hz), getLChanVal2(e63Hz), 2u, color,
 			color);
 	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[1], getLChanVal(e160Hz), color, 2u,
 			color);
@@ -249,7 +277,7 @@ void mtrx_anim(mAnim_t *ctx) {
 	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[6], getLChanVal(e16kHz), color / 2,
 			color, color / 2);
 
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[0], getRChanVal(e63Hz), 2u, color,
+	mtrx_setLedsScaled2(ctx->lcd_ctx, &lRight[0], getRChanVal(e63Hz), getRChanVal2(e63Hz), 2u, color,
 			color);
 	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[1], getRChanVal(e160Hz), color, 2u,
 			color);
