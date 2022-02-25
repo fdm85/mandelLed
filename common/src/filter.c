@@ -32,8 +32,9 @@ typedef struct iCtx{
 }iCtx_t;
 
 iCtx_t CCRAM_PLACING c1_64 = {.v = 0uL}, CCRAM_PLACING c2_64 = {.v = 0uL};
+iCtx_t CCRAM_PLACING c1_160 = {.v = 0uL}, CCRAM_PLACING c2_160 = {.v = 0uL};
 
-static uint32_t fl_i(fltCtx_t *ctx_p, uint32_t yM)
+static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
    (void)yM;
@@ -44,7 +45,20 @@ static uint32_t fl_i(fltCtx_t *ctx_p, uint32_t yM)
    ctx->v += yM/4uL;
    return ctx->v;
 }
+static uint32_t fl_i160(fltCtx_t *ctx_p, uint32_t yM)
+{
+   iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
+   (void)yM;
+
+   ctx->v *=  3uL;
+   ctx->v /=  5uL;
+
+   ctx->v += (2*yM)/5uL;
+   return ctx->v;
+}
 
 // CCRAM_PLACING
-fltCtx_t  cc1 = {.f = fl_i, .ctx = &c1_64};
-fltCtx_t  cc2 = {.f = fl_i, .ctx = &c2_64};
+fltCtx_t  cc1_64 = {.f = fl_i64, .ctx = &c1_64};
+fltCtx_t  cc2_64 = {.f = fl_i64, .ctx = &c2_64};
+fltCtx_t  cc1_160 = {.f = fl_i160, .ctx = &c1_160};
+fltCtx_t  cc2_160 = {.f = fl_i160, .ctx = &c2_160};

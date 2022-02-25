@@ -264,7 +264,7 @@ void mtrx_anim(mAnim_t *ctx) {
 
 	mtrx_setLedsScaled2(ctx->lcd_ctx, &lLeft[0], getLChanVal(e63Hz), getLChanVal2(e63Hz), 2u, color,
 			color);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[1], getLChanVal(e160Hz), color, 2u,
+	mtrx_setLedsScaled2(ctx->lcd_ctx, &lLeft[1], getLChanVal(e160Hz), getLChanVal2(e160Hz), color, 2u,
 			color);
 	mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[2], getLChanVal(e400Hz), color,
 			color, 2u);
@@ -279,7 +279,7 @@ void mtrx_anim(mAnim_t *ctx) {
 
 	mtrx_setLedsScaled2(ctx->lcd_ctx, &lRight[0], getRChanVal(e63Hz), getRChanVal2(e63Hz), 2u, color,
 			color);
-	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[1], getRChanVal(e160Hz), color, 2u,
+	mtrx_setLedsScaled2(ctx->lcd_ctx, &lRight[1], getRChanVal(e160Hz), getRChanVal2(e160Hz), color, 2u,
 			color);
 	mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[2], getRChanVal(e400Hz), color,
 			color, 2u);
