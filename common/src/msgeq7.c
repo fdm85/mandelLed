@@ -151,14 +151,17 @@ void msgeq_ticker(void) {
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 
+   uint32_t t;
    if (hadc == &hadc2) {
       fltCtx_t *ctx = mT.cc1[mT.cycle];
-      mT.adcChan1[mT.cycle] = HAL_ADC_GetValue(&hadc2);
+      t = HAL_ADC_GetValue(&hadc2);
+      mT.adcChan1[mT.cycle] = (t > OFFSET_ADC) ? (t - OFFSET_ADC) : 0uL;
       if(ctx != NULL)
          mT.adcChan12[mT.cycle] =  ctx->f(ctx, mT.adcChan1[mT.cycle]);
    } else if (hadc == &hadc3) {
       fltCtx_t *ctx = mT.cc2[mT.cycle];
-      mT.adcChan2[mT.cycle] = HAL_ADC_GetValue(&hadc3);
+      t = HAL_ADC_GetValue(&hadc2);
+      mT.adcChan2[mT.cycle] = (t > OFFSET_ADC) ? (t - OFFSET_ADC) : 0uL;
       if(ctx != NULL)
                mT.adcChan22[mT.cycle] =  ctx->f(ctx, mT.adcChan2[mT.cycle]);
    } else {
@@ -171,11 +174,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 }
 
 uint32_t getLChanVal(msgeq7Freq freq) {
-   uint32_t ret = (mT.adcChan1[freq] > OFFSET_ADC) ? (mT.adcChan1[freq] - OFFSET_ADC) : 0uL;
+   uint32_t ret = mT.adcChan1[freq];
    return ret;
 }
 uint32_t getRChanVal(msgeq7Freq freq) {
-   uint32_t ret = (mT.adcChan2[freq] > OFFSET_ADC) ? (mT.adcChan2[freq] - OFFSET_ADC) : 0uL;
+   uint32_t ret = mT.adcChan2[freq];
    return ret;
 }
 uint32_t getLChanVal2(msgeq7Freq freq) {
@@ -189,9 +192,9 @@ uint32_t getRChanVal2(msgeq7Freq freq) {
 
 uint32_t getLSum(msgeq7Freq freq) {
    (void) freq;
-   return (getLChanVal(e63Hz) + getLChanVal(e160Hz) + getLChanVal(e400Hz) + getLChanVal(e1kHz) + getLChanVal(e2_5kHz) + getLChanVal(e6_25kHz) + getLChanVal(e16kHz));
+   return (getLChanVal2(e63Hz) + getLChanVal2(e160Hz) + getLChanVal(e400Hz) + getLChanVal(e1kHz) + getLChanVal(e2_5kHz) + getLChanVal(e6_25kHz) + getLChanVal(e16kHz));
 }
 uint32_t getRSum(msgeq7Freq freq) {
    (void) freq;
-   return (getRChanVal(e63Hz) + getRChanVal(e160Hz) + getRChanVal(e400Hz) + getRChanVal(e1kHz) + getRChanVal(e2_5kHz) + getRChanVal(e6_25kHz) + getRChanVal(e16kHz));
+   return (getRChanVal2(e63Hz) + getRChanVal2(e160Hz) + getRChanVal(e400Hz) + getRChanVal(e1kHz) + getRChanVal(e2_5kHz) + getRChanVal(e6_25kHz) + getRChanVal(e16kHz));
 }
