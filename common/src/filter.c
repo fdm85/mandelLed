@@ -29,7 +29,7 @@
 
 typedef struct iCtx{
    fpa_t v;
-
+   uint32_t oM;
 }iCtx_t;
 
 iCtx_t CCRAM_PLACING c1_64, CCRAM_PLACING c2_64;
@@ -40,33 +40,41 @@ void fl_init(fltCtx_t **_pp)
    assrt(_pp != NULL);
    for (int i = 0; _pp[i]!=NULL; ++i) {
       ((iCtx_t*)_pp[i]->ctx)->v.r = 0;
+      ((iCtx_t*)_pp[i]->ctx)->oM = 0;
    }
 }
 
 static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
-   static fpa_t scI = _FPA_R(0.75);
-   static fpa_t scP = _FPA_R(0.25);
-   volatile uint32_t m = yM; (void)m;
-   volatile fpa_t oldI = ctx->v;
-   volatile fpa_t newI =  FPA_mult(scI, oldI);
-   volatile fpa_t newP = FPA_IntMultFpa(yM, scP);
-   volatile fpa_t newOut = {.r = newP.r + newI.r};
-   ctx->v.r = newOut.r;
+   static fpa_t scI = _FPA_R(0.65);
+   static fpa_t scP = _FPA_R(0.35);
+   static fpa_t scDU = _FPA_R(0.5);
+   static fpa_t scDD = _FPA_R(0.3);
+   static fpa_t scOut = _FPA_R(1.65);
 
-   return (uint32_t)ctx->v.i;
+   ctx->v = FPA_mult(scI, ctx->v);
+   ctx->v.r += FPA_IntMultFpa(yM, scP).r;
+   int32_t dif = yM - ctx->oM;
+   ctx->v.r += FPA_IntMultFpa(dif, (dif > 0) ? scDU : scDD).r;
+   ctx->oM = yM;
+
+   return (uint32_t)(FPA_mult(scOut, ctx->v).i);
 }
 static uint32_t fl_i160(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
    static fpa_t scI = _FPA_R(0.6);
    static fpa_t scP = _FPA_R(0.4);
+   static fpa_t scD = _FPA_R(0.5);
+   static fpa_t scOut = _FPA_R(1.05);
 
    ctx->v = FPA_mult(scI, ctx->v);
    ctx->v.r += FPA_IntMultFpa(yM, scP).r;
+   ctx->v.r += FPA_IntMultFpa(yM - ctx->oM, scD).r;
+   ctx->oM = yM;
 
-   return (uint32_t)ctx->v.i;
+   return (uint32_t)(FPA_mult(scOut, ctx->v).i);
 }
 
 // CCRAM_PLACING
