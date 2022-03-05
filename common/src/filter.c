@@ -51,11 +51,11 @@ static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
    static fpa_t scP = _FPA_R(0.35);
    static fpa_t scDU = _FPA_R(0.5);
    static fpa_t scDD = _FPA_R(0.3);
-   static fpa_t scOut = _FPA_R(1.65);
+   static fpa_t scOut = _FPA_R(1.5);
 
    ctx->v = FPA_mult(scI, ctx->v);
    ctx->v.r += FPA_IntMultFpa(yM, scP).r;
-   int32_t dif = yM - ctx->oM;
+   int32_t dif = (int32_t)yM - (int32_t)ctx->oM;
    ctx->v.r += FPA_IntMultFpa(dif, (dif > 0) ? scDU : scDD).r;
    ctx->oM = yM;
 
@@ -66,12 +66,14 @@ static uint32_t fl_i160(fltCtx_t *ctx_p, uint32_t yM)
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
    static fpa_t scI = _FPA_R(0.6);
    static fpa_t scP = _FPA_R(0.4);
-   static fpa_t scD = _FPA_R(0.5);
+   static fpa_t scDU = _FPA_R(0.5);
+   static fpa_t scDD = _FPA_R(0.3);
    static fpa_t scOut = _FPA_R(1.05);
 
    ctx->v = FPA_mult(scI, ctx->v);
    ctx->v.r += FPA_IntMultFpa(yM, scP).r;
-   ctx->v.r += FPA_IntMultFpa(yM - ctx->oM, scD).r;
+   int32_t dif = (int32_t)yM - (int32_t)ctx->oM;
+   ctx->v.r += FPA_IntMultFpa(dif, (dif > 0) ? scDU : scDD).r;
    ctx->oM = yM;
 
    return (uint32_t)(FPA_mult(scOut, ctx->v).i);
