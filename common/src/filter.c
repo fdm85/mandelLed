@@ -24,37 +24,49 @@
 
 #include "filter.h"
 #include "lm.h"
-
+#include "fpa.h"
+#include "assrt.h"
 
 typedef struct iCtx{
-   uint32_t v;
+   fpa_t v;
 
 }iCtx_t;
 
-iCtx_t CCRAM_PLACING c1_64 = {.v = 0uL}, CCRAM_PLACING c2_64 = {.v = 0uL};
-iCtx_t CCRAM_PLACING c1_160 = {.v = 0uL}, CCRAM_PLACING c2_160 = {.v = 0uL};
+iCtx_t CCRAM_PLACING c1_64, CCRAM_PLACING c2_64;
+iCtx_t CCRAM_PLACING c1_160, CCRAM_PLACING c2_160;
+
+void fl_init(fltCtx_t **_pp)
+{
+   assrt(_pp != NULL);
+   for (int i = 0; _pp[i]!=NULL; ++i) {
+      ((iCtx_t*)_pp[i]->ctx)->v.r = 0;
+   }
+}
 
 static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
-   (void)yM;
+   static fpa_t scI = _FPA_R(0.75);
+   static fpa_t scP = _FPA_R(0.25);
+   volatile uint32_t m = yM; (void)m;
+   volatile fpa_t oldI = ctx->v;
+   volatile fpa_t newI =  FPA_mult(scI, oldI);
+   volatile fpa_t newP = FPA_IntMultFpa(yM, scP);
+   volatile fpa_t newOut = {.r = newP.r + newI.r};
+   ctx->v.r = newOut.r;
 
-   ctx->v *=  3uL;
-   ctx->v /=  4uL;
-
-   ctx->v += yM/4uL;
-   return ctx->v;
+   return (uint32_t)ctx->v.i;
 }
 static uint32_t fl_i160(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
-   (void)yM;
+   static fpa_t scI = _FPA_R(0.6);
+   static fpa_t scP = _FPA_R(0.4);
 
-   ctx->v *=  3uL;
-   ctx->v /=  5uL;
+   ctx->v = FPA_mult(scI, ctx->v);
+   ctx->v.r += FPA_IntMultFpa(yM, scP).r;
 
-   ctx->v += (2*yM)/5uL;
-   return ctx->v;
+   return (uint32_t)ctx->v.i;
 }
 
 // CCRAM_PLACING

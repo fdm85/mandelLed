@@ -46,6 +46,8 @@ static void sInit(void) {
    mT.strobeTarget = 1uL;
    tStart(&mT.initTime);
    HAL_GPIO_WritePin(MS_RESET_GPIO_Port, MS_RESET_Pin, GPIO_PIN_SET);
+   fl_init(mT.cc1);
+   fl_init(mT.cc2);
 }
 
 static void exInit(void) {

@@ -36,4 +36,6 @@ struct fltCtx {
 extern fltCtx_t cc1_64, cc1_160;
 extern fltCtx_t cc2_64, cc2_160;
 
+void fl_init(fltCtx_t **_pp);
+
 #endif /* INC_FILTER_H_ */
