@@ -16,6 +16,9 @@
 
 #define OFFSET_ADC	300uL
 
+#define LEFT hadc3
+#define RIGHT hadc2
+
 typedef enum {
    eInit = 0u, eStart, eStrobe, eAdcStart, eAdcFin, eFin,
 } gS_t;
@@ -152,15 +155,15 @@ void msgeq_ticker(void) {
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 
    uint32_t t;
-   if (hadc == &hadc2) {
+   if (hadc == &LEFT) {
       fltCtx_t *ctx = mT.cc1[mT.cycle];
-      t = HAL_ADC_GetValue(&hadc2);
+      t = HAL_ADC_GetValue(hadc);
       mT.adcChan1[mT.cycle] = (t > OFFSET_ADC) ? (t - OFFSET_ADC) : 0uL;
       if(ctx != NULL)
          mT.adcChan12[mT.cycle] =  ctx->f(ctx, mT.adcChan1[mT.cycle]);
-   } else if (hadc == &hadc3) {
+   } else if (hadc == &RIGHT) {
       fltCtx_t *ctx = mT.cc2[mT.cycle];
-      t = HAL_ADC_GetValue(&hadc3);
+      t = HAL_ADC_GetValue(hadc);
       mT.adcChan2[mT.cycle] = (t > OFFSET_ADC) ? (t - OFFSET_ADC) : 0uL;
       if(ctx != NULL)
                mT.adcChan22[mT.cycle] =  ctx->f(ctx, mT.adcChan2[mT.cycle]);
