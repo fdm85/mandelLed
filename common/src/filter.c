@@ -32,8 +32,8 @@ typedef struct iCtx{
    uint32_t oM;
 }iCtx_t;
 
-iCtx_t CCRAM_PLACING c1_64, CCRAM_PLACING c2_64;
-iCtx_t CCRAM_PLACING c1_160, CCRAM_PLACING c2_160;
+iCtx_t CCRAM_PLACING c1_64 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_64 = {.v = {.r = 0}, .oM = 0};
+iCtx_t CCRAM_PLACING c1_160 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_160 = {.v = {.r = 0}, .oM = 0};
 
 void fl_init(fltCtx_t **_pp)
 {
@@ -47,11 +47,11 @@ void fl_init(fltCtx_t **_pp)
 static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
-   static fpa_t scI = _FPA_R(0.65);
-   static fpa_t scP = _FPA_R(0.35);
-   static fpa_t scDU = _FPA_R(0.5);
-   static fpa_t scDD = _FPA_R(0.3);
-   static fpa_t scOut = _FPA_R(1.5);
+   static fpa_t CCRAM_PLACING scI = _FPA_R(0.65);
+   static fpa_t CCRAM_PLACING scP = _FPA_R(0.35);
+   static fpa_t CCRAM_PLACING scDU = _FPA_R(0.5);
+   static fpa_t CCRAM_PLACING scDD = _FPA_R(0.3);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(1.5);
 
    ctx->v = FPA_mult(scI, ctx->v);
    ctx->v.r += FPA_IntMultFpa(yM, scP).r;
@@ -64,11 +64,11 @@ static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
 static uint32_t fl_i160(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
-   static fpa_t scI = _FPA_R(0.6);
-   static fpa_t scP = _FPA_R(0.4);
-   static fpa_t scDU = _FPA_R(0.5);
-   static fpa_t scDD = _FPA_R(0.3);
-   static fpa_t scOut = _FPA_R(1.05);
+   static fpa_t CCRAM_PLACING scI = _FPA_R(0.6);
+   static fpa_t CCRAM_PLACING scP = _FPA_R(0.4);
+   static fpa_t CCRAM_PLACING scDU = _FPA_R(0.5);
+   static fpa_t CCRAM_PLACING scDD = _FPA_R(0.3);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(1.05);
 
    ctx->v = FPA_mult(scI, ctx->v);
    ctx->v.r += FPA_IntMultFpa(yM, scP).r;
@@ -79,8 +79,7 @@ static uint32_t fl_i160(fltCtx_t *ctx_p, uint32_t yM)
    return (uint32_t)(FPA_mult(scOut, ctx->v).i);
 }
 
-// CCRAM_PLACING
-fltCtx_t  cc1_64 = {.f = fl_i64, .ctx = &c1_64};
-fltCtx_t  cc2_64 = {.f = fl_i64, .ctx = &c2_64};
-fltCtx_t  cc1_160 = {.f = fl_i160, .ctx = &c1_160};
-fltCtx_t  cc2_160 = {.f = fl_i160, .ctx = &c2_160};
+fltCtx_t CCRAM_PLACING cc1_64 = {.f = fl_i64, .ctx = &c1_64};
+fltCtx_t CCRAM_PLACING cc2_64 = {.f = fl_i64, .ctx = &c2_64};
+fltCtx_t CCRAM_PLACING cc1_160 = {.f = fl_i160, .ctx = &c1_160};
+fltCtx_t CCRAM_PLACING cc2_160 = {.f = fl_i160, .ctx = &c2_160};

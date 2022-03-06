@@ -32,15 +32,17 @@
 
 .global  g_pfnVectors
 .global  Default_Handler
-.global  Reset_Handler
 
 /* start address for the initialization values of the .data section.
 defined in linker script */
 .word  _sidata
-/* start address for the .data section. defined in linker script */
+.word  _siccmram
+/* start address for the .data section. defined in linker script */  
 .word  _sdata
+.word  _sccmram
 /* end address for the .data section. defined in linker script */
 .word  _edata
+.word  _eccmram
 /* start address for the .bss section. defined in linker script */
 .word  _sbss
 /* end address for the .bss section. defined in linker script */
@@ -78,6 +80,20 @@ LoopCopyDataInit:
   adds  r2, r0, r1
   cmp  r2, r3
   bcc  CopyDataInit
+  b  LoopCopyCCMDataInit
+
+CopyCCMDataInit:
+  ldr  r3, =_siccmram
+  ldr  r3, [r3, r1]
+  str  r3, [r0, r1]
+  adds  r1, r1, #4
+
+LoopCopyCCMDataInit:
+  ldr  r0, =_sccmram
+  ldr  r3, =_eccmram
+  adds  r2, r0, r1
+  cmp  r2, r3
+  bcc  CopyCCMDataInit
   ldr  r2, =_sbss
   b  LoopFillZerobss
 /* Zero fill the bss segment. */
