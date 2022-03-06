@@ -38,7 +38,7 @@ typedef struct mT_s {
    gS_t gS;
 } mT_t;
 
-static mT_t mT = { .cc1 = { &cc1_64, &cc1_160, NULL, NULL, NULL, NULL }, .cc2 = { &cc2_64, &cc2_160, NULL, NULL, NULL, NULL } };
+static mT_t mT = { .cc1 = { &cc1_64, &cc1_160, &cc1_400, &cc1_1k, &cc1_2k5, &cc1_6k25, &cc1_16k }, .cc2 = { &cc2_64, &cc2_160, &cc2_400, &cc2_1k, &cc2_2k5, &cc2_6k25, &cc2_16k} };
 
 static void sInit(void) {
    assrt(mT.gS == eInit);

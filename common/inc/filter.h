@@ -33,8 +33,7 @@ struct fltCtx {
    void* ctx;
 };
 
-extern fltCtx_t cc1_64, cc1_160;
-extern fltCtx_t cc2_64, cc2_160;
-
+extern fltCtx_t cc1_64, cc1_160, cc1_400, cc1_1k, cc1_2k5, cc1_6k25, cc1_16k;
+extern fltCtx_t cc2_64, cc2_160, cc2_400, cc2_1k, cc2_2k5, cc2_6k25, cc2_16k;
 
 #endif /* INC_FILTER_H_ */
