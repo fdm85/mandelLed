@@ -35,15 +35,6 @@ typedef struct iCtx{
 iCtx_t CCRAM_PLACING c1_64 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_64 = {.v = {.r = 0}, .oM = 0};
 iCtx_t CCRAM_PLACING c1_160 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_160 = {.v = {.r = 0}, .oM = 0};
 
-void fl_init(fltCtx_t **_pp)
-{
-   assrt(_pp != NULL);
-   for (int i = 0; _pp[i]!=NULL; ++i) {
-      ((iCtx_t*)_pp[i]->ctx)->v.r = 0;
-      ((iCtx_t*)_pp[i]->ctx)->oM = 0;
-   }
-}
-
 static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
