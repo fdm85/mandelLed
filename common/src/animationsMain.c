@@ -283,7 +283,7 @@ void anim_CyclicCall(mAnim_t* ctx)
 		layers(ctx->lcd_ctx);
 		break;
 	case anim_msqDrv:
-		led_setAllLedsToColor(ctx->lcd_ctx, 2u, 2u, 2u);
+		led_setAllLedsToColor(ctx->lcd_ctx, 6u, 6u, 6u);
 		for (uint8_t i = 0; frqB[i] != NULL; ++i) {
 			anim_frqDrv(ctx->lcd_ctx, frqB[i]);
 		}
