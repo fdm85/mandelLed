@@ -160,7 +160,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
          mT.adcChan12[mT.cycle] =  ctx->f(ctx, mT.adcChan1[mT.cycle]);
    } else if (hadc == &hadc3) {
       fltCtx_t *ctx = mT.cc2[mT.cycle];
-      t = HAL_ADC_GetValue(&hadc2);
+      t = HAL_ADC_GetValue(&hadc3);
       mT.adcChan2[mT.cycle] = (t > OFFSET_ADC) ? (t - OFFSET_ADC) : 0uL;
       if(ctx != NULL)
                mT.adcChan22[mT.cycle] =  ctx->f(ctx, mT.adcChan2[mT.cycle]);
@@ -175,19 +175,19 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 
 uint32_t getLChanVal(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan1[freq];
-   return ret;
+   return (ret <= MAX_OUT) ? ret : MAX_OUT;
 }
 uint32_t getRChanVal(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan2[freq];
-   return ret;
+   return (ret <= MAX_OUT) ? ret : MAX_OUT;
 }
 uint32_t getLChanVal2(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan12[freq];
-   return ret;
+   return (ret <= MAX_OUT) ? ret : MAX_OUT;
 }
 uint32_t getRChanVal2(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan22[freq];
-   return ret;
+   return (ret <= MAX_OUT) ? ret : MAX_OUT;
 }
 
 uint32_t getLSum(msgeq7Freq freq) {

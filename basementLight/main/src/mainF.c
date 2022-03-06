@@ -107,8 +107,8 @@ int main(void)
 	initClock();
 	initPeripherals();
 
-	anim_setMode(&lcd_main, anim_min);
-//	anim_setMode(&lcd_main, anim_msqDrv);
+//	anim_setMode(&lcd_main, anim_min);
+	anim_setMode(&lcd_main, anim_msqDrv);
 	led_initDataRaw(&lcd_main);
 	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
 
