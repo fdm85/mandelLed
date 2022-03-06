@@ -192,9 +192,9 @@ uint32_t getRChanVal2(msgeq7Freq freq) {
 
 uint32_t getLSum(msgeq7Freq freq) {
    (void) freq;
-   return (getLChanVal2(e63Hz) + getLChanVal2(e160Hz) + getLChanVal(e400Hz) + getLChanVal(e1kHz) + getLChanVal(e2_5kHz) + getLChanVal(e6_25kHz) + getLChanVal(e16kHz));
+   return (getLChanVal2(e63Hz) + getLChanVal2(e160Hz) + getLChanVal2(e400Hz) + getLChanVal2(e1kHz) + getLChanVal2(e2_5kHz) + getLChanVal2(e6_25kHz) + getLChanVal2(e16kHz));
 }
 uint32_t getRSum(msgeq7Freq freq) {
    (void) freq;
-   return (getRChanVal2(e63Hz) + getRChanVal2(e160Hz) + getRChanVal(e400Hz) + getRChanVal(e1kHz) + getRChanVal(e2_5kHz) + getRChanVal(e6_25kHz) + getRChanVal(e16kHz));
+   return (getRChanVal2(e63Hz) + getRChanVal2(e160Hz) + getRChanVal2(e400Hz) + getRChanVal2(e1kHz) + getRChanVal2(e2_5kHz) + getRChanVal2(e6_25kHz) + getRChanVal2(e16kHz));
 }
