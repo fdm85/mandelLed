@@ -21,7 +21,8 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+// PA2 TX
+// PA3 RX
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart2;
