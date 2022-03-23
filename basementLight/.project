@@ -29,5 +29,10 @@
 			<type>2</type>
 			<location>D:/eclipse_wrk/mandelLed/common</location>
 		</link>
+		<link>
+			<name>doc</name>
+			<type>2</type>
+			<location>D:/eclipse_wrk/mandelLed/doc</location>
+		</link>
 	</linkedResources>
 </projectDescription>
