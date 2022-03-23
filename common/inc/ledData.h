@@ -29,14 +29,14 @@
 #include "fpa.h"
 #include "tim.h"
 
-// logical led container
+/** @brief logical led container */
 typedef struct LedLogic_tag{
 	uint8_t g;
 	uint8_t r;
 	uint8_t b;
 }LedLogic_t;
 
-// led color transition descriptor
+/** @brief led color transition descriptor */
 typedef struct Led_diffColor{
 	fpa_t g;
 	fpa_t r;
@@ -48,33 +48,37 @@ typedef struct Led_diffColor{
 	uint16_t itMax;
 }Led_progColor_t;
 
+/** @brief diff runner context */
 typedef struct diffRunnerCtx_tag
 {
 	Led_progColor_t * lDc;
 	uint32_t size;
 }diffRunnerCtx_t;
 
-// raw led data for DMA to timer transfer
+/** @brief raw led data for DMA to timer transfer */
 typedef struct LedRaw
 {
-	uint32_t g[8];
-	uint32_t r[8];
-	uint32_t b[8];
+	uint32_t g[8]; /*!< */
+	uint32_t r[8]; /*!< */
+	uint32_t b[8]; /*!< */
 } LedRaw;
 
+/** @brief raw content context of a strip */
 typedef struct lRawCont_tag
 {
-	uint32_t* rI;
-	uint32_t* rO;
-	LedRaw* lConverterLed;
-	LedRaw* lRaw;
-	uint32_t ledCount;
-	uint16_t txCountInUi32;
-	uint16_t padding;
+	uint32_t* rI; /*!< */
+	uint32_t* rO; /*!< */
+	LedRaw* lConverterLed; /*!< */
+	LedRaw* lRaw; /*!< */
+	uint32_t ledCount; /*!< */
+	uint16_t txCountInUi32; /*!< */
+	uint16_t padding; /*!< */
 }lRawCont_t;
 
-
+/** @brief defines time(size) of in/out low level phase */
 #define resLength 41u
+
+/** @brief factory macro to create the raw data container */
 #define lRawContainer(name, ledCnt) \
 	static struct \
 	{ \
@@ -91,10 +95,11 @@ typedef struct lRawCont_tag
 			.ledCount = ledCnt, \
 			.txCountInUi32 = (sizeof(lRawContainer_##name)/sizeof(uint32_t)), \
 	}
-
+/** @brief factory macro to create the logical LED data container */
 #define lLogicContainer(name, ledCnt)\
 	static LedLogic_t CCRAM_PLACING ledsLog_##name[ledCnt]
 
+/** @brief factory macro to tie a logic LED strip to a timer PWM output channel */
 #define lChainDesc(name, timerN, tChan, rOn, rOff) \
 	LedChainDesc_t lcd_##name = { \
 			.lLogic = &ledsLog_##name[0], \
@@ -105,17 +110,17 @@ typedef struct lRawCont_tag
 			.rawOff = rOff, \
 	}
 
-// led chain descriptor, one for each led tube/chain
+/** @brief led chain descriptor, one for each led tube/chain */
 typedef struct LedChainDesc_tag
 {
-	LedLogic_t* lLogic;
-	const lRawCont_t *const lRaw;
-	TIM_HandleTypeDef* timer;
-	uint32_t timChannel;
-	uint32_t rawOn;
-	uint32_t rawOff;
-	uint32_t btMult;
-	uint32_t btDiv;
+	LedLogic_t* lLogic; /*!< pointer to led container, i.e. the RGB values of each single LED in a strip */
+	const lRawCont_t *const lRaw; /*!< pointer to IO-out raw data of the strip */
+	TIM_HandleTypeDef* timer; /*!< pointer to the timer instance responsible for the data output*/
+	uint32_t timChannel; /*!< output channel of the timer (as a timer peripheral my have multiple channels) */
+	uint32_t rawOn; /*!< pwm setval to produce a set bit*/
+	uint32_t rawOff; /*!< pwm setval to produce a reset bit*/
+	uint32_t btMult; /*!< brightness truncation multiplier */
+	uint32_t btDiv; /*!< brightness truncation divider */
 } LedChainDesc_t;
 
 void led_initDataRaw(LedChainDesc_t* lcd);

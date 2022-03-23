@@ -16,8 +16,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @brief Simple physic implementation for dynamic animations
- * @defgroup Physic Functions to support dynamic Animations
+ * @brief Physic public interface
+ * @defgroup Physic Functions to support interaction of dynamic Animations with each other
  * @ingroup Animations
  */
 
