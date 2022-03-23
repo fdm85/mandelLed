@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @brief Assert helper
- * @defgroup Dev_Helper
+ * @defgroup Dev_Helper Development helper's
  */
 
 #ifndef ASSRT_H_

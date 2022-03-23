@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @brief Circular run implementation
- * @defgroup Circular_Run
+ * @defgroup Circular_Run Animations that feature a circular(repeating) manner
  * @ingroup Animations
  */
 

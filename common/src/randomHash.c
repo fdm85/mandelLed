@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @brief Random animation implementation
- * @defgroup Random_Anim
+ * @defgroup Random_Anim Animations featuring chaotic (randomized) behavior
  * @ingroup Animations
  */
 
@@ -35,13 +35,13 @@
 
 typedef union
 {
-	uint32_t u32;
+	uint32_t u32; /*!< */
 	struct
 	{
-		uint8_t a;
-		uint8_t b;
-		uint8_t c;
-		uint8_t d;
+		uint8_t a; /*!< */
+		uint8_t b; /*!< */
+		uint8_t c; /*!< */
+		uint8_t d; /*!< */
 	};
 } rand_u;
 

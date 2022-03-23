@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @brief Filter public interface
- * @defgroup Filter
+ * @defgroup Filter Filter functions
  * @ingroup Math
  */
 

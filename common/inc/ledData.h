@@ -31,28 +31,28 @@
 
 /** @brief logical led container */
 typedef struct LedLogic_tag{
-	uint8_t g;
-	uint8_t r;
-	uint8_t b;
+	uint8_t g; /*!< */
+	uint8_t r; /*!< */
+	uint8_t b; /*!< */
 }LedLogic_t;
 
 /** @brief led color transition descriptor */
 typedef struct Led_diffColor{
-	fpa_t g;
-	fpa_t r;
-	fpa_t b;
-	fpa_t gP;
-	fpa_t rP;
-	fpa_t bP;
-	uint16_t itCur;
-	uint16_t itMax;
+	fpa_t g; /*!< */
+	fpa_t r; /*!< */
+	fpa_t b; /*!< */
+	fpa_t gP; /*!< */
+	fpa_t rP; /*!< */
+	fpa_t bP; /*!< */
+	uint16_t itCur; /*!< */
+	uint16_t itMax; /*!< */
 }Led_progColor_t;
 
 /** @brief diff runner context */
 typedef struct diffRunnerCtx_tag
 {
-	Led_progColor_t * lDc;
-	uint32_t size;
+	Led_progColor_t * lDc; /*!< */
+	uint32_t size; /*!< */
 }diffRunnerCtx_t;
 
 /** @brief raw led data for DMA to timer transfer */

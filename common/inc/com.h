@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @brief Communication Interface
- * @defgroup ComApi
+ * @defgroup ComApi Communication API
  */
 
 #ifndef COM_H_
