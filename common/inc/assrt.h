@@ -9,9 +9,15 @@
 #define ASSRT_H_
 
 #include "cmsis_compiler.h"
+#include "stddef.h"
 #include <stdbool.h>
 
-#define assrt(b) if((b)==false) __BKPT(0)
-#define assrtRet(b) if((b)==false) return
+#ifndef NO_ASSRT
+   #define assrt(b) if((b)==false) __BKPT(0)
+   #define assrtRet(b) if((b)==false) return
+#else
+   #define assrt(b)
+   #define assrtRet(b)
+#endif
 
 #endif /* ASSRT_H_ */

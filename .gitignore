@@ -7,7 +7,11 @@
 /DebugF303/
 /DebugL476/
 
-doc/*
+doc/doxyOut/*
 
 **/*.autosave
 *.launch
+*.bak
+dm00031020-stm32f405415-stm32f407417-stm32f427437-and-stm32f429439-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
+dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
+VisitenKartePlexiGlas.JPG

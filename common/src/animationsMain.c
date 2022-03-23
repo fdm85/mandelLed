@@ -66,7 +66,7 @@ void anim_nextMode(LedChainDesc_t *const lcd)
 
 	if (set == anim_enumAssrt)
 	{
-		set = anim_cR1;
+		set = anim_min;
 	}
 
 	anim_setMode(lcd, set);
@@ -229,19 +229,19 @@ void anim_CyclicCall(mAnim_t* ctx)
 	}
 	switch (currMode)
 	{
-	case anim_cR1:
-		anim_circularRun1(ctx->lcd_ctx, brightness);
-		break;
-	case anim_cR2:
-		riderBlanker(ctx->lcd_ctx, &rider1);
-		riderFiller(ctx->lcd_ctx, &rider1);
-		break;
-	case anim_rnd1:
-		anim_random1(ctx->lcd_ctx);
-		break;
-	case anim_rnd2:
-		anim_random2(ctx->lcd_ctx);
-		break;
+//	case anim_cR1:
+//		anim_circularRun1(ctx->lcd_ctx, brightness);
+//		break;
+//	case anim_cR2:
+//		riderBlanker(ctx->lcd_ctx, &rider1);
+//		riderFiller(ctx->lcd_ctx, &rider1);
+//		break;
+//	case anim_rnd1:
+//		anim_random1(ctx->lcd_ctx);
+//		break;
+//	case anim_rnd2:
+//		anim_random2(ctx->lcd_ctx);
+//		break;
 	case anim_rnd3:
 		anim_random3(ctx->lcd_ctx);
 		break;
@@ -281,6 +281,15 @@ void anim_CyclicCall(mAnim_t* ctx)
 	}
 	case anim_layers:
 		layers(ctx->lcd_ctx);
+		break;
+	case anim_msqDrv:
+		led_setAllLedsToColor(ctx->lcd_ctx, 6u, 6u, 6u);
+		for (uint8_t i = 0; frqB[i] != NULL; ++i) {
+			anim_frqDrv(ctx->lcd_ctx, frqB[i]);
+		}
+		for (uint8_t i = 0; frqR[i] != NULL; ++i) {
+		   anim_frqFrvRem(ctx->lcd_ctx, frqR[i]);
+		}
 		break;
 	default:
 		assrt(false);
