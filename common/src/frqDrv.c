@@ -16,9 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @brief // ToDo
- * @defgroup // ToDo
- * @ingroup // ToDo
+ * @brief Implements frequency driven animations
+ * @defgroup FrqDrv frequency driven animations
+ * @ingroup Animations
  */
 #define colorSetVal 100u
 #include "animations.h"

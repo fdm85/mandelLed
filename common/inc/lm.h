@@ -16,9 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @brief // ToDo
- * @defgroup // ToDo
- * @ingroup // ToDo
+ * @brief Linker map helpers
+ * @defgroup Linker_Map Helps to manage memory section placement
+ * @ingroup Dev_Helper
  */
 
 #ifndef INC_LM_H_

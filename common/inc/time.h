@@ -16,9 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @brief // ToDo
- * @defgroup // ToDo
- * @ingroup // ToDo
+ * @brief Timer implementation
+ * @defgroup Timer Simple time management
+ * @ingroup Dev_Help
  */
 
 #ifndef TIME_H_
