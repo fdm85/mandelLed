@@ -16,16 +16,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @brief // ToDo
- * @defgroup // ToDo
- * @ingroup // ToDo
+ * @brief Allocation of memory for the LEDs
+ * @ingroup LedCreator
  */
 
 #include "leds.h"
 #include "tim.h"
 
+/** @brief count of on full PWM cycle */
 #define PWM_RAW		104uL
+/** @brief PWM set val of a set bit */
 #define lRawOn ((2uL * PWM_RAW)/3uL)
+/** @brief PWM set val of a reset bit */
 #define lRawOff ((1uL * PWM_RAW)/3uL)
 
 lLogicContainer(main, 619);

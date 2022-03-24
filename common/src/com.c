@@ -33,31 +33,35 @@
 #include "stm32f3xx_hal_uart.h"
 #endif
 
-static uint16_t rxBuf[64];
+#define RX_BUF_SZ 64u
+static uint16_t rxBuf[RX_BUF_SZ];
 static uint16_t rxSize;
 static bool doParse = false;
 
+/**
+ * @brief Trigger TX of hello
+ */
 void com_testSend(void) {
 	static uint8_t str[] = "hello";
 	HAL_UART_Transmit(&huart2, &str[0], sizeof(str), 100uL);
 }
 
+/**
+ * @brief Enable receive interrupt
+ */
 void com_enableRx(void) {
 	doParse = false;
 	rxSize = 0u;
-	for (uint16_t i = 0; i < 64u; ++i) {
+	for (uint16_t i = 0; i < RX_BUF_SZ; ++i) {
 		rxBuf[i] = 0u;
 	}
-	HAL_UART_Receive_IT(&huart2, (uint8_t*) &rxBuf[0], 1u);
+	HAL_UART_Receive_IT(&huart2, (uint8_t*) &rxBuf[0], RX_BUF_SZ);
 }
-
-
 
 /**
  * @brief  Rx Transfer completed callbacks.
  * @param  huart  Pointer to a UART_HandleTypeDef structure that contains
  *                the configuration information for the specified UART module.
- * @retval None
  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	doParse = true;

@@ -58,12 +58,27 @@ void led_initDataRaw(LedChainDesc_t* lcd)
 	led_pasteData(lcd);
 }
 
+/** @brief Set brightness truncation
+ *  @param lcd context to work on
+ *  @param mult Multiplier
+ *  @param div Divider
+ *  @ingroup AccessAbstraction
+ */
 void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div)
 {
 	lcd->btMult = mult;
 	lcd->btDiv = div;
 }
 
+/** @brief Set a specific led's colors
+ *  @param lcd led to work on
+ *  @param r red color
+ *  @param g green color
+ *  @param b blue color
+ *  @param mult multiplier
+ *  @param div divider
+ *  @ingroup AccessAbstraction
+ */
 static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, uint32_t mult, uint32_t div)
 {
 	uint32_t rOut = (uint32_t) (r * mult) / div;
@@ -78,6 +93,14 @@ static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, u
 	led->b = (uint8_t) bOut;
 }
 
+/** @brief Set a specific led's colors
+ *  @param lcd strip context to work on
+ *  @param i index of led to set
+ *  @param r red color
+ *  @param g green color
+ *  @param b blue color
+ *  @ingroup AccessAbstraction
+ */
 void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b)
 {
 	if(i > lcd->lRaw->ledCount)
@@ -85,6 +108,12 @@ void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, ui
 	led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
 }
 
+/** @brief Get a specific led's colors
+ *  @param lcd strip context to work on
+ *  @param i index of led to set
+ *  @param l were to write the colors to
+ *  @ingroup AccessAbstraction
+ */
 void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l)
 {
 	assrt(l);
@@ -95,6 +124,13 @@ void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l)
 	l->r = lcd->lLogic[i].r;
 }
 
+/** @brief Set all leds of the strip to the same color
+ *  @param lcd strip context to work on
+ *  @param r red color
+ *  @param g green color
+ *  @param b blue color
+ *  @ingroup AccessAbstraction
+ */
 void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b)
 {
 	for (uint16_t i = 0; i < lcd->lRaw->ledCount; ++i)
@@ -103,6 +139,11 @@ void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b)
 	}
 }
 
+/** @brief Set all leds of the strip to the same color (uni color)
+ *  @param lcd strip context to work on
+ *  @param brightness brightness set val
+ *  @ingroup AccessAbstraction
+ */
 void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness)
 {
 	for (uint16_t i = 0; i < lcd->lRaw->ledCount; ++i)
@@ -111,6 +152,10 @@ void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness)
 	}
 }
 
+/** @brief Convert/Paste logic rgb colors to the raw data out field
+ *  @param lcd strip context to work on
+ *  @ingroup AccessAbstraction
+ */
 void led_pasteData(LedChainDesc_t* lcd)
 {
 	for (uint16_t i = 0; i < lcd->lRaw->ledCount; ++i)
@@ -119,6 +164,10 @@ void led_pasteData(LedChainDesc_t* lcd)
 	}
 }
 
+/** @brief Trigger data transmission
+ *  @param lcd strip context to work on
+ *  @ingroup AccessAbstraction
+ */
 void led_transmitData(LedChainDesc_t* lcd)
 {
 	volatile HAL_StatusTypeDef result;

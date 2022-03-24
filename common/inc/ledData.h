@@ -75,10 +75,18 @@ typedef struct lRawCont_tag
 	uint16_t padding; /*!< */
 }lRawCont_t;
 
-/** @brief defines time(size) of in/out low level phase */
+/** @defgroup MemoryAbstraction Memory Abstraction
+ *  @ingroup Led_Data*/
+
+/** @defgroup AccessAbstraction LED access abstraction
+ *  @ingroup Led_Data*/
+
+/** @brief defines time(size) of in/out low level phase
+ *  @ingroup MemoryAbstraction */
 #define resLength 41u
 
-/** @brief factory macro to create the raw data container */
+/** @brief factory macro to create the raw data container
+ *  @ingroup MemoryAbstraction */
 #define lRawContainer(name, ledCnt) \
 	static struct \
 	{ \
@@ -95,11 +103,13 @@ typedef struct lRawCont_tag
 			.ledCount = ledCnt, \
 			.txCountInUi32 = (sizeof(lRawContainer_##name)/sizeof(uint32_t)), \
 	}
-/** @brief factory macro to create the logical LED data container */
+/** @brief factory macro to create the logical LED data container
+ *  @ingroup MemoryAbstraction */
 #define lLogicContainer(name, ledCnt)\
 	static LedLogic_t CCRAM_PLACING ledsLog_##name[ledCnt]
 
-/** @brief factory macro to tie a logic LED strip to a timer PWM output channel */
+/** @brief factory macro to tie a logic LED strip to a timer PWM output channel
+ *  @ingroup MemoryAbstraction */
 #define lChainDesc(name, timerN, tChan, rOn, rOff) \
 	LedChainDesc_t lcd_##name = { \
 			.lLogic = &ledsLog_##name[0], \
@@ -110,7 +120,8 @@ typedef struct lRawCont_tag
 			.rawOff = rOff, \
 	}
 
-/** @brief led chain descriptor, one for each led tube/chain */
+/** @brief led chain descriptor, one for each led tube/chain
+ *  @ingroup Led_Data */
 typedef struct LedChainDesc_tag
 {
 	LedLogic_t* lLogic; /*!< pointer to led container, i.e. the RGB values of each single LED in a strip */

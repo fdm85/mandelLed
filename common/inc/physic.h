@@ -17,7 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @brief Physic public interface
- * @defgroup Physic Functions to support interaction of dynamic Animations with each other
+ * @defgroup Physic Simple physic emulation
+ * @details Functions to support interaction of dynamic Animations with each other
  * @ingroup Animations
  */
 

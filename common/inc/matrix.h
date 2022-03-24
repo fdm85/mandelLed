@@ -18,7 +18,6 @@
  *
  * @brief Matrix Interface
  * @defgroup Matrix Matrix based Animations
- * @ingroup Animations
  */
 
 #ifndef MATRIX_H_
