@@ -36,30 +36,6 @@ typedef struct LedLogic_tag{
 	uint8_t b; /*!< blue set val */
 }LedLogic_t;
 
-/** @brief led color transition descriptor
- * @details compound with all needed details to run random diff color animation
- * @ingroup Random_Anim */
-typedef struct Led_diffColor{
-	fpa_t g; /*!< green diff per iteration */
-	fpa_t r; /*!< red diff per iteration */
-	fpa_t b; /*!< blue diff per iteration */
-	fpa_t gP; /*!< green last set val */
-	fpa_t rP; /*!< red last set val */
-	fpa_t bP; /*!< blue last set val */
-	uint16_t itCur; /*!< iteration counter */
-	uint16_t itMax; /*!< target iteration count */
-}Led_progColor_t;
-
-/** @brief diff runner context
- * @details adapter to couple diff animation array to a strip
- * @ingroup Random_Anim */
-typedef struct diffRunnerCtx_tag
-{
-	Led_progColor_t * lDc; /*!< reference to strip to run on */
-	uint32_t size; /*!< size/length of animation on the strip */
-	// todo add start point
-}diffRunnerCtx_t;
-
 /** @brief raw led data for DMA to timer transfer
  * @details dedicated for pwm timer usage with 32-bit timer \n dedicated for ws2812 with color sequence 1. green 2. red 3. blue
  * \n todo port to 16-bit timer to reduce memory footprint
