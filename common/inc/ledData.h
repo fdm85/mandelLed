@@ -31,48 +31,58 @@
 
 /** @brief logical led container */
 typedef struct LedLogic_tag{
-	uint8_t g; /*!< */
-	uint8_t r; /*!< */
-	uint8_t b; /*!< */
+	uint8_t g; /*!< green set val */
+	uint8_t r; /*!< red set val */
+	uint8_t b; /*!< blue set val */
 }LedLogic_t;
 
-/** @brief led color transition descriptor */
+/** @brief led color transition descriptor
+ * @details compound with all needed details to run random diff color animation
+ * @ingroup Random_Anim */
 typedef struct Led_diffColor{
-	fpa_t g; /*!< */
-	fpa_t r; /*!< */
-	fpa_t b; /*!< */
-	fpa_t gP; /*!< */
-	fpa_t rP; /*!< */
-	fpa_t bP; /*!< */
-	uint16_t itCur; /*!< */
-	uint16_t itMax; /*!< */
+	fpa_t g; /*!< green diff per iteration */
+	fpa_t r; /*!< red diff per iteration */
+	fpa_t b; /*!< blue diff per iteration */
+	fpa_t gP; /*!< green last set val */
+	fpa_t rP; /*!< red last set val */
+	fpa_t bP; /*!< blue last set val */
+	uint16_t itCur; /*!< iteration counter */
+	uint16_t itMax; /*!< target iteration count */
 }Led_progColor_t;
 
-/** @brief diff runner context */
+/** @brief diff runner context
+ * @details adapter to couple diff animation array to a strip
+ * @ingroup Random_Anim */
 typedef struct diffRunnerCtx_tag
 {
-	Led_progColor_t * lDc; /*!< */
-	uint32_t size; /*!< */
+	Led_progColor_t * lDc; /*!< reference to strip to run on */
+	uint32_t size; /*!< size/length of animation on the strip */
+	// todo add start point
 }diffRunnerCtx_t;
 
-/** @brief raw led data for DMA to timer transfer */
+/** @brief raw led data for DMA to timer transfer
+ * @details dedicated for pwm timer usage with 32-bit timer \n dedicated for ws2812 with color sequence 1. green 2. red 3. blue
+ * \n todo port to 16-bit timer to reduce memory footprint
+ * @ingroup Led_Data */
 typedef struct LedRaw
 {
-	uint32_t g[8]; /*!< */
-	uint32_t r[8]; /*!< */
-	uint32_t b[8]; /*!< */
+	uint32_t g[8]; /*!< green data */
+	uint32_t r[8]; /*!< red data */
+	uint32_t b[8]; /*!< blue data */
 } LedRaw;
 
-/** @brief raw content context of a strip */
+/** @brief raw content context of a strip
+ * @details dedicated to ws2812 leds
+ * @ingroup Led_Data */
 typedef struct lRawCont_tag
 {
-	uint32_t* rI; /*!< */
-	uint32_t* rO; /*!< */
-	LedRaw* lConverterLed; /*!< */
-	LedRaw* lRaw; /*!< */
-	uint32_t ledCount; /*!< */
-	uint16_t txCountInUi32; /*!< */
-	uint16_t padding; /*!< */
+	uint32_t* rI; /*!< fade in dummy part, to create low level */
+	uint32_t* rO; /*!< fade out dummy part, to create low level */
+	LedRaw* lConverterLed; /*!< Converter led is used as 'cheap' level shifter, so it is the first 'real' led in the strip (will be painted in plain green) */
+	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
+	uint32_t ledCount; /*!< count of 'real' leds in the strip */
+	uint16_t txCountInUi32; /*!< count of 'total to transmit' raw led data packets */
+	uint16_t padding; /*!< padding/reserved */
 }lRawCont_t;
 
 /** @defgroup MemoryAbstraction Memory Abstraction
@@ -86,7 +96,10 @@ typedef struct lRawCont_tag
 #define resLength 41u
 
 /** @brief factory macro to create the raw data container
- *  @ingroup MemoryAbstraction */
+ *  @details will create raw data struct needed to output a full strip led-data
+ *  @ingroup MemoryAbstraction
+ *  @param name Name of the instance
+ *  @param ledCnt count of real leds */
 #define lRawContainer(name, ledCnt) \
 	static struct \
 	{ \
@@ -104,11 +117,19 @@ typedef struct lRawCont_tag
 			.txCountInUi32 = (sizeof(lRawContainer_##name)/sizeof(uint32_t)), \
 	}
 /** @brief factory macro to create the logical LED data container
- *  @ingroup MemoryAbstraction */
+ *  @details will create logic data struct needed to handle a strip
+ *  @ingroup MemoryAbstraction
+ *  @param name Name of the instance
+ *  @param ledCnt count of real leds */
 #define lLogicContainer(name, ledCnt)\
 	static LedLogic_t CCRAM_PLACING ledsLog_##name[ledCnt]
 
 /** @brief factory macro to tie a logic LED strip to a timer PWM output channel
+ *  @param name Name of the instance
+ *  @param timerN timer peripheral (used to reference)
+ *  @param tChan PWM channel used to output the data
+ *  @param rOn PWM setval of high bit
+ *  @param rOff PWM setval of low bit
  *  @ingroup MemoryAbstraction */
 #define lChainDesc(name, timerN, tChan, rOn, rOff) \
 	LedChainDesc_t lcd_##name = { \

@@ -1,7 +1,8 @@
 WS2812 Sandbox based on STM32                         {#mainpage}
 ============
 
-Ws2812 offers flexibility regarding length/count of LEDs to be controlled.
+Ws2812 offers flexibility regarding length/count of LEDs to be controlled.  
+<a href="https://www.mikrocontroller.net/articles/WS2812_Ansteuerung">See here for details (in German)</a> 
 This project is divided into two main parts.  
 - Common files which implement:
   - low level driver for data output and converter of RGB values to raw data @ref Led_Data
