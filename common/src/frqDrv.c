@@ -22,7 +22,7 @@
  */
 #define colorSetVal 100u
 #include "animations.h"
-
+#include "assrt.h"
 #define fm_frqBand(name, gf, str, len, rr, gg, bb, bnd, mx)\
 	static const frqBand_t name = {.gCv = gf, .pSt = str, .pL = len, .r = rr, .g = gg, .b = bb, .band = bnd, .pM = (str + (len - 1)/2), .hL = (len - 1)/2, .max = mx}
 
@@ -57,12 +57,20 @@ void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB) {
 
 //  uint32_t remainder = ((fB->hL) * val) % max;
    uint32_t remainderFull = val % max;
+   assrt(remainderFull != 0uL);
 //  uint8_t remR = (uint8_t) (((uint32_t) (remainder * fB->r) / max) + 1u);
 //  uint8_t remG = (uint8_t) (((uint32_t) (remainder * fB->g) / max) + 1u);
 //  uint8_t remB = (uint8_t) (((uint32_t) (remainder * fB->b) / max) + 1u);
-   uint8_t remRF = (uint8_t) (((uint32_t) (remainderFull * fB->r) / max) + 1u);
-   uint8_t remGF = (uint8_t) (((uint32_t) (remainderFull * fB->g) / max) + 1u);
-   uint8_t remBF = (uint8_t) (((uint32_t) (remainderFull * fB->b) / max) + 1u);
+   uint32_t r = (((uint32_t) (remainderFull * fB->r) / max) + 1u);
+   uint32_t g = (((uint32_t) (remainderFull * fB->g) / max) + 1u);
+   uint32_t b = (((uint32_t) (remainderFull * fB->b) / max) + 1u);
+   assrt(r < UINT8_MAX);
+   assrt(g < UINT8_MAX);
+   assrt(b < UINT8_MAX);
+
+   uint8_t remRF = (uint8_t) r;
+   uint8_t remGF = (uint8_t) g;
+   uint8_t remBF = (uint8_t) b;
 
    // blank all related
 //   for (uint32_t i = 0; i < fB->pL; ++i) {

@@ -191,19 +191,19 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 
 uint32_t getLChanVal(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan1[freq];
-   return (ret <= MAX_OUT) ? ret : MAX_OUT;
+   return (ret < (MAX_OUT - 1)) ? ret : (MAX_OUT - 1);
 }
 uint32_t getRChanVal(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan2[freq];
-   return (ret <= MAX_OUT) ? ret : MAX_OUT;
+   return (ret < (MAX_OUT - 1)) ? ret : (MAX_OUT - 1);
 }
 uint32_t getLChanVal2(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan12[freq];
-   return (ret <= MAX_OUT) ? ret : MAX_OUT;
+   return (ret < (MAX_OUT - 1)) ? ret : (MAX_OUT - 1);
 }
 uint32_t getRChanVal2(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan22[freq];
-   return (ret <= MAX_OUT) ? ret : MAX_OUT;
+   return (ret < (MAX_OUT - 1)) ? ret : (MAX_OUT - 1);
 }
 
 uint32_t getLSum(msgeq7Freq freq) {
