@@ -1,11 +1,24 @@
-/******************************************************************************/
-/*!
- * \file
+/**
+ * @file      msgeq7.c
+ * @authors   Clemens Grünberger
+ * @copyright 2022  Clemens Grünberger
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation version 2
+ * of the License.
  *
- * \brief smartFIXME: add file brief
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * todo: add file description
- ******************************************************************************/
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @brief Implements msgeq function
+ * @ingroup msgeq7
+ */
 
 #include "msgeq7.h"
 #include "main.h"
@@ -178,19 +191,19 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 
 uint32_t getLChanVal(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan1[freq];
-   return (ret <= MAX_OUT) ? ret : MAX_OUT;
+   return (ret < (MAX_OUT - 1)) ? ret : (MAX_OUT - 1);
 }
 uint32_t getRChanVal(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan2[freq];
-   return (ret <= MAX_OUT) ? ret : MAX_OUT;
+   return (ret < (MAX_OUT - 1)) ? ret : (MAX_OUT - 1);
 }
 uint32_t getLChanVal2(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan12[freq];
-   return (ret <= MAX_OUT) ? ret : MAX_OUT;
+   return (ret < (MAX_OUT - 1)) ? ret : (MAX_OUT - 1);
 }
 uint32_t getRChanVal2(msgeq7Freq freq) {
    uint32_t ret = mT.adcChan22[freq];
-   return (ret <= MAX_OUT) ? ret : MAX_OUT;
+   return (ret < (MAX_OUT - 1)) ? ret : (MAX_OUT - 1);
 }
 
 uint32_t getLSum(msgeq7Freq freq) {

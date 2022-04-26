@@ -1,8 +1,24 @@
-/*
- * time.h
+/**
+ * @file      time.h
+ * @authors   Clemens Grünberger
+ * @copyright 2022  Clemens Grünberger
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation version 2
+ * of the License.
  *
- *  Created on: 06.03.2021
- *      Author: cgrue
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @brief Timer implementation
+ * @defgroup Timer Simple time management
+ * @ingroup Dev_Help
  */
 
 #ifndef TIME_H_

@@ -16,9 +16,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @brief // ToDo
- * @defgroup // ToDo
- * @ingroup // ToDo
+ * @brief Filter implementation
+ * @ingroup Filter
  */
 
 
@@ -45,7 +44,7 @@ static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
    static fpa_t CCRAM_PLACING scI = _FPA_R(0.65);
    static fpa_t CCRAM_PLACING scP = _FPA_R(0.35);
-   static fpa_t CCRAM_PLACING scDU = _FPA_R(0.5);
+   static fpa_t CCRAM_PLACING scDU = _FPA_R(0.7);
    static fpa_t CCRAM_PLACING scDD = _FPA_R(0.3);
    static fpa_t CCRAM_PLACING scOut = _FPA_R(1.6);
 

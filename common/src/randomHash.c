@@ -1,8 +1,25 @@
-/*
- * randomHash.c
+/**
+ * @file      randomHash.c
+ * @authors   Clemens Grünberger
+ * @copyright 2022  Clemens Grünberger
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation version 2
+ * of the License.
  *
- *  Created on: 01.08.2020
- *      Author: gruenberger
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @brief Random animation implementation
+ * @defgroup Random_Anim Animations featuring chaotic (randomized) behavior
+ * @ingroup Animations
+ * @{
  */
 
 #include "animations.h"
@@ -17,15 +34,38 @@
 #include "rng.h"
 #endif
 
+/** @brief led color transition descriptor
+ * @details compound with all needed details to run random diff color animation
+*/
+typedef struct Led_diffColor{
+    fpa_t g; /*!< green diff per iteration */
+    fpa_t r; /*!< red diff per iteration */
+    fpa_t b; /*!< blue diff per iteration */
+    fpa_t gP; /*!< green last set val */
+    fpa_t rP; /*!< red last set val */
+    fpa_t bP; /*!< blue last set val */
+    uint16_t itCur; /*!< iteration counter */
+    uint16_t itMax; /*!< target iteration count */
+}Led_progColor_t;
+
+/** @brief diff runner context
+ * @details adapter to couple diff animation array to a strip */
+typedef struct diffRunnerCtx_tag
+{
+    Led_progColor_t * lDc; /*!< reference to strip to run on */
+    uint32_t size; /*!< size/length of animation on the strip */
+    // todo add start point
+}diffRunnerCtx_t;
+
 typedef union
 {
-	uint32_t u32;
+	uint32_t u32; /*!< */
 	struct
 	{
-		uint8_t a;
-		uint8_t b;
-		uint8_t c;
-		uint8_t d;
+		uint8_t a; /*!< */
+		uint8_t b; /*!< */
+		uint8_t c; /*!< */
+		uint8_t d; /*!< */
 	};
 } rand_u;
 
@@ -177,3 +217,5 @@ void anim_random3(LedChainDesc_t *const lcd)
 		++diff.lDc[i].itCur;
 	}
 }
+
+/** @} */

@@ -16,10 +16,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @brief // ToDo
- * @defgroup // ToDo
- * @ingroup // ToDo
+ * @brief Filter public interface
+ * @defgroup Filter Filter functions
+ * @ingroup Math
  */
+
+/** @defgroup Math Math functions */
 
 #ifndef INC_FILTER_H_
 #define INC_FILTER_H_

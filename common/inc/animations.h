@@ -1,8 +1,23 @@
-/*
- * animations.h
+/**
+ * @file      animations.h
+ * @authors   Clemens Grünberger
+ * @copyright 2022  Clemens Grünberger
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation version 2
+ * of the License.
  *
- *  Created on: 01.08.2020
- *      Author: gruenberger
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @brief Public animation functions
+ * @defgroup Animations Public interface of animations.
  */
 
 #ifndef ANIMATIONS_H_
@@ -47,15 +62,15 @@ typedef struct mAnim_tag mAnim_t;
 typedef void (*fpRender)(mAnim_t* ctx);
 struct mAnim_tag
 {
-	fpRender fpRend;
-	LedChainDesc_t *const lcd_ctx;
-	const uint32_t triggerTimeMs;
-	uint32_t lastToggle;
-	volatile uint32_t sendLock;
-	volatile uint32_t a, b, c, d, e, f;
-	eSm state;
-	puState_t puState;
-	uint16_t padd2;
+	fpRender fpRend; /*!< */
+	LedChainDesc_t *const lcd_ctx; /*!< */
+	const uint32_t triggerTimeMs; /*!< */
+	uint32_t lastToggle; /*!< */
+	volatile uint32_t sendLock; /*!< */
+	volatile uint32_t a, b, c, d, e, f; /*!< */
+	eSm state; /*!< */
+	puState_t puState; /*!< */
+	uint16_t padd2; /*!< */
 };
 
 void anim_setCirc(bool shrt);
@@ -69,17 +84,17 @@ typedef struct rider rider_t;
 typedef void (*riderInit)(rider_t*);
 struct rider
 {
-	riderInit fpInit;
-	uint32_t pos;
-	fpa_t posIq;
-	uint32_t posMin;
-	uint32_t posMax;
-	fpa_t step;
-	LedLogic_t c;
-	uint8_t length;
-	uint8_t blanks;
-	uint8_t iteration;
-	uint16_t padd;
+	riderInit fpInit; /*!< */
+	uint32_t pos; /*!< */
+	fpa_t posIq; /*!< */
+	uint32_t posMin; /*!< */
+	uint32_t posMax; /*!< */
+	fpa_t step; /*!< */
+	LedLogic_t c; /*!< */
+	uint8_t length; /*!< */
+	uint8_t blanks; /*!< */
+	uint8_t iteration; /*!< */
+	uint16_t padd; /*!< */
 };
 
 #if !(defined(STM32F103xB))
@@ -118,16 +133,16 @@ void anim_layerRedRider(uint32_t pos);
 #include "msgeq7.h"
 
 typedef struct frqBand {
-	gChanVal gCv;
-	uint32_t pSt;
-	uint32_t pL;
-	uint32_t pM;
-	uint32_t hL;
-	uint32_t max;
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-	msgeq7Freq band;
+	gChanVal gCv; /*!< */
+	uint32_t pSt; /*!< */
+	uint32_t pL; /*!< */
+	uint32_t pM; /*!< */
+	uint32_t hL; /*!< */
+	uint32_t max; /*!< */
+	uint8_t r; /*!< */
+	uint8_t g; /*!< */
+	uint8_t b; /*!< */
+	msgeq7Freq band; /*!< */
 } frqBand_t;
 
 extern const frqBand_t *frqB[];

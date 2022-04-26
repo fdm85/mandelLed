@@ -18,7 +18,7 @@
  *
  * @brief fixed point arithmetic
  * @defgroup fpa fixed point arithmetic
- * @ingroup math Math and helper functions
+ * @ingroup Math Math and helper functions
  * @details Header for fpa use. Fixed point arithmetic shall bring easy and
  * performant workaround to floating point arithmetic. Focus here is to use fpa
  * while retaining the ability to easily read the integer parts to ease debugging.
