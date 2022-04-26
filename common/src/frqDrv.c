@@ -57,7 +57,7 @@ void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB) {
 
 //  uint32_t remainder = ((fB->hL) * val) % max;
    uint32_t remainderFull = val % max;
-   assrt(remainderFull != 0uL);
+   assrt(val == 0uL || remainderFull != 0uL);
 //  uint8_t remR = (uint8_t) (((uint32_t) (remainder * fB->r) / max) + 1u);
 //  uint8_t remG = (uint8_t) (((uint32_t) (remainder * fB->g) / max) + 1u);
 //  uint8_t remB = (uint8_t) (((uint32_t) (remainder * fB->b) / max) + 1u);
