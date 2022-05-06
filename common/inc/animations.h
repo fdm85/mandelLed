@@ -27,6 +27,9 @@
 #include <stdbool.h>
 #include "ledData.h"
 
+#define fm_frqBand(name, gf, str, len, rr, gg, bb, bnd, mx)\
+    static const frqBand_t name = {.gCv = gf, .pSt = str, .pL = len, .r = rr, .g = gg, .b = bb, .band = bnd, .pM = (str + (len - 1)/2), .hL = (len - 1)/2, .max = mx}
+
 typedef enum  {
 	anim_powerUp = 0,
 
