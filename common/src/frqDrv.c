@@ -27,7 +27,6 @@
 
 void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB) {
    uint32_t max = fB->max;
-   uint32_t round = max / 2uL;
 
    uint32_t val = fB->gCv(fB->band);
 

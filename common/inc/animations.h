@@ -148,8 +148,18 @@ typedef struct frqBand {
 	msgeq7Freq band; /*!< */
 } frqBand_t;
 
-extern const frqBand_t *frqB[];
-extern const frqBand_t *frqR[];
+typedef void(*anim_frqDrv_F)(LedChainDesc_t *const lcd, const frqBand_t *fB);
+
+typedef struct frqString {
+   anim_frqDrv_F f;
+   uint32_t start;
+   uint32_t end;
+   LedLogic_t backGround;
+   const frqBand_t **frqB;
+}frqString_t;
+
+extern const frqString_t *frqS[];
+
 void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB);
 void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB);
 #else

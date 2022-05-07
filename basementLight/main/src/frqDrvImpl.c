@@ -44,5 +44,11 @@ fm_frqBand(rr0, getRChanVal2, 253u, 66u, 0u, 0u, colorSetVal, e63Hz, MAX_OUT);
 
 
 
-const frqBand_t *frqB[] = { &bl2, &br2, &bl3, &br3, &bl4, &br4, &bl5, &br5, &bl6, &br6, NULL };
-const frqBand_t *frqR[] = { &rl0, &rr0, &rl1, &rr1, NULL };
+const frqBand_t *frqR[] = { &br2, &br3, &br4, &br5, &br6, NULL };
+const frqBand_t *frqL[] = { &bl2, &bl3, &bl4, &bl5, &bl6, NULL };
+const frqBand_t *frqM[] = { &rl0, &rr0, &rl1, &rr1, NULL };
+const frqString_t frqL_Str = {.f = anim_frqDrv, .start = 0u, .end = 139u, .backGround = {.r = 6u, .g = 6u, .b = 6u }, .frqB = frqL};
+const frqString_t frqR_Str = {.f = anim_frqDrv, .start = 374u, .end = 619u, .backGround = {.r = 6u, .g = 6u, .b = 6u }, .frqB = frqR};
+const frqString_t frqM_Str = {.f = anim_frqFrvRem, .start = 139u, .end = (319u + 55u), .backGround = {.r = 30u, .g = 0u, .b = 0u },.frqB = frqM};
+
+const frqString_t *frqS[] = { &frqL_Str, &frqR_Str, &frqM_Str, NULL};
