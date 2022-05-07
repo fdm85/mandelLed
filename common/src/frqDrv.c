@@ -30,14 +30,13 @@ void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB) {
    uint32_t round = max / 2uL;
 
    uint32_t val = fB->gCv(fB->band);
-   uint32_t scaled = (((fB->hL) * val) + round) / max;
 
    uint32_t remainderFull = val % max;
    assrt(val == 0uL || remainderFull != 0uL);
 
-   uint32_t r = (((uint32_t) (remainderFull * fB->r) / max) + 1u);
-   uint32_t g = (((uint32_t) (remainderFull * fB->g) / max) + 1u);
-   uint32_t b = (((uint32_t) (remainderFull * fB->b) / max) + 1u);
+   uint32_t r = (((uint32_t) (remainderFull * fB->r) / max) + ((fB->r != 0) ? 1u : 0u));
+   uint32_t g = (((uint32_t) (remainderFull * fB->g) / max) + ((fB->g != 0) ? 1u : 0u));
+   uint32_t b = (((uint32_t) (remainderFull * fB->b) / max) + ((fB->b != 0) ? 1u : 0u));
    assrt(r < UINT8_MAX);
    assrt(g < UINT8_MAX);
    assrt(b < UINT8_MAX);
@@ -61,9 +60,9 @@ void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB) {
    uint32_t scaled = (((fB->hL) * val) + round) / max;
    uint32_t remainderFull = val % max;
 
-   uint8_t remRF = (uint8_t) (((uint32_t) (remainderFull * fB->r) / max) + 1u);
-   uint8_t remGF = (uint8_t) (((uint32_t) (remainderFull * fB->g) / max) + 1u);
-   uint8_t remBF = (uint8_t) (((uint32_t) (remainderFull * fB->b) / max) + 1u);
+   uint8_t remRF = (uint8_t) (((uint32_t) (remainderFull * fB->r) / max) + ((fB->r != 0) ? 1u : 0u));
+   uint8_t remGF = (uint8_t) (((uint32_t) (remainderFull * fB->g) / max) + ((fB->g != 0) ? 1u : 0u));
+   uint8_t remBF = (uint8_t) (((uint32_t) (remainderFull * fB->b) / max) + ((fB->b != 0) ? 1u : 0u));
 
    // paint middle led
    led_setLedToColor(lcd, fB->pM, fB->r, fB->g, fB->b);
