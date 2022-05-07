@@ -20,7 +20,7 @@
  * @defgroup FrqDrv frequency driven animations
  * @ingroup Animations
  */
-#define colorSetVal 100u
+
 #include "animations.h"
 #include "assrt.h"
 
@@ -32,12 +32,9 @@ void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB) {
    uint32_t val = fB->gCv(fB->band);
    uint32_t scaled = (((fB->hL) * val) + round) / max;
 
-//  uint32_t remainder = ((fB->hL) * val) % max;
    uint32_t remainderFull = val % max;
    assrt(val == 0uL || remainderFull != 0uL);
-//  uint8_t remR = (uint8_t) (((uint32_t) (remainder * fB->r) / max) + 1u);
-//  uint8_t remG = (uint8_t) (((uint32_t) (remainder * fB->g) / max) + 1u);
-//  uint8_t remB = (uint8_t) (((uint32_t) (remainder * fB->b) / max) + 1u);
+
    uint32_t r = (((uint32_t) (remainderFull * fB->r) / max) + 1u);
    uint32_t g = (((uint32_t) (remainderFull * fB->g) / max) + 1u);
    uint32_t b = (((uint32_t) (remainderFull * fB->b) / max) + 1u);
@@ -49,10 +46,6 @@ void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB) {
    uint8_t remGF = (uint8_t) g;
    uint8_t remBF = (uint8_t) b;
 
-   // blank all related
-//   for (uint32_t i = 0; i < fB->pL; ++i) {
-//      led_setLedToColor(lcd, fB->pSt + i, 0u, 0u, 0u);
-//   }
 
    // blank all related
    for (uint32_t i = 0; i < fB->pL; ++i) {
@@ -66,23 +59,11 @@ void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB) {
 
    uint32_t val = fB->gCv(fB->band);
    uint32_t scaled = (((fB->hL) * val) + round) / max;
-
-//	uint32_t remainder = ((fB->hL) * val) % max;
    uint32_t remainderFull = val % max;
-//	uint8_t remR = (uint8_t) (((uint32_t) (remainder * fB->r) / max) + 1u);
-//	uint8_t remG = (uint8_t) (((uint32_t) (remainder * fB->g) / max) + 1u);
-//	uint8_t remB = (uint8_t) (((uint32_t) (remainder * fB->b) / max) + 1u);
+
    uint8_t remRF = (uint8_t) (((uint32_t) (remainderFull * fB->r) / max) + 1u);
    uint8_t remGF = (uint8_t) (((uint32_t) (remainderFull * fB->g) / max) + 1u);
    uint8_t remBF = (uint8_t) (((uint32_t) (remainderFull * fB->b) / max) + 1u);
-
-   // blank all related
-//   for (uint32_t i = 0; i < fB->pL; ++i) {
-//      led_setLedToColor(lcd, fB->pSt + i, 0u, 0u, 0u);
-//   }
-//   for (uint32_t i = 0; i < fB->pL; ++i) {
-//      led_setLedToColor(lcd, fB->pSt + i, 0u, 0u, 0u);
-//   }
 
    // paint middle led
    led_setLedToColor(lcd, fB->pM, fB->r, fB->g, fB->b);
@@ -99,13 +80,5 @@ void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB) {
       led_setLedToColor(lcd, fB->pM + i, remRF, remGF, remBF);
       led_setLedToColor(lcd, fB->pM - i, remRF, remGF, remBF);
    }
-
-//	// paint adjacent to in-scaled led's
-//	if (scaled < fB->hL) {
-//		led_setLedToColor(lcd, fB->pM + i, remRF, remGF, remBF);
-//		led_setLedToColor(lcd, fB->pM - i, remRF, remGF, remBF);
-//	}
-
-// paint remainder led's
 
 }
