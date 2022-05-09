@@ -18,6 +18,7 @@
  *
  * @brief Matrix Interface
  * @defgroup Matrix Matrix based Animations
+ * @{
  */
 
 #ifndef MATRIX_H_
@@ -35,3 +36,4 @@
 void mtrx_Init(void);
 void mtrx_anim(mAnim_t* ctx);
 #endif /* MATRIX_H_ */
+/** @}*/

@@ -18,6 +18,7 @@
  *
  * @brief Public animation functions
  * @defgroup Animations Public interface of animations.
+ * @{
  */
 
 #ifndef ANIMATIONS_H_
@@ -175,3 +176,4 @@ void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB);
 #endif
 
 #endif /* ANIMATIONS_H_ */
+/** @}*/

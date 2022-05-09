@@ -19,6 +19,7 @@
  * @brief Timer implementation
  * @defgroup Timer Simple time management
  * @ingroup Dev_Help
+ * @{
  */
 
 #ifndef TIME_H_
@@ -54,3 +55,4 @@ static inline void tStop(time_t* t) {
 	t->duration = tElapsed(t);
 }
 #endif /* TIME_H_ */
+/** @}*/

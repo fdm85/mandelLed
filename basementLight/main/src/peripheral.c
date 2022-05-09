@@ -18,6 +18,8 @@
  *
  * @brief Implementation of peripheral interface
  * @ingroup PeripheralInterface
+ * @ingroup BasementLight
+ * @{
  */
 
 #include "peripheral.h"
@@ -117,3 +119,4 @@ uint32_t getAdcVal(void)
 	}
 	return (middle);
 }
+/** @}*/

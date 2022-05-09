@@ -19,6 +19,7 @@
  * @brief Implements msgeq function
  * @defgroup msgeq7 Audio signal analysing
  * @ingroup IO
+ * @{
  */
 
 #ifndef MSGEQ7_H_
@@ -26,6 +27,7 @@
 
 #include "peripheral.h"
 
+/*! @brief max ADC value */
 #define MAX_OUT		3100uL
 
 typedef enum {
@@ -50,3 +52,4 @@ uint32_t getRChanVal2(msgeq7Freq freq);
 uint32_t getLSum(msgeq7Freq freq);
 uint32_t getRSum(msgeq7Freq freq);
 #endif /* MSGEQ7_H_ */
+/** @}*/

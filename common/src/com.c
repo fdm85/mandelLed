@@ -18,6 +18,7 @@
  *
  * @brief Implements ComApi
  * @ingroup ComApi
+ * @{
  */
 
 #include "com.h"
@@ -67,3 +68,4 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	doParse = true;
 	rxSize = huart->RxXferCount;
 }
+/** @}*/

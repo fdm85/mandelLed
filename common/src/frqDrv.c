@@ -19,6 +19,7 @@
  * @brief Implements frequency driven animations
  * @defgroup FrqDrv frequency driven animations
  * @ingroup Animations
+ * @{
  */
 
 #include "animations.h"
@@ -80,3 +81,5 @@ void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB) {
    }
 
 }
+
+/** @}*/

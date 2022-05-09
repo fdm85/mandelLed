@@ -18,6 +18,7 @@
  *
  * @brief Main implementation of target
  * @defgroup BasementLight LED strip project used for ambient light, featuring music/sound controlled effects
+ * @{
  */
 #include "peripheral.h"
 #include "leds.h"
@@ -158,3 +159,4 @@ int main(void)
 		cyclicReSend(&anim_matrix);
 	}
 }
+/** @}*/
