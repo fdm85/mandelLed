@@ -18,6 +18,7 @@
  *
  * @brief Filter implementation
  * @ingroup Filter
+ * @{
  */
 
 
@@ -118,3 +119,4 @@ fltCtx_t CCRAM_PLACING cc1_6k25 = {.f = fl_i6k25, .ctx = NULL};
 fltCtx_t CCRAM_PLACING cc2_6k25 = {.f = fl_i6k25, .ctx = NULL};
 fltCtx_t CCRAM_PLACING cc1_16k = {.f = fl_i16k, .ctx = NULL};
 fltCtx_t CCRAM_PLACING cc2_16k = {.f = fl_i16k, .ctx = NULL};
+/** @}*/

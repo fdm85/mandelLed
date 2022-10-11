@@ -20,6 +20,7 @@
  * @defgroup Physic Simple physic emulation
  * @details Functions to support interaction of dynamic Animations with each other
  * @ingroup Animations
+ * @{
  */
 
 #ifndef PHYSIC_H_
@@ -42,3 +43,4 @@ void phy_swapColors(rider_t* a, rider_t* b);
 
 #endif
 #endif /* PHYSIC_H_ */
+/** @}*/

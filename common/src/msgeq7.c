@@ -18,6 +18,7 @@
  *
  * @brief Implements msgeq function
  * @ingroup msgeq7
+ * @{
  */
 
 #include "msgeq7.h"
@@ -214,3 +215,4 @@ uint32_t getRSum(msgeq7Freq freq) {
    (void) freq;
    return (getRChanVal2(e63Hz) + getRChanVal2(e160Hz) + getRChanVal2(e400Hz) + getRChanVal2(e1kHz) + getRChanVal2(e2_5kHz) + getRChanVal2(e6_25kHz) + getRChanVal2(e16kHz));
 }
+/** @}*/

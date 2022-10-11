@@ -19,6 +19,7 @@
  * @brief Export of allocated led strip context's
  * @defgroup LedCreator Allocates memory for the LEDs
  * @ingroup BasementLight
+ * @{
  */
 
 #ifndef LEDS_H_
@@ -31,3 +32,4 @@
 extern LedChainDesc_t lcd_main;
 extern LedChainDesc_t lcd_matrix;
 #endif /* LEDS_H_ */
+/** @}*/

@@ -1,5 +1,5 @@
 /**
- * @file      frqDrvImpl.c
+ * @file      frqDrv_Cfg.c
  * @authors   Clemens Grünberger
  * @copyright 2022  Clemens Grünberger
  * This program is free software; you can redistribute it and/or
@@ -16,12 +16,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @brief // ToDo
- * @defgroup // ToDo
- * @ingroup // ToDo
+ * @brief Defines target depending frq-driven animations
+ * @defgroup FrqDrv_Cfg Configuration of frequency driven animation style
+ * @ingroup FrqDrv
+ * @ingroup BasementLight
+ * @{
  */
 
 
+/*! @brief brightness value */
 #define colorSetVal 100u
 #include "animations.h"
 
@@ -43,12 +46,19 @@ fm_frqBand(rr1, getRChanVal2, 319u, 55u, colorSetVal, 0u, colorSetVal, e160Hz, M
 fm_frqBand(rr0, getRChanVal2, 253u, 66u, 0u, 0u, colorSetVal, e63Hz, MAX_OUT);
 
 
-
+/*! @brief Right side frequency-band to position config */
 const frqBand_t *frqR[] = { &br2, &br3, &br4, &br5, &br6, NULL };
+/*! @brief Left side config frequency-band to position config */
 const frqBand_t *frqL[] = { &bl2, &bl3, &bl4, &bl5, &bl6, NULL };
+/*! @brief Middle side config frequency-band to position config */
 const frqBand_t *frqM[] = { &rl0, &rr0, &rl1, &rr1, NULL };
+/*! @brief Left side animation function selection and default coloring */
 const frqString_t frqL_Str = {.f = anim_frqDrv, .start = 0u, .end = 138u, .backGround = {.r = 15u, .g = 15u, .b = 15u }, .frqB = frqL};
+/*! @brief Right side animation function selection and default coloring */
 const frqString_t frqR_Str = {.f = anim_frqDrv, .start = 374u, .end = 619u, .backGround = {.r = 15u, .g = 15u, .b = 15u }, .frqB = frqR};
+/*! @brief Middle side animation function selection and default coloring */
 const frqString_t frqM_Str = {.f = anim_frqFrvRem, .start = 139u, .end = 373u, .backGround = {.r = 60u, .g = 3u, .b = 8u },.frqB = frqM};
-
+/*! @brief Export of config via list */
 const frqString_t *frqS[] = { &frqL_Str, &frqR_Str, &frqM_Str, NULL};
+
+/** @}*/

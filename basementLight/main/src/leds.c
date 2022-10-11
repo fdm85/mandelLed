@@ -18,6 +18,8 @@
  *
  * @brief Allocation of memory for the LEDs
  * @ingroup LedCreator
+ * @ingroup BasementLight
+ * @{
  */
 
 #include "leds.h"
@@ -38,4 +40,4 @@ lLogicContainer(matrix, 256);
 lRawContainer(matrix, 256);
 lChainDesc(matrix, htim4, TIM_CHANNEL_2, lRawOn, lRawOff);
 
-
+/** @}*/

@@ -17,7 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * @brief Low level implementation of driver for leds
- * @ingroup Led_Data
+ * @ingroup AccessAbstraction
+ * @{
  */
 
 #include "ledData.h"
@@ -62,7 +63,6 @@ void led_initDataRaw(LedChainDesc_t* lcd)
  *  @param lcd context to work on
  *  @param mult Multiplier
  *  @param div Divider
- *  @ingroup AccessAbstraction
  */
 void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div)
 {
@@ -77,7 +77,6 @@ void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t di
  *  @param b blue color
  *  @param mult multiplier
  *  @param div divider
- *  @ingroup AccessAbstraction
  */
 static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, uint32_t mult, uint32_t div)
 {
@@ -99,7 +98,6 @@ static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, u
  *  @param r red color
  *  @param g green color
  *  @param b blue color
- *  @ingroup AccessAbstraction
  */
 void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b)
 {
@@ -112,7 +110,6 @@ void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, ui
  *  @param lcd strip context to work on
  *  @param i index of led to set
  *  @param l were to write the colors to
- *  @ingroup AccessAbstraction
  */
 void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l)
 {
@@ -129,7 +126,6 @@ void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l)
  *  @param r red color
  *  @param g green color
  *  @param b blue color
- *  @ingroup AccessAbstraction
  */
 void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b)
 {
@@ -146,7 +142,6 @@ void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b)
  *  @param b blue color
  *  @param s start
  *  @param e end
- *  @ingroup AccessAbstraction
  */
 void led_setFromToLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b, uint32_t s, uint32_t e)
 {
@@ -159,7 +154,6 @@ void led_setFromToLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t
 /** @brief Set all leds of the strip to the same color (uni color)
  *  @param lcd strip context to work on
  *  @param brightness brightness set val
- *  @ingroup AccessAbstraction
  */
 void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness)
 {
@@ -171,7 +165,6 @@ void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness)
 
 /** @brief Convert/Paste logic rgb colors to the raw data out field
  *  @param lcd strip context to work on
- *  @ingroup AccessAbstraction
  */
 void led_pasteData(LedChainDesc_t* lcd)
 {
@@ -183,7 +176,6 @@ void led_pasteData(LedChainDesc_t* lcd)
 
 /** @brief Trigger data transmission
  *  @param lcd strip context to work on
- *  @ingroup AccessAbstraction
  */
 void led_transmitData(LedChainDesc_t* lcd)
 {
@@ -192,4 +184,4 @@ void led_transmitData(LedChainDesc_t* lcd)
 	assrt(result == HAL_OK);
 	(void) result;
 }
-
+/** @}*/

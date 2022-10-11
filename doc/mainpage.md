@@ -9,7 +9,7 @@ This project is divided into two main parts.
   - memory abstraction to access LED strips @ref AccessAbstraction
   - animation routines producing visual effects (called cyclic) @ref Animations
   - factory macros to ease allocation @ref MemoryAbstraction
-  - math functions @ref Math
+  - math functions @ref Filter
   - led strip style @ref Animations
   - matrix style @ref Matrix
   - generic development helper @ref Dev_Helper

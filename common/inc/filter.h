@@ -18,10 +18,8 @@
  *
  * @brief Filter public interface
  * @defgroup Filter Filter functions
- * @ingroup Math
+ * @{
  */
-
-/** @defgroup Math Math functions */
 
 #ifndef INC_FILTER_H_
 #define INC_FILTER_H_
@@ -39,3 +37,4 @@ extern fltCtx_t cc1_64, cc1_160, cc1_400, cc1_1k, cc1_2k5, cc1_6k25, cc1_16k;
 extern fltCtx_t cc2_64, cc2_160, cc2_400, cc2_1k, cc2_2k5, cc2_6k25, cc2_16k;
 
 #endif /* INC_FILTER_H_ */
+/** @}*/
