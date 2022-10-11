@@ -28,53 +28,66 @@
 #include <stdbool.h>
 #include "ledData.h"
 
+/*! @brief factory macro to generate frqBand related led-bar */
 #define fm_frqBand(name, gf, str, len, rr, gg, bb, bnd, mx)\
     static const frqBand_t name = {.gCv = gf, .pSt = str, .pL = len, .r = rr, .g = gg, .b = bb, .band = bnd, .pM = (str + (len - 1)/2), .hL = (len - 1)/2, .max = mx}
 
+/*! @brief animation mode(s) */
 typedef enum  {
-	anim_powerUp = 0,
+	anim_powerUp = 0, /*!< power up sequence */
 
-	anim_min = 1,
+	anim_min = 1, /*!< helper enum, surrogate of first "real" animation */
 
-	anim_rnd3 = 1,
-	anim_white,
-	anim_red,
-	anim_green,
-	anim_blue,
-	anim_cycleColors,
-	anim_layers,
-	anim_msqDrv,
-	anim_enumAssrt,
+	anim_rnd3 = 1, /*!< random 3 visualization */
+	anim_msqDrv, /*!< music driven visualization */
+	anim_blue, /*!< only blue */
+	anim_white, /*!< only white */
+	anim_red, /*!< only red */
+	anim_green, /*!< only green */
+	anim_cycleColors, /*!< epileptic's nightmare */
+	anim_layers, /*!< layerd animation WIP */
+	anim_enumAssrt, /*!< helper enum to wrap around when iterating through visualization mode's */
 
+	// obsolete or outdated
 	anim_cR1,
 	anim_cR2,
 	anim_rnd1,
 	anim_rnd2,
 }anim_mode_e;
 
+/*! @brief power up animation states */
 typedef enum
 {
-	init, blueSpawn, greenSpawn, redSpawn, whiteSpawn, fullWhite, done,
+	init, /*! @brief init sate */
+	blueSpawn, /*!< spwan blue rider */
+	greenSpawn, /*!< spawn green rider */
+	redSpawn, /*!< spawn red rider*/
+	whiteSpawn, /*!< spawn white rider */
+	fullWhite, /*!< transit to white */
+	done, /*!< end state, switch to selected visualization */
 } puState_t;
 
+/*! @brief possible working states */
 typedef enum
 {
-	e_render, e_waitTxCplt, e_paste
+	e_render, /*!< render next */
+	e_waitTxCplt, /*!< wait until transmission is concluded */
+	e_paste /*!< paste from buffer to DMA storage */
 } eSm;
 
 typedef struct mAnim_tag mAnim_t;
 typedef void (*fpRender)(mAnim_t* ctx);
 struct mAnim_tag
 {
-	fpRender fpRend; /*!< */
-	LedChainDesc_t *const lcd_ctx; /*!< */
-	const uint32_t triggerTimeMs; /*!< */
-	uint32_t lastToggle; /*!< */
-	volatile uint32_t sendLock; /*!< */
-	volatile uint32_t a, b, c, d, e, f; /*!< */
-	eSm state; /*!< */
-	puState_t puState; /*!< */
-	uint16_t padd2; /*!< */
+	fpRender fpRend; /*!< current render function */
+	LedChainDesc_t *const lcd_ctx; /*!< led chain context to work on */
+	const uint32_t triggerTimeMs; /*!< cycle-time set value */
+	uint32_t lastToggle; /*!< last render start */
+	volatile uint32_t sendLock; /*!< DMA tx helper semaphore */
+	volatile uint32_t a, b, c, d, e, f; /*!< RTM helper counters */
+	eSm state; /*!< current render state */
+	puState_t puState; /*!< power up state */
+	uint16_t padd2; /*!< alignment padding */
 };
 
 void anim_setCirc(bool shrt);
@@ -84,21 +97,28 @@ void anim_setBrightness(uint8_t set);
 void anim_addBrightness(int8_t add);
 void anim_nextMode(LedChainDesc_t *const lcd);
 
+/*! @brief forward declaration of rider struct */
 typedef struct rider rider_t;
+/*! @brief forward declaration of rider init function */
 typedef void (*riderInit)(rider_t*);
+/*! @brief rider struct
+ * @details A rider struct is a contiguous set of led's displaying in the same color.
+ * It may move in a defined area with defined speed.
+ *
+ * */
 struct rider
 {
-	riderInit fpInit; /*!< */
-	uint32_t pos; /*!< */
-	fpa_t posIq; /*!< */
-	uint32_t posMin; /*!< */
-	uint32_t posMax; /*!< */
-	fpa_t step; /*!< */
-	LedLogic_t c; /*!< */
-	uint8_t length; /*!< */
-	uint8_t blanks; /*!< */
-	uint8_t iteration; /*!< */
-	uint16_t padd; /*!< */
+	riderInit fpInit; /*!< rider init function */
+	uint32_t pos; /*!< current position as int */
+	fpa_t posIq; /*!< current position as fixed-point */
+	uint32_t posMin; /*!< lowest possible position */
+	uint32_t posMax; /*!< highest possible position */
+	fpa_t step; /*!< step per cycle / speed */
+	LedLogic_t c; /*!< color of rider */
+	uint8_t length; /*!< length of rider in led's */
+	uint8_t blanks; /*!< blanks at both ends */
+	uint8_t iteration; /*!< iteration count */
+	uint16_t padd; /*!< alignment */
 };
 
 #if !(defined(STM32F103xB))

@@ -203,16 +203,23 @@ void anim_random2(LedChainDesc_t *const lcd)
 	++it_r2;
 }
 
+/** @brief rainbow effect style
+ *  @details Each single led receives a random rgb set value and cycle-count in which a transition from current rgb to set-value is performed.
+ *
+ *  @param lcd led-chain context to use
+ */
 void anim_random3(LedChainDesc_t *const lcd)
 {
+   //! do for all leds in the strip
 	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
 	{
-
+	   //! transition complete?
 		if (diff.lDc[i].itCur == diff.lDc[i].itMax)
 		{
+		   //! calculate new cycle
 			anim_Diff(lcd, i, true);
 		}
-
+		//! perform a step of the transition
 		anim_render(lcd, i);
 		++diff.lDc[i].itCur;
 	}
