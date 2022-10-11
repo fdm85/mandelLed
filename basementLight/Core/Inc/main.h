@@ -86,10 +86,10 @@ void SystemClock_Config(void);
 #define SPI1_MISO_GPIO_Port GPIOA
 #define SPI1_MOSI_Pin GPIO_PIN_7
 #define SPI1_MOSI_GPIO_Port GPIOA
-#define MS_STROBE_Pin GPIO_PIN_5
-#define MS_STROBE_GPIO_Port GPIOC
 #define MS_RESET_Pin GPIO_PIN_4
 #define MS_RESET_GPIO_Port GPIOC
+#define MS_STROBE_Pin GPIO_PIN_5
+#define MS_STROBE_GPIO_Port GPIOC
 #define BOOT1_Pin GPIO_PIN_2
 #define BOOT1_GPIO_Port GPIOB
 #define CLK_IN_Pin GPIO_PIN_10
