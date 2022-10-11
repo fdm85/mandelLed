@@ -117,8 +117,13 @@ typedef struct lRawCont_tag
 			.rawOff = rOff, \
 	}
 
+/** \addtogroup Led_Data
+ *  @{
+ */
+
 /** @brief led chain descriptor, one for each led tube/chain
- *  @ingroup Led_Data */
+ *
+ */
 typedef struct LedChainDesc_tag
 {
 	LedLogic_t* lLogic; /*!< pointer to led container, i.e. the RGB values of each single LED in a strip */
@@ -141,5 +146,7 @@ void led_transmitData(LedChainDesc_t* lcd);
 void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div);
 void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b);
 uint32_t getLedCount(LedChainDesc_t* lcd);
+
+/** @}*/
 
 #endif /* LEDDATA_H_ */

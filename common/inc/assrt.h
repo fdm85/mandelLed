@@ -18,6 +18,7 @@
  *
  * @brief Assert helper
  * @defgroup Dev_Helper Development helper's
+ * @{
  */
 
 #ifndef ASSRT_H_
@@ -36,3 +37,4 @@
 #endif
 
 #endif /* ASSRT_H_ */
+/** @}*/

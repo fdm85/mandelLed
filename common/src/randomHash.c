@@ -217,5 +217,4 @@ void anim_random3(LedChainDesc_t *const lcd)
 		++diff.lDc[i].itCur;
 	}
 }
-
 /** @} */

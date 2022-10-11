@@ -18,6 +18,7 @@
  *
  * @brief Communication Interface
  * @defgroup ComApi Communication API
+ * @{
  */
 
 #ifndef COM_H_
@@ -27,3 +28,4 @@ void com_testSend(void);
 void com_enableRx(void);
 void com_parse(void);
 #endif /* COM_H_ */
+/** @}*/

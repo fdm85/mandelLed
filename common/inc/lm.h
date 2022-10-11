@@ -19,11 +19,14 @@
  * @brief Linker map helpers
  * @defgroup Linker_Map Helps to manage memory section placement
  * @ingroup Dev_Helper
+ * @{
  */
 
 #ifndef INC_LM_H_
 #define INC_LM_H_
 
+/*! @brief Define memory section pragma for led data */
 #define CCRAM_PLACING __attribute__((section (".ccmram")))
 
 #endif /* INC_LM_H_ */
+/** @}*/

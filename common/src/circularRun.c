@@ -19,6 +19,8 @@
  * @brief Circular run implementation
  * @defgroup Circular_Run Animations that feature a circular(repeating) manner
  * @ingroup Animations
+ *
+ * @{
  */
 
 #include "animations.h"
@@ -193,4 +195,4 @@ void rideOnceFiller(LedChainDesc_t *const lcd, rider_t *arg)
 		arg->pos = (uint32_t)arg->posIq.i;
 	}
 }
-
+/** @}*/

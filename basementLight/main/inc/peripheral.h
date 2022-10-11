@@ -19,6 +19,7 @@
  * @brief Implements peripheral dependencies
  * @defgroup PeripheralInterface Peripheral interface
  * @ingroup IO
+ * @{
  */
 
 #ifndef PERIPHERAL_H_
@@ -37,3 +38,4 @@ void brightnessAdc(void);
 uint32_t getAdcVal(void);
 void ADC_ConvCpltCallback(void* hadc);
 #endif /* PERIPHERAL_H_ */
+/** @}*/

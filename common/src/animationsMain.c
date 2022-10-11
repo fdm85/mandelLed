@@ -18,6 +18,7 @@
  *
  * @brief Main animations implementation
  * @ingroup Animations
+ * @{
  */
 
 #include "animations.h"
@@ -316,3 +317,4 @@ void anim_CyclicCall(mAnim_t* ctx)
 		break;
 	}
 }
+/** @}*/

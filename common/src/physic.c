@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * @brief Physic implementation
  * @ingroup Physic
+ * @{
  */
 
 
@@ -80,3 +81,4 @@ void phy_perfSimpleImpact(rider_t* a, rider_t* b)
 	a->step.r *= -1;
 	b->step.r *= -1;
 }
+/** @}*/
