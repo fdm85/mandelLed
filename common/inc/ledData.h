@@ -133,6 +133,7 @@ typedef struct LedChainDesc_tag
 
 void led_initDataRaw(LedChainDesc_t* lcd);
 void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness);
+void led_setFromToLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b, uint32_t s, uint32_t e);
 void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b);
 void led_getLedColor(LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l);
 void led_pasteData(LedChainDesc_t* lcd);

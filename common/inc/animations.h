@@ -27,6 +27,9 @@
 #include <stdbool.h>
 #include "ledData.h"
 
+#define fm_frqBand(name, gf, str, len, rr, gg, bb, bnd, mx)\
+    static const frqBand_t name = {.gCv = gf, .pSt = str, .pL = len, .r = rr, .g = gg, .b = bb, .band = bnd, .pM = (str + (len - 1)/2), .hL = (len - 1)/2, .max = mx}
+
 typedef enum  {
 	anim_powerUp = 0,
 
@@ -145,8 +148,18 @@ typedef struct frqBand {
 	msgeq7Freq band; /*!< */
 } frqBand_t;
 
-extern const frqBand_t *frqB[];
-extern const frqBand_t *frqR[];
+typedef void(*anim_frqDrv_F)(LedChainDesc_t *const lcd, const frqBand_t *fB);
+
+typedef struct frqString {
+   anim_frqDrv_F f;
+   uint32_t start;
+   uint32_t end;
+   LedLogic_t backGround;
+   const frqBand_t **frqB;
+}frqString_t;
+
+extern const frqString_t *frqS[];
+
 void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB);
 void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB);
 #else

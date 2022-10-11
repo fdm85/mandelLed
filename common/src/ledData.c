@@ -139,6 +139,23 @@ void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b)
 	}
 }
 
+/** @brief Set leds [s,e] of the strip to the same color
+ *  @param lcd strip context to work on
+ *  @param r red color
+ *  @param g green color
+ *  @param b blue color
+ *  @param s start
+ *  @param e end
+ *  @ingroup AccessAbstraction
+ */
+void led_setFromToLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b, uint32_t s, uint32_t e)
+{
+	for (uint32_t i = s; i < e; ++i)
+	{
+		led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
+	}
+}
+
 /** @brief Set all leds of the strip to the same color (uni color)
  *  @param lcd strip context to work on
  *  @param brightness brightness set val
