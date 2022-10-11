@@ -93,6 +93,7 @@ struct mAnim_tag
 void anim_setCirc(bool shrt);
 void anim_CyclicCall(mAnim_t* ctx);
 void anim_setMode(LedChainDesc_t *const lcd, anim_mode_e set);
+anim_mode_e anim_getCurrMode(void);
 void anim_setBrightness(uint8_t set);
 void anim_addBrightness(int8_t add);
 void anim_nextMode(LedChainDesc_t *const lcd);

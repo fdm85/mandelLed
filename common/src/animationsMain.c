@@ -28,7 +28,7 @@
 #include "matrix.h"
 #include "msgeq7.h"
 
-static anim_mode_e currMode = anim_cR2;
+static anim_mode_e currMode = anim_min;
 static uint8_t brightness = 255u;
 static rider_t rider1;
 static rider_t rider2;
@@ -57,6 +57,7 @@ rider_t *rPu4[] =
 void anim_setMode(LedChainDesc_t *const lcd, anim_mode_e set)
 {
 	assrt(set < anim_enumAssrt);
+	led_initDataRaw(lcd);
 	currMode = set;
 	if ((set == anim_rnd2) || (set == anim_rnd3))
 	{
@@ -73,6 +74,10 @@ void anim_setMode(LedChainDesc_t *const lcd, anim_mode_e set)
 	{
 		anim_r23DeInit(lcd);
 	}
+}
+
+anim_mode_e anim_getCurrMode(void) {
+   return currMode;
 }
 
 void anim_nextMode(LedChainDesc_t *const lcd)

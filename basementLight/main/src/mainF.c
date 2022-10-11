@@ -29,6 +29,32 @@
 #include "cmsis_compiler.h"
 #include "stm32f4xx_hal.h"
 
+
+
+mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 22uL, .puState = init};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
+
+
+/** @brief Toggle encoder control
+ *  @details Enable encoder, switch matrix render function so basic navigation is possible.
+ *  Details of navigation are handled in matrix module.
+ */
+static void toggleEncoder(void) {
+   static bool disabled = true;
+
+   if (disabled) {
+      disabled = false;
+      startEncoder();
+      blueLedToggle();
+      anim_matrix.fpRend = mtrx_display;
+   } else {
+      disabled = true;
+      stopEncoder();
+      blueLedToggle();
+      anim_matrix.fpRend = mtrx_anim;
+   }
+}
+
 /** @brief reads digital IO pin input to switch between
  *  @details Maintains status led on the evaluation board on the fly
  *  @ingroup ComApi
@@ -50,15 +76,11 @@ static void maintainStatusLeds(void)
 			{
 				swCount = 0u;
 				orangeLedToggle();
-				led_initDataRaw(&lcd_main);
-				anim_nextMode(&lcd_main);
+				toggleEncoder();
 			}
 		}
 	}
 }
-
-mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 22uL, .puState = init};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
 
 /** @brief Statemachine to trigger rendering and data output
  *  @param ctx context to work on, brings all needed dependencies

@@ -19,6 +19,7 @@
  * @brief Matrix implementation
  * @ingroup Matrix
  * @{
+ * @defgroup Display Display emulation for easy configuration
  */
 
 #include "matrix.h"
@@ -159,6 +160,16 @@ void mtrx_Init(void) {
    mtrx_InitAuxR();
 }
 
+static void mtrx_setLedsAsNavBar(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g, uint8_t b) {
+
+   assrt(val <= barLedCount);
+
+   for (uint32_t i = 0u; i <= val; ++i) {
+      uint32_t j = i/2u;
+      led_setLedToColor(lcd, chan->bar[(i % 2u) ? 1 : 0].dots[inverted ? (barHeigth - (j + 1)) : j], r, g, b);
+   }
+}
+
 static void mtrx_setLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g, uint8_t b) {
    static const uint32_t max = 3100uL;
    static const uint32_t round = max / 2uL;
@@ -290,5 +301,25 @@ void mtrx_anim(mAnim_t *ctx) {
    mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[4], getRChanVal2(e2_5kHz), color / 2, color / 2, color);
    mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[5], getRChanVal2(e6_25kHz), color, 2u, 2u);
    mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[6], getRChanVal2(e16kHz), color / 2, color, color / 2);
+}
+
+//static void display(mAnim_t *ctx) {
+//
+//}
+
+/** @brief main function of display emulation
+ *  @param context to work on
+ *  @ingroup Display
+ */
+void mtrx_display(mAnim_t *ctx) {
+   static uint8_t color = 20u;
+   static anim_mode_e curMode;
+   led_setAllLedsToColor(ctx->lcd_ctx, 2u, 2u, 2u);
+   curMode = anim_getCurrMode();
+
+   uint16_t curVal = (uint16_t) getEncoder();
+   curVal %= (barLedCount + 1u);
+   if (curVal) // if zero, none shall be enabled
+      mtrx_setLedsAsNavBar(ctx->lcd_ctx, &lLeft[0], curVal - 1u, 2u, color, color);
 }
 /** @}*/

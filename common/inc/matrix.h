@@ -26,6 +26,7 @@
 
 #define barHeigth 8
 #define barWidth 2
+#define barLedCount (barHeigth*barWidth)
 #define channelWidth 7
 #define auxChanWidth 1
 
@@ -35,5 +36,6 @@
 
 void mtrx_Init(void);
 void mtrx_anim(mAnim_t* ctx);
+void mtrx_display(mAnim_t *ctx);
 #endif /* MATRIX_H_ */
 /** @}*/
