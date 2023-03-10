@@ -22,6 +22,7 @@
  */
 #include "peripheral.h"
 #include "leds.h"
+#include "display.h"
 #include "msgeq7.h"
 #include "animations.h"
 #include "matrix.h"
@@ -46,7 +47,7 @@ static void toggleEncoder(void) {
       disabled = false;
       startEncoder();
       blueLedToggle();
-      anim_matrix.fpRend = mtrx_display;
+      anim_matrix.fpRend = disp_display;
    } else {
       disabled = true;
       stopEncoder();
@@ -76,7 +77,8 @@ static void maintainStatusLeds(void)
 			{
 				swCount = 0u;
 				orangeLedToggle();
-				toggleEncoder();
+//				toggleEncoder();
+				anim_nextMode(&lcd_main);
 			}
 		}
 	}

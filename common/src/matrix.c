@@ -19,7 +19,6 @@
  * @brief Matrix implementation
  * @ingroup Matrix
  * @{
- * @defgroup Display Display emulation for easy configuration
  */
 
 #include "matrix.h"
@@ -160,16 +159,6 @@ void mtrx_Init(void) {
    mtrx_InitAuxR();
 }
 
-static void mtrx_setLedsAsNavBar(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g, uint8_t b) {
-
-   assrt(val <= barLedCount);
-
-   for (uint32_t i = 0u; i <= val; ++i) {
-      uint32_t j = i/2u;
-      led_setLedToColor(lcd, chan->bar[(i % 2u) ? 1 : 0].dots[inverted ? (barHeigth - (j + 1)) : j], r, g, b);
-   }
-}
-
 static void mtrx_setLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val, uint8_t r, uint8_t g, uint8_t b) {
    static const uint32_t max = 3100uL;
    static const uint32_t round = max / 2uL;
@@ -303,23 +292,22 @@ void mtrx_anim(mAnim_t *ctx) {
    mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[6], getRChanVal2(e16kHz), color / 2, color, color / 2);
 }
 
-//static void display(mAnim_t *ctx) {
-//
-//}
-
-/** @brief main function of display emulation
- *  @param context to work on
- *  @ingroup Display
+/** @brief Use matrix bar to display a value in a range 0-16
+ *  @details it is assumed that the leds were previously reset to base color(low brightness or off)
+ *  @param lcd led stripe context
+ *  @param chan bar/channel selector
+ *  @param val value to display
+ *  @param r red set val
+ *  @param g green set val
+ *  @param b blue set val
  */
-void mtrx_display(mAnim_t *ctx) {
-   static uint8_t color = 20u;
-   static anim_mode_e curMode;
-   led_setAllLedsToColor(ctx->lcd_ctx, 2u, 2u, 2u);
-   curMode = anim_getCurrMode();
-
-   uint16_t curVal = (uint16_t) getEncoder();
+void disp_displayValue16(mAnim_t *ctx, uint16_t curVal, uint8_t r, uint8_t g, uint8_t b) {
    curVal %= (barLedCount + 1u);
+   assrt(curVal <= barLedCount);
    if (curVal) // if zero, none shall be enabled
-      mtrx_setLedsAsNavBar(ctx->lcd_ctx, &lLeft[0], curVal - 1u, 2u, color, color);
+      for (uint32_t i = 0u; i <= curVal; ++i) {
+         uint32_t j = i / 2u;
+         led_setLedToColor(ctx->lcd_ctx, lLeft[0].bar[(i % 2u) ? 1 : 0].dots[inverted ? (barHeigth - (j + 1)) : j], r, g, b);
+      }
 }
 /** @}*/
