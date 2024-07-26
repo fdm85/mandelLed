@@ -1,9 +1,9 @@
-  AppVersion = 75803
+  AppVersion = 78603
   FileVersion = 2
 [GENERAL]
   aATEModuleSel[24] = 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
   ConnectMode = 0
-  CurrentFile = "D:\eclipse_wrk\bsmlightBackUp_20211128.hex"
+  CurrentFile = "D:\eclipse_wrk\mandelLed\basementLight\20230907_backup.hex"
   DataFileSAddr = 0x00000000
   GUIMode = 0
   HostName = ""
@@ -31,7 +31,6 @@
   NumExitSteps = 0
   UseScriptFile = 0
   ScriptFile = ""
-  UseRAM = 1
   RAMAddr = 0x20000000
   RAMSize = 0x00020000
   CheckCoreID = 1
@@ -53,7 +52,6 @@
   AutoPerformsProgram = 1
   AutoPerformsSecure = 0
   AutoPerformsStartApp = 0
-  AutoPerformsUnsecure = 0
   AutoPerformsVerify = 1
   EnableFixedVTref = 0
   EnableTargetPower = 0

@@ -28,7 +28,7 @@
 #include "matrix.h"
 #include "msgeq7.h"
 
-static anim_mode_e currMode = anim_min;
+static anim_mode_e currMode = anim_msqDrv;
 static uint8_t brightness = 255u;
 static rider_t rider1;
 static rider_t rider2;

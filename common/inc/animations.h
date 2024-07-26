@@ -38,8 +38,11 @@ typedef enum  {
 
 	anim_min = 1, /*!< helper enum, surrogate of first "real" animation */
 
-	anim_rnd3 = 1, /*!< random 3 visualization */
-	anim_msqDrv, /*!< music driven visualization */
+	anim_msqDrv = 1, /*!< random 3 visualization */
+
+	anim_rnd3,
+//	anim_rnd3 = 1, /*!< random 3 visualization */
+//	anim_msqDrv, /*!< music driven visualization */
 	anim_blue, /*!< only blue */
 	anim_white, /*!< only white */
 	anim_red, /*!< only red */

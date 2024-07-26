@@ -147,7 +147,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 
 	ctx->f = HAL_GetTick();
 }
-
+#include "assrt.h"
 /** @brief main function
  */
 int main(void)
@@ -157,8 +157,8 @@ int main(void)
 	initClock();
 	initPeripherals();
 
-	anim_setMode(&lcd_main, anim_min);
-//	anim_setMode(&lcd_main, anim_msqDrv);
+//	anim_setMode(&lcd_main, anim_min);
+	anim_setMode(&lcd_main, anim_msqDrv);
 	led_initDataRaw(&lcd_main);
 	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
 
