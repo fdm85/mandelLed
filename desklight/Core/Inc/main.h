@@ -58,6 +58,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define MS_A_LEFT_Pin GPIO_PIN_0
+#define MS_A_LEFT_GPIO_Port GPIOA
+#define MS_RESET_Pin GPIO_PIN_1
+#define MS_RESET_GPIO_Port GPIOA
+#define MS_STROBE_Pin GPIO_PIN_2
+#define MS_STROBE_GPIO_Port GPIOA
+#define MS_A_RIGHT_Pin GPIO_PIN_3
+#define MS_A_RIGHT_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

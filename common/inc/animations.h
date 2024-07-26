@@ -134,6 +134,17 @@ void anim_r23Init(LedChainDesc_t *const lcd);
 void anim_r23DeInit(LedChainDesc_t *const lcd);
 void anim_layerRedRider(uint32_t pos);
 
+#else
+#define anim_random1(x)
+#define anim_setRandom2CycleCount(x)
+#define anim_random2(x)
+#define anim_random3(x)
+#define anim_r23Init(x)
+
+#define anim_r23DeInit(x)
+#define anim_layerRedRider(x)
+
+#endif
 #include "msgeq7.h"
 
 typedef struct frqBand {
@@ -163,17 +174,5 @@ extern const frqString_t *frqS[];
 
 void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB);
 void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB);
-#else
-#define anim_random1(x)
-#define anim_setRandom2CycleCount(x)
-#define anim_random2(x)
-#define anim_random3(x)
-#define anim_r23Init(x)
-
-#define anim_r23DeInit(x)
-#define anim_layerRedRider(x)
-
-#endif
-
 #endif /* ANIMATIONS_H_ */
 /** @}*/

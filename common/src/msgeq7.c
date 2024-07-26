@@ -30,9 +30,6 @@
 
 #define OFFSET_ADC	300uL
 
-#define LEFT hadc3
-#define RIGHT hadc2
-
 typedef enum {
    eInit = 0u, eStart, eStrobe, eAdcStart, eAdcFin, eFin,
 } gS_t;
@@ -92,16 +89,16 @@ static void sStart(void) {
 
 static void sAdc(void) {
    assrt(mT.gS == eAdcStart);
-   uint32_t adcState = HAL_ADC_GetState(&hadc2);
+   uint32_t adcState = HAL_ADC_GetState(&RIGHT);
    bool rdy = ((adcState & HAL_ADC_STATE_READY) != 0uL);
    assrt(rdy);
-   adcState = HAL_ADC_GetState(&hadc3);
+   adcState = HAL_ADC_GetState(&LEFT);
    rdy = ((adcState & HAL_ADC_STATE_READY) != 0uL);
    assrt(rdy);
    mT.actChan = 1u;
    tReset(&mT.strobeTime);
-   HAL_ADC_Start_IT(&hadc2);
-   HAL_ADC_Start_IT(&hadc3);
+   HAL_ADC_Start_IT(&RIGHT);
+   HAL_ADC_Start_IT(&LEFT);
 }
 
 void msgeq_ticker(void) {
