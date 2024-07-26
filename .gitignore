@@ -8,7 +8,7 @@
 /DebugL476/
 
 doc/doxyOut/*
-
+.metadata/**
 **/*.autosave
 *.launch
 *.bak
