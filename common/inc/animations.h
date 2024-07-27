@@ -75,6 +75,7 @@ struct mAnim_tag
 	eSm state; /*!< */
 	puState_t puState; /*!< */
 	uint16_t padd2; /*!< */
+	anim_mode_e AnimMode;
 };
 
 void anim_setCirc(bool shrt);
@@ -124,12 +125,12 @@ void anim_initRedRider3(LedChainDesc_t *const lcd, rider_t* arg);
 
 #endif
 
+void anim_random3(LedChainDesc_t *const lcd);
 
 #if !( (defined(STM32F303xE) | defined(STM32F103xB)) )
 void anim_random1(LedChainDesc_t *const lcd);
 void anim_setRandom2CycleCount(uint16_t c);
 void anim_random2(LedChainDesc_t *const lcd);
-void anim_random3(LedChainDesc_t *const lcd);
 void anim_r23Init(LedChainDesc_t *const lcd);
 void anim_r23DeInit(LedChainDesc_t *const lcd);
 void anim_layerRedRider(uint32_t pos);
@@ -138,7 +139,6 @@ void anim_layerRedRider(uint32_t pos);
 #define anim_random1(x)
 #define anim_setRandom2CycleCount(x)
 #define anim_random2(x)
-#define anim_random3(x)
 #define anim_r23Init(x)
 
 #define anim_r23DeInit(x)

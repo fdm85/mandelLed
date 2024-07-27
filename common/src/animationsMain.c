@@ -27,9 +27,9 @@
 #include "physic.h"
 #include "matrix.h"
 #include "msgeq7.h"
-
-static anim_mode_e currMode = anim_cR2;
 static uint8_t brightness = 255u;
+static anim_mode_e currMode = anim_cR2;
+#if USE_RIDERS
 static rider_t rider1;
 static rider_t rider2;
 static rider_t rider3;
@@ -235,15 +235,17 @@ static void layers(LedChainDesc_t *const lcd)
 		riderFiller(lcd, rA[i]);
 	}
 }
-
+#endif
 void anim_CyclicCall(mAnim_t* ctx)
 {
+#if USE_RIDERS
 	if (ctx->puState != done)
 	{
 		powerUp(ctx);
 		return;
 	}
-	switch (currMode)
+#endif
+	switch (ctx->AnimMode)
 	{
 //	case anim_cR1:
 //		anim_circularRun1(ctx->lcd_ctx, brightness);
@@ -261,6 +263,7 @@ void anim_CyclicCall(mAnim_t* ctx)
 	case anim_rnd3:
 		anim_random3(ctx->lcd_ctx);
 		break;
+#if USE_RIDERS
 	case anim_white:
 		led_setAllLedsToColor(ctx->lcd_ctx, brightness, brightness, brightness);
 		break;
@@ -298,6 +301,7 @@ void anim_CyclicCall(mAnim_t* ctx)
 	case anim_layers:
 		layers(ctx->lcd_ctx);
 		break;
+#endif
 	case anim_msqDrv:
 		for (uint8_t i = 0; frqS[i] != NULL; ++i) {
           led_setFromToLedsToColor(ctx->lcd_ctx, frqS[i]->backGround.r, frqS[i]->backGround.g, frqS[i]->backGround.b, frqS[i]->start, frqS[i]->end);

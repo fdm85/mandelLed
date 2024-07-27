@@ -10,31 +10,31 @@
 #include "animations.h"
 #include "com.h"
 #include "cmsis_compiler.h"
-
+#include "crc.h"
 #include "stm32f1xx_hal_conf.h"
 
-static void maintainModeSwitch(void)
-{
-	static const uint32_t blueLedToggleTimeMs = 100uL;
-	static uint32_t lastToggle = 0uL;
-
-	if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
-	{
-		lastToggle = HAL_GetTick();
-
-		static uint8_t swCount = 0u;
-		if (!getModeSwitch())
-		{
-			++swCount;
-			if (swCount > 5u)
-			{
-				swCount = 0u;
-				led_initDataRaw(&lcd_main);
-				anim_nextMode(&lcd_main);
-			}
-		}
-	}
-}
+//static void maintainModeSwitch(void)
+//{
+//	static const uint32_t blueLedToggleTimeMs = 100uL;
+//	static uint32_t lastToggle = 0uL;
+//
+//	if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
+//	{
+//		lastToggle = HAL_GetTick();
+//
+//		static uint8_t swCount = 0u;
+//		if (!getModeSwitch())
+//		{
+//			++swCount;
+//			if (swCount > 5u)
+//			{
+//				swCount = 0u;
+//				led_initDataRaw(&lcd_main);
+//				anim_nextMode(&lcd_main);
+//			}
+//		}
+//	}
+//}
 
 mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 100uL, .puState = done};
 
@@ -95,15 +95,28 @@ int main(void)
 {
 	initClock();
 	initPeripherals();
-
-	anim_setMode(&lcd_main, anim_white);
-	led_initDataRaw(&lcd_main);
+	MX_CRC_Init();
+	anim_main.AnimMode = anim_rnd3;
+//	anim_setMode(&lcd_main, anim_rnd3);
 	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
+	led_initDataRaw(&lcd_main);
 
 	__enable_irq();
 	for (;;)
 	{
-		maintainModeSwitch();
+//		maintainModeSwitch();
 		cyclicReSend(&anim_main);
 	}
+}
+
+uint32_t hrng;
+
+HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(void * vd, uint32_t *random32bit)
+{
+	(void)vd;
+	uint32_t temp = HAL_GetTick();
+
+	*random32bit = HAL_CRC_Accumulate(&hcrc, &temp, 1);
+
+	return  hcrc.State;
 }
