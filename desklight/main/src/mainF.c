@@ -105,6 +105,7 @@ int main(void)
 	for (;;)
 	{
 //		maintainModeSwitch();
+		msgeq_ticker();
 		cyclicReSend(&anim_main);
 	}
 }

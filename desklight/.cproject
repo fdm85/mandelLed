@@ -77,7 +77,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="common/src/circularRun.c|common/src/randomHash.c|common/src/physic.c|common/src/com.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Core/Src/sysmem.c|Core/Src/syscalls.c|common/src/circularRun.c|common/src/randomHash.c|common/src/physic.c|common/src/com.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -131,7 +131,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="common/src/circularRun.c|common/src/randomHash.c|common/src/physic.c|common/src/com.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Core/Src/sysmem.c|Core/Src/syscalls.c|common/src/circularRun.c|common/src/randomHash.c|common/src/physic.c|common/src/com.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -193,7 +193,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="common/src/circularRun.c|common/src/randomHash.c|common/src/physic.c|common/src/com.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Core/Src/sysmem.c|Core/Src/syscalls.c|common/src/circularRun.c|common/src/randomHash.c|common/src/physic.c|common/src/com.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -279,7 +279,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="common/src/physic.c|common/src/com.c|common/src/circularRun.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Core/Src/sysmem.c|Core/Src/syscalls.c|common/src/physic.c|common/src/com.c|common/src/circularRun.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
