@@ -59,8 +59,28 @@ typedef enum
 
 typedef enum
 {
-	e_render, e_waitTxCplt, e_paste
+	e_render,
+	e_waitTxCplt,
+	e_paste,
+	e_StartDma,
+	e_dma
 } eSm;
+
+typedef enum
+{
+	e_fadeIn,
+	e_tx,
+	e_fadeOut
+} dmaState_t;
+
+typedef struct lRawDma_tag
+{
+	dmaState_t dS;
+	uint32_t  i; /*!< index counter for current state */
+	const uint32_t ledCount; /*!< count of 'real' leds in the strip */
+	const uint32_t rawCount; /*!< half size of dma tx buffer (in units of LedRaw[]) */
+	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
+}lRawDma_t;
 
 typedef struct mAnim_tag mAnim_t;
 typedef void (*fpRender)(mAnim_t* ctx);

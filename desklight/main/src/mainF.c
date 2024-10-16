@@ -8,6 +8,7 @@
 #include "peripheral.h"
 #include "leds.h"
 #include "animations.h"
+#include "matrix.h"
 #include "com.h"
 #include "cmsis_compiler.h"
 #include "crc.h"
@@ -37,6 +38,12 @@
 //}
 
 mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 100uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
+
+static inline startDma(mAnim_t *ctx)
+{
+
+}
 
 static void cyclicReSend(mAnim_t *ctx)
 {
@@ -47,7 +54,8 @@ static void cyclicReSend(mAnim_t *ctx)
 		ctx->a = HAL_GetTick();
 		ctx->fpRend(ctx);
 		ctx->b = HAL_GetTick() - ctx->a;
-		ctx->state = e_waitTxCplt;
+//		ctx->state = e_waitTxCplt;
+		ctx->state = e_StartDma;
 		break;
 
 	case e_waitTxCplt:
@@ -70,10 +78,23 @@ static void cyclicReSend(mAnim_t *ctx)
 		ctx->state = e_render;
 		break;
 
+	case e_StartDma:
+		startDma();
+		ctx->state = e_dma;
+		break;
+	case e_dma:
+
 	default:
 		__BKPT(0);
 		break;
 	}
+}
+
+static void
+
+void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
+{
+
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
@@ -99,14 +120,17 @@ int main(void)
 	anim_main.AnimMode = anim_rnd3;
 //	anim_setMode(&lcd_main, anim_rnd3);
 	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
+	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
 	led_initDataRaw(&lcd_main);
-
+	led_initDataRaw(&lcd_matrix);
+	mtrx_Init();
 	__enable_irq();
 	for (;;)
 	{
 //		maintainModeSwitch();
 		msgeq_ticker();
 		cyclicReSend(&anim_main);
+		cyclicReSend(&anim_matrix);
 	}
 }
 

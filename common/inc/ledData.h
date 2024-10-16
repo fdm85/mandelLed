@@ -58,7 +58,7 @@ typedef struct lRawCont_tag
 	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
 	uint32_t ledCount; /*!< count of 'real' leds in the strip */
 	uint16_t txCountInUi32; /*!< count of 'total to transmit' raw led data packets */
-	uint16_t padding; /*!< padding/reserved */
+	uint16_t iTx; /*!<  */
 }lRawCont_t;
 
 /** @defgroup MemoryAbstraction Memory Abstraction

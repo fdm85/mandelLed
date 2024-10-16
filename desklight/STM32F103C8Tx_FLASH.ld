@@ -61,8 +61,8 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 20K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 64K
+RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 0x5000
+FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 0x10000
 }
 
 /* Define output sections */
@@ -133,6 +133,18 @@ SECTIONS
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
+
+  /* User_heap_stack section, used to check that there is enough RAM left */
+  ._user_heap_stack :
+  {
+    . = ALIGN(8);
+    PROVIDE ( end = . );
+    PROVIDE ( _end = . );
+    . = . + _Min_Heap_Size;
+    . = . + _Min_Stack_Size;
+    . = ALIGN(8);
+  } >RAM
+
   /* Initialized data sections goes into RAM, load LMA copy after code */
   .data : 
   {
@@ -161,19 +173,15 @@ SECTIONS
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
   } >RAM
-
-  /* User_heap_stack section, used to check that there is enough RAM left */
-  ._user_heap_stack :
+  
+  ._ram_end :
   {
     . = ALIGN(8);
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
-    . = . + _Min_Heap_Size;
-    . = . + _Min_Stack_Size;
+    . = . + 8;
     . = ALIGN(8);
   } >RAM
-
-  
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
