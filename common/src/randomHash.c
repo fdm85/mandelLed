@@ -121,7 +121,7 @@ void anim_setRandom2CycleCount(uint16_t c)
 	cycleMin_r23 = c;
 }
 #endif
-extern HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(void * vd, uint32_t *random32bit);
+extern HAL_CRC_StateTypeDef HAL_RNG_GenerateRandomNumber(void * vd, uint32_t *random32bit);
 static void anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
 {
 	rand_u r;

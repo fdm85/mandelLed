@@ -47,6 +47,7 @@ static struct \
 	LedChainDesc_t lcd_matrix = { \
 				.lLogic = &ledsLog_matrix[0], \
 				.lRaw = &lRawCont_matrix, \
+				.lRawNew = &matrix_dma, \
 				.timer = &htim3, \
 				.timChannel = 0x00000000U, \
 				.rawOn = ((2uL * 90uL)/3uL), \

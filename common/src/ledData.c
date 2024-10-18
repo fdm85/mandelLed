@@ -101,7 +101,7 @@ static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, u
  */
 void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b)
 {
-	if(i > lcd->lRaw->ledCount)
+	if(i > lcd->lRawNew->ledCount)
 		assrt(false);
 	led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
 }
@@ -193,45 +193,50 @@ static inline void led_stopTransmitData(LedChainDesc_t* lcd)
 	volatile HAL_StatusTypeDef result;
 	result = HAL_TIM_PWM_Stop_DMA(lcd->timer, lcd->timChannel);
 	assrt(result == HAL_OK);
+	lcd->lRawNew->dS = e_done;
 	(void) result;
 }
 
-static inline void fillFade(lRawDma_t * RawDma, LedChainDesc_t* lcd)
+static inline void fillFade(LedChainDesc_t* lcd)
 {
-	const uint32_t iMax = RawDma->rawCount * 24uL;
+	const uint32_t iMax = lcd->lRawNew->rawCount * 24uL;
 	for (uint32_t i = 0; i < iMax; ++i) {
-		((uint32_t*)RawDma->lRaw)[i] = 0uL;
+		((uint32_t*)lcd->lRawNew->lRaw)[i] = 0uL;
 	}
 }
 
-static inline void fillRealData(lRawDma_t * RawDma, LedChainDesc_t* lcd)
+static inline void fillRealData(LedChainDesc_t* lcd)
 {
-	const uint32_t iMax = (RawDma->rS == e_Init) ? RawDma->rawCount : (RawDma->rawCount / 2u);
-	const uint32_t iOffset = (RawDma->rS == e_SecondHalf) ? (RawDma->rawCount / 2u) : 0;
-	for (uint32_t i = 0; (i < iMax) && (RawDma->i < RawDma->ledCount); ++i, ++RawDma->i) {
-		led_convertLed(lcd, &lcd->lLogic[RawDma->i], &RawDma->lRaw[iOffset + i]);
+	const uint32_t iMax = (lcd->lRawNew->rS == e_Init) ? lcd->lRawNew->rawCount : (lcd->lRawNew->rawCount / 2u);
+	const uint32_t iOffset = (lcd->lRawNew->rS == e_SecondHalf) ? (lcd->lRawNew->rawCount / 2u) : 0;
+	for (uint32_t i = 0; (i < iMax) && (lcd->lRawNew->i < lcd->lRawNew->ledCount); ++i, ++lcd->lRawNew->i) {
+		led_convertLed(lcd, &lcd->lLogic[lcd->lRawNew->i], &lcd->lRawNew->lRaw[iOffset + i]);
 	}
 }
 
-void fillRawLed(lRawDma_t * RawDma, LedChainDesc_t* lcd)
+void led_txRaw(LedChainDesc_t* lcd)
 {
 	/// is it possible to change dma size during active run?
-	switch (RawDma->dS) {
+	switch (lcd->lRawNew->dS) {
 		case e_fadeIn:
-			fillFade(RawDma, lcd);
-			led_startTransmitData();
-			RawDma->dS = e_realData;
+			fillFade(lcd);
+			led_startTransmitData(lcd);
+			lcd->lRawNew->dS = e_realData;
 			break;
 		case e_realData:
-			fillRealData(RawDma, lcd);
-			RawDma->dS = e_realData;
+			fillRealData(lcd);
+			lcd->lRawNew->dS = e_realData;
 			break;
 		case e_fadeOut:
-			fillFade(RawDma, lcd);
-			RawDma->dS = e_done;
+			fillFade(lcd);
+			lcd->lRawNew->dS = e_done;
 			break;
 		case e_done:
-			HAL_TIM_PWM_Stop_DMA();
+			if(lcd->lRawNew->rS == e_SecondHalf)
+			{
+				led_stopTransmitData(lcd);
+
+			}
 			break;
 		default:
 			break;

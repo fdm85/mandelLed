@@ -63,31 +63,8 @@ typedef enum
 	e_waitTxCplt,
 	e_paste,
 	e_StartDma,
-	e_dma
+	e_waitDmaDone
 } eSm;
-
-typedef enum
-{
-	e_fadeIn,
-	e_realData,
-	e_fadeOut,
-	e_done
-} dmaState_t;
-
-typedef enum {
-	e_Init, /*!< fill full struct */
-	e_FirstHalf, /*!< fill first half (called from dma half complete) */
-	e_SecondHalf, /*!< fill second half (called from dma complete) */
-}eDmaRawFill;
-typedef struct lRawDma_tag
-{
-	dmaState_t dS;
-	eDmaRawFill rS;
-	uint32_t  i; /*!< index counter for current state */
-	const uint32_t ledCount; /*!< count of 'real' leds in the strip */
-	const uint32_t rawCount; /*!< half size of dma tx buffer (in units of LedRaw[]) */
-	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
-}lRawDma_t;
 
 typedef struct mAnim_tag mAnim_t;
 typedef void (*fpRender)(mAnim_t* ctx);

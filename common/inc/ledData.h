@@ -61,6 +61,30 @@ typedef struct lRawCont_tag
 	uint16_t iTx; /*!<  */
 }lRawCont_t;
 
+typedef enum
+{
+	e_fadeIn,
+	e_realData,
+	e_fadeOut,
+	e_done
+} dmaState_t;
+
+typedef enum {
+	e_Init, /*!< fill full struct */
+	e_FirstHalf, /*!< fill first half (called from dma half complete) */
+	e_SecondHalf, /*!< fill second half (called from dma complete) */
+}eDmaRawFill;
+typedef struct lRawDma_tag
+{
+	dmaState_t dS;
+	eDmaRawFill rS;
+	uint32_t  i; /*!< index counter for current state */
+	const uint32_t ledCount; /*!< count of 'real' leds in the strip */
+	const uint32_t rawCount; /*!< half size of dma tx buffer (in units of LedRaw[]) */
+	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
+}lRawDma_t;
+
+
 /** @defgroup MemoryAbstraction Memory Abstraction
  *  @ingroup Led_Data*/
 
@@ -128,6 +152,7 @@ typedef struct LedChainDesc_tag
 {
 	LedLogic_t* lLogic; /*!< pointer to led container, i.e. the RGB values of each single LED in a strip */
 	const lRawCont_t *const lRaw; /*!< pointer to IO-out raw data of the strip */
+	lRawDma_t *const lRawNew; /*!< pointer to IO-out raw data of the strip */
 	TIM_HandleTypeDef* timer; /*!< pointer to the timer instance responsible for the data output*/
 	uint32_t timChannel; /*!< output channel of the timer (as a timer peripheral my have multiple channels) */
 	uint32_t rawOn; /*!< pwm setval to produce a set bit*/
@@ -143,7 +168,7 @@ void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, ui
 void led_getLedColor(LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l);
 void led_pasteData(LedChainDesc_t* lcd);
 void led_transmitData(LedChainDesc_t* lcd);
-void fillRawLed(lRawDma_t * matrix_dma, LedChainDesc_t* lcd, uint8_t sHalf);
+void led_txRaw(LedChainDesc_t* lcd);
 void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div);
 void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b);
 uint32_t getLedCount(LedChainDesc_t* lcd);
