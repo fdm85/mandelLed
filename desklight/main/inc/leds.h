@@ -11,7 +11,7 @@
 #define CCRAM_PLACING
 #include "ledData.h"
 
-
+extern lRawDma_t matrix_dma;
 extern LedChainDesc_t lcd_main;
 extern LedChainDesc_t lcd_matrix;
 #endif /* LEDS_H_ */

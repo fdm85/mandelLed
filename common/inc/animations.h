@@ -69,13 +69,20 @@ typedef enum
 typedef enum
 {
 	e_fadeIn,
-	e_tx,
-	e_fadeOut
+	e_realData,
+	e_fadeOut,
+	e_done
 } dmaState_t;
 
+typedef enum {
+	e_Init, /*!< fill full struct */
+	e_FirstHalf, /*!< fill first half (called from dma half complete) */
+	e_SecondHalf, /*!< fill second half (called from dma complete) */
+}eDmaRawFill;
 typedef struct lRawDma_tag
 {
 	dmaState_t dS;
+	eDmaRawFill rS;
 	uint32_t  i; /*!< index counter for current state */
 	const uint32_t ledCount; /*!< count of 'real' leds in the strip */
 	const uint32_t rawCount; /*!< half size of dma tx buffer (in units of LedRaw[]) */

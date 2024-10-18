@@ -90,22 +90,24 @@ static void cyclicReSend(mAnim_t *ctx)
 	}
 }
 
-static void
-
 void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 {
-
+	if(htim == htim3)
+		fillRawLed(matrix_dma);
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
 	/* Prevent unused argument(s) compilation warning */
 	UNUSED(htim);
-
-	anim_main.sendLock = false;
-	anim_main.e = HAL_GetTick() - anim_main.e;
-
-	anim_main.f = HAL_GetTick();
+	if(htim == htim3)
+		fillRawLed(matrix_dma);
+	else
+	{
+		anim_main.sendLock = false;
+		anim_main.e = HAL_GetTick() - anim_main.e;
+		anim_main.f = HAL_GetTick();
+	}
 //  __BKPT(0);
 	/* NOTE : This function should not be modified, when the callback is needed,
 	 the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file

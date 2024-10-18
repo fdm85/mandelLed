@@ -22,7 +22,7 @@
  */
 
 #include "ledData.h"
-#include "stdint.h"
+#include <stdint.h>
 #include "assrt.h"
 
 #include "tim.h"
@@ -163,6 +163,7 @@ void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness)
 	}
 }
 
+
 /** @brief Convert/Paste logic rgb colors to the raw data out field
  *  @param lcd strip context to work on
  */
@@ -177,11 +178,64 @@ void led_pasteData(LedChainDesc_t* lcd)
 /** @brief Trigger data transmission
  *  @param lcd strip context to work on
  */
-void led_transmitData(LedChainDesc_t* lcd)
+static inline void led_startTransmitData(LedChainDesc_t* lcd)
 {
 	volatile HAL_StatusTypeDef result;
 	result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel, &lcd->lRaw->rI[0], lcd->lRaw->txCountInUi32);
 	assrt(result == HAL_OK);
 	(void) result;
 }
+/** @brief Trigger data transmission
+ *  @param lcd strip context to work on
+ */
+static inline void led_stopTransmitData(LedChainDesc_t* lcd)
+{
+	volatile HAL_StatusTypeDef result;
+	result = HAL_TIM_PWM_Stop_DMA(lcd->timer, lcd->timChannel);
+	assrt(result == HAL_OK);
+	(void) result;
+}
+
+static inline void fillFade(lRawDma_t * RawDma, LedChainDesc_t* lcd)
+{
+	const uint32_t iMax = RawDma->rawCount * 24uL;
+	for (uint32_t i = 0; i < iMax; ++i) {
+		((uint32_t*)RawDma->lRaw)[i] = 0uL;
+	}
+}
+
+static inline void fillRealData(lRawDma_t * RawDma, LedChainDesc_t* lcd)
+{
+	const uint32_t iMax = (RawDma->rS == e_Init) ? RawDma->rawCount : (RawDma->rawCount / 2u);
+	const uint32_t iOffset = (RawDma->rS == e_SecondHalf) ? (RawDma->rawCount / 2u) : 0;
+	for (uint32_t i = 0; (i < iMax) && (RawDma->i < RawDma->ledCount); ++i, ++RawDma->i) {
+		led_convertLed(lcd, &lcd->lLogic[RawDma->i], &RawDma->lRaw[iOffset + i]);
+	}
+}
+
+void fillRawLed(lRawDma_t * RawDma, LedChainDesc_t* lcd)
+{
+	/// is it possible to change dma size during active run?
+	switch (RawDma->dS) {
+		case e_fadeIn:
+			fillFade(RawDma, lcd);
+			led_startTransmitData();
+			RawDma->dS = e_realData;
+			break;
+		case e_realData:
+			fillRealData(RawDma, lcd);
+			RawDma->dS = e_realData;
+			break;
+		case e_fadeOut:
+			fillFade(RawDma, lcd);
+			RawDma->dS = e_done;
+			break;
+		case e_done:
+			HAL_TIM_PWM_Stop_DMA();
+			break;
+		default:
+			break;
+	}
+}
+
 /** @}*/

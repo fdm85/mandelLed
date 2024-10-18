@@ -143,6 +143,7 @@ void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, ui
 void led_getLedColor(LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l);
 void led_pasteData(LedChainDesc_t* lcd);
 void led_transmitData(LedChainDesc_t* lcd);
+void fillRawLed(lRawDma_t * matrix_dma, LedChainDesc_t* lcd, uint8_t sHalf);
 void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div);
 void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b);
 uint32_t getLedCount(LedChainDesc_t* lcd);

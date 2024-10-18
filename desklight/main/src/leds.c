@@ -24,6 +24,8 @@ lLogicContainer(matrix, 256);
 //lRawContainer(matrix, 32);
 //lChainDesc(matrix, htim3, TIM_CHANNEL_1, lRawOn, lRawOff);
 
+static LedRaw matrix_rawLeds[16];
+lRawDma_t matrix_dma = {.ledCount = 256uL, .rawCount = 16uL, .lRaw = matrix_rawLeds};
 
 static struct \
 	{ \
