@@ -37,7 +37,7 @@
 //	}
 //}
 
-//mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 100uL, .puState = done};
+mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 100uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
 
 static void cyclicReSend(mAnim_t *ctx)
@@ -74,7 +74,7 @@ static void cyclicReSend(mAnim_t *ctx)
 		break;
 
 	case e_StartDma:
-		led_txRaw(ctx->lcd_ctx);
+		led_txRaw(ctx->lcd_ctx, e_Init);
 		ctx->state = e_waitDmaDone;
 		break;
 
@@ -89,15 +89,15 @@ static void cyclicReSend(mAnim_t *ctx)
 
 void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 {
-	if(htim == &htim3)
-		led_txRaw(&lcd_matrix);
+	LedChainDesc_t* lcd = (htim == &htim3) ? &lcd_matrix : &lcd_main;
+	led_txRaw(lcd, e_FirstHalf);
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
-	/* Prevent unused argument(s) compilation warning */
-	if(htim == &htim3)
-		led_txRaw(&lcd_matrix);
+	LedChainDesc_t* lcd = (htim == &htim3) ? &lcd_matrix : &lcd_main;
+	led_txRaw(lcd, e_SecondHalf);
+
 //	else
 //	{
 //		anim_main.sendLock = false;
@@ -115,21 +115,27 @@ int main(void)
 	initClock();
 	initPeripherals();
 	MX_CRC_Init();
-//	anim_main.AnimMode = anim_rnd3;
+	anim_main.AnimMode = anim_rnd3;
 	anim_matrix.AnimMode = anim_msqDrv;
 //	anim_setMode(&lcd_main, anim_rnd3);
-//	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
-	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
-//	led_initDataRaw(&lcd_main);
-	led_initDataRaw(&lcd_matrix);
-	mtrx_Init();
+	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
+//	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
+	led_LedLogicInit(&lcd_main);
+	led_setLedToColor(&lcd_main, 0, 255, 0, 0);
+	led_setLedToColor(&lcd_main, 1, 0, 255, 0);
+	led_setLedToColor(&lcd_main, 2, 0, 0, 255);
+	led_setLedToColor(&lcd_main, 3, 255, 0, 0);
+	led_setLedToColor(&lcd_main, 4, 0, 255, 0);
+	led_setLedToColor(&lcd_main, 5, 0, 0, 255);
+//	led_LedLogicInit(&lcd_matrix);
+//	mtrx_Init();
 	__enable_irq();
 	for (;;)
 	{
 //		maintainModeSwitch();
-		msgeq_ticker();
-//		cyclicReSend(&anim_main);
-		cyclicReSend(&anim_matrix);
+//		msgeq_ticker();
+		cyclicReSend(&anim_main);
+//		cyclicReSend(&anim_matrix);
 	}
 }
 

@@ -27,8 +27,8 @@
 #include "physic.h"
 #include "matrix.h"
 #include "msgeq7.h"
-static uint8_t brightness = 255u;
-static anim_mode_e currMode = anim_cR2;
+//static uint8_t brightness = 255u;
+//static anim_mode_e currMode = anim_cR2;
 #if USE_RIDERS
 static rider_t rider1;
 static rider_t rider2;

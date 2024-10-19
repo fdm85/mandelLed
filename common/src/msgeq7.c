@@ -180,7 +180,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
                mT.adcChan22[mT.cycle] =  ctx->f(ctx, mT.adcChan2[mT.cycle]);
    } else {
       if (hadc == &hadc1)
-         ADC_ConvCpltCallback(hadc);
+//         ADC_ConvCpltCallback(hadc);
       return;
    }
 

@@ -209,7 +209,7 @@ void anim_random2(LedChainDesc_t *const lcd)
 #endif
 void anim_random3(LedChainDesc_t *const lcd)
 {
-	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
+	for (uint32_t i = 0; i < lcd->lRawNew->ledCount; ++i)
 	{
 
 		if (diff.lDc[i].itCur == diff.lDc[i].itMax)

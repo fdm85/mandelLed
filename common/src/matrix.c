@@ -175,7 +175,7 @@ static void mtrx_setLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, uint3
       led_setLedToColor(lcd, chan->bar[1].dots[inverted ? (barHeigth - (i + 1)) : i], r, g, b);
    }
 }
-static void mtrx_setLedsScaled2(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val1, uint32_t val2, uint8_t r, uint8_t g, uint8_t b) {
+static __attribute__ ((used)) void mtrx_setLedsScaled2(LedChainDesc_t *const lcd, channel_t *chan, uint32_t val1, uint32_t val2, uint8_t r, uint8_t g, uint8_t b) {
    static const uint32_t max = 3100uL;
    static const uint32_t round = max / 2uL;
 
