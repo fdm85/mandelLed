@@ -54,10 +54,7 @@ static void cyclicReSend(mAnim_t *ctx)
 		break;
 
 	case e_waitTxCplt:
-		if (!ctx->sendLock && ((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTimeMs))
-		{
-			ctx->state = e_paste;
-		}
+
 		break;
 
 	case e_paste:
@@ -68,17 +65,19 @@ static void cyclicReSend(mAnim_t *ctx)
 		ctx->e = HAL_GetTick();
 //		led_transmitData(ctx->lcd_ctx);
 
-		ctx->lastToggle = HAL_GetTick();
 
 		ctx->state = e_render;
 		break;
 
 	case e_StartDma:
+		ctx->lastToggle = HAL_GetTick();
 		led_txRaw(ctx->lcd_ctx, e_Init);
 		ctx->state = e_waitDmaDone;
 		break;
 
 	case e_waitDmaDone:
+	  if ((ctx->lcd_ctx->lRawNew->dS == e_done) && ((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTimeMs))
+	    ctx->state = e_render;
 		break;
 
 	default:
