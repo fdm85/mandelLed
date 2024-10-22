@@ -64,23 +64,29 @@ typedef struct lRawCont_tag
 typedef enum
 {
 	e_fadeIn,
-	e_realData,
-	e_fadeOut,
-	e_done
+	e_FirstHalf, /*!< fill first half (called from dma half complete) */
+	e_SecondHalf, /*!< fill second half (called from dma complete) */
+	e_Inv2
 } dmaState_t;
 
 typedef enum {
-	e_Init, /*!< fill full struct */
-	e_FirstHalf, /*!< fill first half (called from dma half complete) */
-	e_SecondHalf, /*!< fill second half (called from dma complete) */
+	e_Precursor, /*!< fill full struct */
+	e_realData,
+	e_Tail_1, /*!<  */
+	e_Tail_2, /*!<  */
+	e_done,
+	e_Inv
 }eDmaRawFill;
+
 typedef struct lRawDma_tag
 {
 	dmaState_t dS;
 	eDmaRawFill rS;
-	uint32_t  i; /*!< index counter for current state */
+	uint32_t iS; /*!< index counter at source */
+	uint32_t iD; /*!< index counter at destination */
 	const uint32_t ledCount; /*!< count of 'real' leds in the strip */
 	const uint32_t rawCount; /*!< size of dma tx buffer (in units of LedRaw[]) */
+	const uint32_t rawTxCount; /*!< size of dma tx buffer (in units of uint32_t) */
 	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
 }lRawDma_t;
 
@@ -167,7 +173,7 @@ void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, ui
 void led_getLedColor(LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l);
 void led_pasteData(LedChainDesc_t* lcd);
 void led_transmitData(LedChainDesc_t* lcd);
-void led_txRaw(LedChainDesc_t* lcd, volatile eDmaRawFill fillState);
+void led_txRaw(LedChainDesc_t* lcd);
 void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div);
 void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b);
 uint32_t getLedCount(LedChainDesc_t* lcd);

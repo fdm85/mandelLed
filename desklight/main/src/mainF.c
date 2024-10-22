@@ -14,28 +14,7 @@
 #include "crc.h"
 #include "stm32f1xx_hal_conf.h"
 
-//static void maintainModeSwitch(void)
-//{
-//	static const uint32_t blueLedToggleTimeMs = 100uL;
-//	static uint32_t lastToggle = 0uL;
-//
-//	if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
-//	{
-//		lastToggle = HAL_GetTick();
-//
-//		static uint8_t swCount = 0u;
-//		if (!getModeSwitch())
-//		{
-//			++swCount;
-//			if (swCount > 5u)
-//			{
-//				swCount = 0u;
-//				led_initDataRaw(&lcd_main);
-//				anim_nextMode(&lcd_main);
-//			}
-//		}
-//	}
-//}
+
 static uint8_t col = 20;
 static uint8_t index = 0;
 static void cycleColors(mAnim_t* ctx)
@@ -46,66 +25,54 @@ static void cycleColors(mAnim_t* ctx)
   }
   ++index;
 }
-mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 5000uL, .puState = done};
+mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
+extern void led_startTransmitData(LedChainDesc_t* lcd);
+static void cyclicReSend(mAnim_t *ctx) {
 
-static void cyclicReSend(mAnim_t *ctx)
-{
+  switch (ctx->state) {
+  case e_render:
+    ctx->a = HAL_GetTick();
+    ctx->fpRend(ctx);
+    ctx->b = HAL_GetTick() - ctx->a;
+    ctx->state = e_StartDma;
+    break;
 
-	switch (ctx->state)
-	{
-	case e_render:
-		ctx->a = HAL_GetTick();
-		ctx->fpRend(ctx);
-		ctx->b = HAL_GetTick() - ctx->a;
-//		ctx->state = e_waitTxCplt;
-		ctx->state = e_StartDma;
-		break;
+  case e_StartDma:
+//		ctx->c = HAL_GetTick();
+//		ctx->d = HAL_GetTick() - ctx->c;
+//		ctx->e = HAL_GetTick();
+    ctx->lastToggle = HAL_GetTick();
+    ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
+    ctx->lcd_ctx->lRawNew->rS = e_Precursor;
+    led_txRaw(ctx->lcd_ctx);
+    ctx->state = e_waitDmaDone;
+    break;
 
-	case e_waitTxCplt:
+  case e_waitDmaDone:
+    if ((ctx->lcd_ctx->lRawNew->rS == e_done)
+        && ((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTimeMs))
+      ctx->state = e_render;
+    break;
 
-		break;
-
-	case e_paste:
-		ctx->sendLock = 0x55aa55aauL;
-		ctx->c = HAL_GetTick();
-//		led_pasteData(ctx->lcd_ctx);
-		ctx->d = HAL_GetTick() - ctx->c;
-		ctx->e = HAL_GetTick();
-//		led_transmitData(ctx->lcd_ctx);
-
-
-		ctx->state = e_render;
-		break;
-
-	case e_StartDma:
-		ctx->lastToggle = HAL_GetTick();
-		ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
-		led_txRaw(ctx->lcd_ctx, e_Init);
-		ctx->state = e_waitDmaDone;
-		break;
-
-	case e_waitDmaDone:
-	  if ((ctx->lcd_ctx->lRawNew->dS == e_done) && ((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTimeMs))
-	    ctx->state = e_render;
-		break;
-
-	default:
-		__BKPT(0);
-		break;
-	}
+  default:
+    __BKPT(0);
+    break;
+  }
 }
 
 void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 {
 	LedChainDesc_t* lcd = (htim == &htim3) ? &lcd_matrix : &lcd_main;
-	led_txRaw(lcd, e_FirstHalf);
+	lcd->lRawNew->dS = e_FirstHalf;
+	led_txRaw(lcd);
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
 	LedChainDesc_t* lcd = (htim == &htim3) ? &lcd_matrix : &lcd_main;
-	led_txRaw(lcd, e_SecondHalf);
+	lcd->lRawNew->dS = e_SecondHalf;
+	led_txRaw(lcd);
 
 //	else
 //	{

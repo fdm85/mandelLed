@@ -11,6 +11,11 @@
 #define CCRAM_PLACING
 #include "ledData.h"
 
+
+#define PWM_RAW   90uL
+#define lRawOn ((2uL * PWM_RAW)/3uL)
+#define lRawOff ((1uL * PWM_RAW)/3uL)
+
 extern lRawDma_t matrix_dma;
 extern LedChainDesc_t lcd_main;
 extern LedChainDesc_t lcd_matrix;
