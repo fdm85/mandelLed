@@ -36,8 +36,17 @@
 //		}
 //	}
 //}
-
-mAnim_t anim_main = { .fpRend = anim_CyclicCall, .lcd_ctx = &lcd_main, .triggerTimeMs = 100uL, .puState = done};
+static uint8_t col = 20;
+static uint8_t index = 0;
+static void cycleColors(mAnim_t* ctx)
+{
+  led_LedLogicInit(ctx->lcd_ctx);
+  for (uint32_t i = 0uL; i < 6uL; ++i) {
+    led_setLedToColor(ctx->lcd_ctx, i, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col);
+  }
+  ++index;
+}
+mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 5000uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
 
 static void cyclicReSend(mAnim_t *ctx)
@@ -71,6 +80,7 @@ static void cyclicReSend(mAnim_t *ctx)
 
 	case e_StartDma:
 		ctx->lastToggle = HAL_GetTick();
+		ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
 		led_txRaw(ctx->lcd_ctx, e_Init);
 		ctx->state = e_waitDmaDone;
 		break;
@@ -120,12 +130,7 @@ int main(void)
 	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
 //	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
 	led_LedLogicInit(&lcd_main);
-	led_setLedToColor(&lcd_main, 0, 255, 0, 0);
-	led_setLedToColor(&lcd_main, 1, 0, 255, 0);
-	led_setLedToColor(&lcd_main, 2, 0, 0, 255);
-	led_setLedToColor(&lcd_main, 3, 255, 0, 0);
-	led_setLedToColor(&lcd_main, 4, 0, 255, 0);
-	led_setLedToColor(&lcd_main, 5, 0, 0, 255);
+
 //	led_LedLogicInit(&lcd_matrix);
 //	mtrx_Init();
 	__enable_irq();

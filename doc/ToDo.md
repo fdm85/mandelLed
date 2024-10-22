@@ -2,7 +2,7 @@
 
 ## Switchboard
 Todo:
-- Terminal & Allgemein Beschriftungen
+- Terminal & Allgemein Beschriftungen, Version 
 - Feinsicherungshalter je Einspeißung & Ausgang
 - 3.3V Regler für MCU
 - 5V DC In Klemmen tauschen für größeren Aderquerschnitt

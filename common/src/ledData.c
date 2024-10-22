@@ -208,9 +208,14 @@ static LOC_INL_DBG void fillRealData(LedChainDesc_t* lcd)
 		led_convertLed(lcd, &lcd->lLogic[lcd->lRawNew->i], &lcd->lRawNew->lRaw[iOffset + i]);
 	}
 }
+volatile eDmaRawFill list[30] = {0};
+static uint8_t idx = 0u;
 static const LedLogic_t ConverterLed = {12u, 0u, 0u};
 void led_txRaw(LedChainDesc_t* lcd,volatile eDmaRawFill fillState)
 {
+  list[idx++] = fillState;
+  if(idx >= 30)
+    idx = 0u;
 	/// is it possible to change dma size during active run?
 	switch (lcd->lRawNew->dS) {
 		case e_fadeIn:
@@ -233,6 +238,7 @@ void led_txRaw(LedChainDesc_t* lcd,volatile eDmaRawFill fillState)
 			if(fillState == e_SecondHalf)
 			{
 				led_stopTransmitData(lcd);
+				idx = 0u;
 			}
 			else
 				fillFade(lcd, fillState);

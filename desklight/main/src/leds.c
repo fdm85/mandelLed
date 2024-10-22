@@ -14,9 +14,9 @@
 #define lRawOn ((2uL * PWM_RAW)/3uL)
 #define lRawOff ((1uL * PWM_RAW)/3uL)
 
-static LedRaw rawLeds[16];
+static LedRaw rawLeds[6];
 lRawDma_t matrix_dma = {.ledCount = 256uL, .rawCount = 16uL, .lRaw = rawLeds};
-lRawDma_t main_dma = {.ledCount = 6uL, .rawCount = 16uL, .lRaw = rawLeds};
+lRawDma_t main_dma = {.ledCount = 6uL, .rawCount = 6uL, .lRaw = rawLeds};
 
 lLogicContainer(main, LED_1);
 //lRawContainer(main, LED_1);
