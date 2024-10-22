@@ -177,7 +177,7 @@ void led_txRaw(LedChainDesc_t* lcd);
 void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div);
 void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b);
 uint32_t getLedCount(LedChainDesc_t* lcd);
-
+void initMea(void);
 /** @}*/
 
 #endif /* LEDDATA_H_ */

@@ -45,6 +45,7 @@ static void cyclicReSend(mAnim_t *ctx) {
     ctx->lastToggle = HAL_GetTick();
     ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
     ctx->lcd_ctx->lRawNew->rS = e_Precursor;
+    initMea();
     led_txRaw(ctx->lcd_ctx);
     ctx->state = e_waitDmaDone;
     break;
@@ -65,6 +66,7 @@ void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 {
 	LedChainDesc_t* lcd = (htim == &htim3) ? &lcd_matrix : &lcd_main;
 	lcd->lRawNew->dS = e_FirstHalf;
+	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
 	led_txRaw(lcd);
 }
 
@@ -72,8 +74,9 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
 	LedChainDesc_t* lcd = (htim == &htim3) ? &lcd_matrix : &lcd_main;
 	lcd->lRawNew->dS = e_SecondHalf;
+	led_stopTransmitData(lcd);
+	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
 	led_txRaw(lcd);
-
 //	else
 //	{
 //		anim_main.sendLock = false;
