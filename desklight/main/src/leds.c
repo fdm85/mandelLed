@@ -10,11 +10,13 @@
 #include "leds.h"
 #include "tim.h"
 
+#define LDCNT  256uL
+
 static LedRaw rawLeds[16];
 lRawDma_t matrix_dma = {.ledCount = 256uL, .rawCount = 16uL, .lRaw = rawLeds};
-lRawDma_t main_dma = {.ledCount = 31uL, .rawCount = (sizeof(rawLeds) / sizeof(rawLeds[0])), .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
+lRawDma_t main_dma = {.ledCount = LDCNT, .rawCount = (sizeof(rawLeds) / sizeof(rawLeds[0])), .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
 
-lLogicContainer(main, LED_1);
+lLogicContainer(main, LDCNT);
 //lRawContainer(main, LED_1);
 lRawContainer(main, 8);
 //lChainDesc(main, htim4, TIM_CHANNEL_2, lRawOn, lRawOff);
