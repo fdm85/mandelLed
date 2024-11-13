@@ -194,7 +194,6 @@ LOC_INL_DBG void led_stopTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
   result = HAL_TIM_PWM_Stop_DMA(lcd->timer, lcd->timChannel);
   assrt(result == HAL_OK);
-  lcd->lRawNew->rS = e_done;
   (void) result;
 }
 

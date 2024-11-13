@@ -20,8 +20,12 @@ static uint8_t index = 0;
 static void cycleColors(mAnim_t* ctx)
 {
   led_LedLogicInit(ctx->lcd_ctx);
-  for (uint32_t i = 0uL; i < 6uL; ++i) {
-    led_setLedToColor(ctx->lcd_ctx, i, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col);
+  for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount;) {
+    led_setLedToColor(ctx->lcd_ctx, i++, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col);
+    if(i < ctx->lcd_ctx->lRawNew->ledCount)
+      led_setLedToColor(ctx->lcd_ctx, i++, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col, ((index + 0) % 3) ? 0 : col);
+    if(i < ctx->lcd_ctx->lRawNew->ledCount)
+      led_setLedToColor(ctx->lcd_ctx, i++, ((index + 2) % 3) ? 0 : col, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col);
   }
   ++index;
 }
@@ -74,7 +78,6 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
 	LedChainDesc_t* lcd = (htim == &htim3) ? &lcd_matrix : &lcd_main;
 	lcd->lRawNew->dS = e_SecondHalf;
-	led_stopTransmitData(lcd);
 	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
 	led_txRaw(lcd);
 //	else
