@@ -160,8 +160,6 @@ typedef struct LedChainDesc_tag
 	lRawDma_t *const lRawNew; /*!< pointer to IO-out raw data of the strip */
 	TIM_HandleTypeDef* timer; /*!< pointer to the timer instance responsible for the data output*/
 	uint32_t timChannel; /*!< output channel of the timer (as a timer peripheral my have multiple channels) */
-	uint32_t rawOn; /*!< pwm setval to produce a set bit*/
-	uint32_t rawOff; /*!< pwm setval to produce a reset bit*/
 	uint32_t btMult; /*!< brightness truncation multiplier */
 	uint32_t btDiv; /*!< brightness truncation divider */
 } LedChainDesc_t;

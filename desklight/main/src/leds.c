@@ -12,7 +12,7 @@
 
 static LedRaw rawLeds[16];
 lRawDma_t matrix_dma = {.ledCount = 256uL, .rawCount = 16uL, .lRaw = rawLeds};
-lRawDma_t main_dma = {.ledCount = 16uL, .rawCount = (sizeof(rawLeds) / sizeof(rawLeds[0])), .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
+lRawDma_t main_dma = {.ledCount = 8uL, .rawCount = (sizeof(rawLeds) / sizeof(rawLeds[0])), .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
 
 lLogicContainer(main, LED_1);
 //lRawContainer(main, LED_1);
@@ -46,14 +46,10 @@ static struct \
 				.lRawNew = &matrix_dma, \
 				.timer = &htim3, \
 				.timChannel = TIM_CHANNEL_1, \
-				.rawOn = ((2uL * 90uL)/3uL), \
-				.rawOff = ((1uL * 90uL)/3uL), \
 		};
 	LedChainDesc_t lcd_main = { \
 				.lLogic = &ledsLog_main[0], \
 				.lRawNew = &main_dma, \
 				.timer = &htim4, \
 				.timChannel = TIM_CHANNEL_2, \
-				.rawOn = ((2uL * 90uL)/3uL), \
-				.rawOff = ((1uL * 90uL)/3uL), \
 		};
