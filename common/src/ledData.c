@@ -214,29 +214,35 @@ static LOC_INL_DBG void fadeIn(LedChainDesc_t *lcd) {
   /// add first segment of real data here to simplify implementation of half cycle filler
   led_convertLed(&cLed, &lcd->lRawNew->lRaw[lcd->lRawNew->iD++]);
   for (lcd->lRawNew->iS = 0uL; (lcd->lRawNew->iS < lcd->lRawNew->ledCount) && (lcd->lRawNew->iD < lcd->lRawNew->rawCount);
-      ++lcd->lRawNew->iS, ++lcd->lRawNew->iD) {
+      ++lcd->lRawNew->iS, ++lcd->lRawNew->iD)
     led_convertLed(&lcd->lLogic[lcd->lRawNew->iS], &lcd->lRawNew->lRaw[lcd->lRawNew->iD]);
 
-  }
+  /// set possible remainder to zero
+  for (; (lcd->lRawNew->iD < lcd->lRawNew->rawCount); ++lcd->lRawNew->iD)
+    led_convertLedToZero(&lcd->lRawNew->lRaw[lcd->lRawNew->iD]);
+
 }
+
 static LOC_INL_DBG void fadeOut(LedChainDesc_t *lcd) {
   /// assuming dma buffer is at least twice as big as (inFrame + cLed)
 
   const uint32_t iMax = (lcd->lRawNew->rawCount / 2u);
   const uint32_t iOffset = (lcd->lRawNew->dS == e_SecondHalf) ? (lcd->lRawNew->rawCount / 2u) : 0;
-  for (lcd->lRawNew->iD = 0uL; (lcd->lRawNew->iD < iMax); // && (lcd->lRawNew->iS < lcd->lRawNew->ledCount);
-      ++lcd->lRawNew->iS, ++lcd->lRawNew->iD) {
+  for (lcd->lRawNew->iD = 0uL; (lcd->lRawNew->iD < iMax); ++lcd->lRawNew->iD)
     led_convertLedToZero(&lcd->lRawNew->lRaw[lcd->lRawNew->iD + iOffset]);
-  }
 }
 
 LOC_INL_DBG void fillRealData(LedChainDesc_t *lcd) {
   const uint32_t iMax = (lcd->lRawNew->rawCount / 2u);
   const uint32_t iOffset = (lcd->lRawNew->dS == e_SecondHalf) ? (lcd->lRawNew->rawCount / 2u) : 0;
+
   for (lcd->lRawNew->iD = 0uL; (lcd->lRawNew->iD < iMax) && (lcd->lRawNew->iS < lcd->lRawNew->ledCount);
-      ++lcd->lRawNew->iS, ++lcd->lRawNew->iD) {
+      ++lcd->lRawNew->iS, ++lcd->lRawNew->iD)
     led_convertLed(&lcd->lLogic[lcd->lRawNew->iS], &lcd->lRawNew->lRaw[lcd->lRawNew->iD + iOffset]);
-  }
+
+  /// set possible remainder to zero
+  for (; (lcd->lRawNew->iD < iMax); ++lcd->lRawNew->iD)
+    led_convertLedToZero(&lcd->lRawNew->lRaw[lcd->lRawNew->iD + iOffset]);
 }
 volatile eDmaRawFill list[30] = { e_Inv };
 volatile dmaState_t list2[30] = { e_Inv2 };
@@ -263,7 +269,6 @@ void led_txRaw(LedChainDesc_t *lcd) {
   case e_realData:
     if (lcd->lRawNew->iS == lcd->lRawNew->ledCount) {
       lcd->lRawNew->rS = e_Tail_1;
-      lcd->lRawNew->iS = 0uL;
       fadeOut(lcd);
     }
     else
