@@ -47,7 +47,7 @@ static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
    static fpa_t CCRAM_PLACING scP = _FPA_R(0.35);
    static fpa_t CCRAM_PLACING scDU = _FPA_R(0.7);
    static fpa_t CCRAM_PLACING scDD = _FPA_R(0.3);
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(1.6);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(1.2);
 
    ctx->v = FPA_mult(scI, ctx->v);
    ctx->v.r += FPA_IntMultFpa(yM, scP).r;
@@ -64,7 +64,7 @@ static uint32_t fl_i160(fltCtx_t *ctx_p, uint32_t yM)
    static fpa_t CCRAM_PLACING scP = _FPA_R(0.4);
    static fpa_t CCRAM_PLACING scDU = _FPA_R(0.5);
    static fpa_t CCRAM_PLACING scDD = _FPA_R(0.3);
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.8);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.7);
 
    ctx->v = FPA_mult(scI, ctx->v);
    ctx->v.r += FPA_IntMultFpa(yM, scP).r;
@@ -77,31 +77,31 @@ static uint32_t fl_i160(fltCtx_t *ctx_p, uint32_t yM)
 static uint32_t fl_i400(fltCtx_t *ctx_p, uint32_t yM)
 {
    (void)ctx_p;
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.7);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.8);
    return (uint32_t)FPA_IntMultFpa(yM, scOut).i;
 }
 static uint32_t fl_i1k(fltCtx_t *ctx_p, uint32_t yM)
 {
    (void)ctx_p;
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.7);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.75);
    return (uint32_t)FPA_IntMultFpa(yM, scOut).i;
 }
 static uint32_t fl_i2k5(fltCtx_t *ctx_p, uint32_t yM)
 {
    (void)ctx_p;
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.65);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.75);
    return (uint32_t)FPA_IntMultFpa(yM, scOut).i;
 }
 static uint32_t fl_i6k25(fltCtx_t *ctx_p, uint32_t yM)
 {
    (void)ctx_p;
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.6);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.7);
    return (uint32_t)FPA_IntMultFpa(yM, scOut).i;
 }
 static uint32_t fl_i16k(fltCtx_t *ctx_p, uint32_t yM)
 {
    (void)ctx_p;
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.5);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.6);
    return (uint32_t)FPA_IntMultFpa(yM, scOut).i;
 }
 

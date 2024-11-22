@@ -37,8 +37,10 @@ static void cycleColorsSingle(mAnim_t* ctx)
 
   ++index;
 }
-mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = cycleColorsSingle, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
+//mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
+mAnim_t anim_main = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_main, .triggerTimeMs = 10uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
+
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
 
@@ -111,14 +113,13 @@ int main(void)
 	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
 //	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
 	led_LedLogicInit(&lcd_main);
-
+	mtrx_Init();
 //	led_LedLogicInit(&lcd_matrix);
-//	mtrx_Init();
 	__enable_irq();
 	for (;;)
 	{
 //		maintainModeSwitch();
-//		msgeq_ticker();
+		msgeq_ticker();
 		cyclicReSend(&anim_main);
 //		cyclicReSend(&anim_matrix);
 	}
