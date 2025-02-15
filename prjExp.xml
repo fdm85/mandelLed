@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+  <section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+    <language id="org.eclipse.cdt.core.assembly" name="s,S"/>
+    <language id="org.eclipse.cdt.core.gcc" name="C Source File">
+      <includepath workspace_path="true">/desklight/Core/Inc</includepath>
+      <includepath workspace_path="true">/desklight/Drivers/CMSIS/Device/ST/STM32F1xx/Include</includepath>
+      <includepath workspace_path="true">/desklight/Drivers/CMSIS/Include</includepath>
+      <includepath workspace_path="true">/desklight/Drivers/STM32F1xx_HAL_Driver/Inc</includepath>
+      <includepath workspace_path="true">/desklight/main/inc</includepath>
+      <includepath workspace_path="true">/desklight/common/inc</includepath>
+      <includepath>C:\ST\STM32CubeIDE_1.16.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.200.202406191623\tools\arm-none-eabi\include</includepath>
+    </language>
+    <language name="Object File"/>
+  </section>
+  <section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.Macros">
+    <language id="org.eclipse.cdt.core.assembly" name="s,S"/>
+    <language id="org.eclipse.cdt.core.gcc" name="C Source File">
+      <macro>
+        <name>FPA_FRAC</name>
+        <value>5</value>
+      </macro>
+      <macro>
+        <name>GLOBAL_IQ</name>
+        <value>15</value>
+      </macro>
+      <macro>
+        <name>LEFT</name>
+        <value>hadc1</value>
+      </macro>
+      <macro>
+        <name>RIGHT</name>
+        <value>hadc2</value>
+      </macro>
+      <macro>
+        <name>STM32F103xB</name>
+        <value/>
+      </macro>
+      <macro>
+        <name>LED_1</name>
+        <value>30</value>
+      </macro>
+    </language>
+    <language name="Object File"/>
+  </section>
+</cdtprojectproperties>
