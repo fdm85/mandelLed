@@ -68,6 +68,7 @@ void Error_Handler(void);
 #define MS_A_RIGHT_GPIO_Port GPIOA
 #define dbg1_Pin GPIO_PIN_12
 #define dbg1_GPIO_Port GPIOA
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
@@ -77,5 +78,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
