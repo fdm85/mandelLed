@@ -12,7 +12,7 @@
 #include "com.h"
 #include "cmsis_compiler.h"
 #include "crc.h"
-#include "stm32f1xx_hal_conf.h"
+#include "stm32f4xx_hal.h"
 
 
 static uint8_t col = 20;
