@@ -75,7 +75,7 @@ typedef union
 Led_progColor_t prog_r23[LED_1];
 diffRunnerCtx_t diff = {.lDc = &prog_r23[0], .size = LED_1};
 static uint16_t cycleMin_r23 = 100u;
-//static uint16_t it_r2 = 100u;
+static uint16_t it_r2 = 100u;
 #if !(defined(STM32F103xB))
 void anim_r23Init(LedChainDesc_t *const lcd)
 {
@@ -108,7 +108,7 @@ void anim_r23DeInit(LedChainDesc_t *const lcd)
 
 void anim_random1(LedChainDesc_t *const lcd)
 {
-	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
+	for (uint32_t i = 0; i < lcd->lRawNew->ledCount; ++i)
 	{
 		rand_u r;
 		HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
@@ -121,7 +121,6 @@ void anim_setRandom2CycleCount(uint16_t c)
 	cycleMin_r23 = c;
 }
 #endif
-extern HAL_CRC_StateTypeDef HAL_RNG_GenerateRandomNumber(void * vd, uint32_t *random32bit);
 static void anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
 {
 	rand_u r;
@@ -181,7 +180,7 @@ static void anim_render(LedChainDesc_t *const lcd, uint32_t i)
 #if !(defined(STM32F103xB))
 static void anim_r2Diff(LedChainDesc_t *const lcd)
 {
-	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
+	for (uint32_t i = 0; i < lcd->lRawNew->ledCount; ++i)
 	{
 		anim_Diff(lcd, i, false);
 	}
@@ -189,7 +188,7 @@ static void anim_r2Diff(LedChainDesc_t *const lcd)
 
 static void anim_r2CalcAndSet(LedChainDesc_t *const lcd)
 {
-	for (uint32_t i = 0; i < lcd->lRaw->ledCount; ++i)
+	for (uint32_t i = 0; i < lcd->lRawNew->ledCount; ++i)
 	{
 		anim_render(lcd, i);
 	}

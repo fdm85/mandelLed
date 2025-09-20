@@ -24,11 +24,10 @@
 
 #include "peripheral.h"
 #include "stdbool.h"
-#include "stm32f4xx_hal_conf.h"
+//#include "stm32f4xx_hal_conf.h"
 
 #include "dma.h"
 #include "gpio.h"
-#include "main.h"
 #include "main.h"
 #include "rng.h"
 #include "tim.h"

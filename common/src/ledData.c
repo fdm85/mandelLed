@@ -50,25 +50,25 @@ static void led_convertLedToZero(LedRaw *r) {
     r->b[i] = 0u;
   }
 }
-/// raw bits are stored MSB first, order is green, red, blue
-static void led_convertLedToOff(LedRaw *r) {
-  for (uint8_t i = 0; i < 8u; ++i) {
-    r->g[i] = lRawOff;
-    r->r[i] = lRawOff;
-    r->b[i] = lRawOff;
-  }
-}
-/// raw bits are stored MSB first, order is green, red, blue
-static void led_convertLedToStartPulse(LedRaw *r) {
-  r->g[0] = PWM_RAW - 1;
-  r->r[0] = 0u;
-  r->b[0] = 0u;
-  for (uint8_t i = 1u; i < 8u; ++i) {
-    r->g[i] = 0u;
-    r->r[i] = 0u;
-    r->b[i] = 0u;
-  }
-}
+///// raw bits are stored MSB first, order is green, red, blue
+//static void led_convertLedToOff(LedRaw *r) {
+//  for (uint8_t i = 0; i < 8u; ++i) {
+//    r->g[i] = lRawOff;
+//    r->r[i] = lRawOff;
+//    r->b[i] = lRawOff;
+//  }
+//}
+///// raw bits are stored MSB first, order is green, red, blue
+//static void led_convertLedToStartPulse(LedRaw *r) {
+//  r->g[0] = PWM_RAW - 1;
+//  r->r[0] = 0u;
+//  r->b[0] = 0u;
+//  for (uint8_t i = 1u; i < 8u; ++i) {
+//    r->g[i] = 0u;
+//    r->r[i] = 0u;
+//    r->b[i] = 0u;
+//  }
+//}
 
 void led_LedLogicInit(LedChainDesc_t *lcd) {
   led_setAllLedsToUniColors(lcd, 0u);
@@ -262,7 +262,7 @@ void led_txRaw(LedChainDesc_t *lcd) {
   switch (lcd->lRawNew->rS) {
   case e_Precursor:
     fadeIn(lcd);
-    HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
+//    HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
     led_startTransmitData(lcd);
     lcd->lRawNew->rS = e_realData;
     break;
