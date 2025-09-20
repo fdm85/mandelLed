@@ -1,43 +1,57 @@
-/**
- * @file      leds.c
- * @authors   Clemens Grünberger
- * @copyright 2022  Clemens Grünberger
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation version 2
- * of the License.
+/******************************************************************************/
+/*!
+ * \file
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * \brief info: add file brief
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * @brief Allocation of memory for the LEDs
- * @ingroup LedCreator
- * @ingroup BasementLight
- * @{
- */
+ * todo: add file description
+ ******************************************************************************/
 
 #include "leds.h"
 #include "tim.h"
 
-/** @brief count of on full PWM cycle */
-#define PWM_RAW		104uL
-/** @brief PWM set val of a set bit */
-#define lRawOn ((2uL * PWM_RAW)/3uL)
-/** @brief PWM set val of a reset bit */
-#define lRawOff ((1uL * PWM_RAW)/3uL)
+#define LDCNT  256uL
 
-lLogicContainer(main, 619);
-lRawContainer(main, 619);
-lChainDesc(main, htim3, TIM_CHANNEL_3, lRawOn, lRawOff);
+static LedRaw rawLeds[16];
+lRawDma_t matrix_dma = {.ledCount = 256uL, .rawCount = 16uL, .lRaw = rawLeds};
+lRawDma_t main_dma = {.ledCount = LDCNT, .rawCount = (sizeof(rawLeds) / sizeof(rawLeds[0])), .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
+
+lLogicContainer(main, LDCNT);
+//lRawContainer(main, LED_1);
+lRawContainer(main, 8);
+//lChainDesc(main, htim4, TIM_CHANNEL_2, lRawOn, lRawOff);
+
 
 lLogicContainer(matrix, 256);
-lRawContainer(matrix, 256);
-lChainDesc(matrix, htim4, TIM_CHANNEL_2, lRawOn, lRawOff);
+//lRawContainer(matrix, 32);
+//lChainDesc(matrix, htim3, TIM_CHANNEL_1, lRawOn, lRawOff);
 
-/** @}*/
+static struct \
+	{ \
+		uint32_t rI[41u]; \
+		LedRaw converterLed[1]; \
+		LedRaw ledRaw[32]; \
+		uint32_t rO[41u]; \
+	} lRawContainer_matrix; \
+	const lRawCont_t lRawCont_matrix = { \
+			.rI = &lRawContainer_matrix.rI[0], \
+			.rO = &lRawContainer_matrix.rO[0], \
+			.lConverterLed = &lRawContainer_matrix.converterLed[0], \
+			.lRaw = &lRawContainer_matrix.ledRaw[0], \
+			.ledCount = 32, \
+			.txCountInUi32 = (sizeof(lRawContainer_matrix)/sizeof(uint32_t)), \
+	};
+
+
+	LedChainDesc_t lcd_matrix = { \
+				.lLogic = &ledsLog_matrix[0], \
+				.lRawNew = &matrix_dma, \
+				.timer = &htim3, \
+				.timChannel = TIM_CHANNEL_1, \
+		};
+	LedChainDesc_t lcd_main = { \
+				.lLogic = &ledsLog_main[0], \
+				.lRawNew = &main_dma, \
+				.timer = &htim4, \
+				.timChannel = TIM_CHANNEL_2, \
+		};

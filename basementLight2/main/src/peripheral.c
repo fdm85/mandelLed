@@ -24,9 +24,8 @@
 
 #include "peripheral.h"
 #include "stdbool.h"
-#include "stm32f4xx_hal_gpio.h"
+#include "stm32f4xx_hal_conf.h"
 
-#include "crc.h"
 #include "dma.h"
 #include "gpio.h"
 #include "main.h"
@@ -48,7 +47,6 @@ void initPeripherals(void)
 	MX_TIM3_Init();
 	MX_TIM4_Init();
 	MX_RNG_Init();
-	MX_CRC_Init();
 	MX_ADC1_Init();
 	MX_ADC2_Init();
 	MX_ADC3_Init();
