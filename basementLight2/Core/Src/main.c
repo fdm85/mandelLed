@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
-#include "crc.h"
 #include "dma.h"
 #include "rng.h"
 #include "tim.h"
