@@ -54,7 +54,6 @@ typedef struct lRawCont_tag
 {
 	uint32_t* rI; /*!< fade in dummy part, to create low level */
 	uint32_t* rO; /*!< fade out dummy part, to create low level */
-	LedRaw* lConverterLed; /*!< Converter led is used as 'cheap' level shifter, so it is the first 'real' led in the strip (will be painted in plain green) */
 	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
 	uint32_t ledCount; /*!< count of 'real' leds in the strip */
 	uint16_t txCountInUi32; /*!< count of 'total to transmit' raw led data packets */
@@ -110,14 +109,12 @@ typedef struct lRawDma_tag
 	static struct \
 	{ \
 		uint32_t rI[resLength]; \
-		LedRaw converterLed[1]; \
 		LedRaw ledRaw[ledCnt]; \
 		uint32_t rO[resLength]; \
 	} lRawContainer_##name; \
 	const lRawCont_t lRawCont_##name = { \
 			.rI = &lRawContainer_##name.rI[0], \
 			.rO = &lRawContainer_##name.rO[0], \
-			.lConverterLed = &lRawContainer_##name.converterLed[0], \
 			.lRaw = &lRawContainer_##name.ledRaw[0], \
 			.ledCount = ledCnt, \
 			.txCountInUi32 = (sizeof(lRawContainer_##name)/sizeof(uint32_t)), \
