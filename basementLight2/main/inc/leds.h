@@ -12,7 +12,7 @@
 #include "ledData.h"
 
 
-#define PWM_RAW   90uL
+#define PWM_RAW   24uL
 #define lRawOn ((2uL * PWM_RAW)/3uL)
 #define lRawOff ((1uL * PWM_RAW)/3uL)
 

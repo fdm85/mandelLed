@@ -30,9 +30,9 @@
 #include "stm32f4xx_hal.h"
 
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 10uL, .puState = done};
-mAnim_t anim_mainR = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 10uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
+mAnim_t anim_mainL = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 100uL, .puState = done};
+mAnim_t anim_mainR = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 100uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 100uL, .puState = done};
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
@@ -77,10 +77,10 @@ void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 {
 	LedChainDesc_t* lcd;
 	if(htim == &htim3)
-	  lcd = &lcd_mainL;
-	if(htim == &htim4)
 	  lcd = &lcd_matrix;
-	if(htim == &htim5)
+	if(htim == &htim4)
+	  lcd = &lcd_mainL;
+	if(htim == &htim2)
 	  lcd = &lcd_mainR;
 	lcd->lRawNew->dS = e_FirstHalf;
 //	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
@@ -91,10 +91,10 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
   LedChainDesc_t* lcd;
   if(htim == &htim3)
-    lcd = &lcd_mainL;
-  if(htim == &htim4)
     lcd = &lcd_matrix;
-  if(htim == &htim5)
+  if(htim == &htim4)
+    lcd = &lcd_mainL;
+  if(htim == &htim2)
     lcd = &lcd_mainR;
 	lcd->lRawNew->dS = e_SecondHalf;
 //	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
@@ -131,10 +131,10 @@ int main(void)
 	for (;;)
 	{
 //		maintainModeSwitch();
-		msgeq_ticker();
+//		msgeq_ticker();
+		cyclicReSend(&anim_matrix);
 //		cyclicReSend(&anim_mainL);
 //		cyclicReSend(&anim_mainR);
-		cyclicReSend(&anim_matrix);
 	}
 }
 /** @}*/
