@@ -75,12 +75,8 @@ typedef struct LedRaw
  * @ingroup Led_Data */
 typedef struct lRawCont_tag
 {
-	uint32_t* rI; /*!< fade in dummy part, to create low level */
-	uint32_t* rO; /*!< fade out dummy part, to create low level */
 	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
 	uint32_t ledCount; /*!< count of 'real' leds in the strip */
-	uint16_t txCountInUi32; /*!< count of 'total to transmit' raw led data packets */
-	uint16_t iTx; /*!<  */
 }lRawCont_t;
 
 typedef enum
@@ -131,16 +127,11 @@ typedef struct lRawDma_tag
 #define lRawContainer(name, ledCnt) \
 	static struct \
 	{ \
-		uint32_t rI[resLength]; \
 		LedRaw ledRaw[ledCnt]; \
-		uint32_t rO[resLength]; \
 	} lRawContainer_##name; \
 	const lRawCont_t lRawCont_##name = { \
-			.rI = &lRawContainer_##name.rI[0], \
-			.rO = &lRawContainer_##name.rO[0], \
 			.lRaw = &lRawContainer_##name.ledRaw[0], \
 			.ledCount = ledCnt, \
-			.txCountInUi32 = (sizeof(lRawContainer_##name)/sizeof(uint32_t)), \
 	}
 /** @brief factory macro to create the logical LED data container
  *  @details will create logic data struct needed to handle a strip

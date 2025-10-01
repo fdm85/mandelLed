@@ -28,11 +28,34 @@
 #include "com.h"
 #include "cmsis_compiler.h"
 #include "stm32f4xx_hal.h"
+static uint8_t col = 10;
+static uint8_t index = 0;
+void cycleColors(mAnim_t* ctx)
+{
+//  led_LedLogicInit(ctx->lcd_ctx);
+  for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount;) {
+    led_setLedToColor(ctx->lcd_ctx, i++, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col);
+    if(i < ctx->lcd_ctx->lRawNew->ledCount)
+      led_setLedToColor(ctx->lcd_ctx, i++, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col, ((index + 0) % 3) ? 0 : col);
+    if(i < ctx->lcd_ctx->lRawNew->ledCount)
+      led_setLedToColor(ctx->lcd_ctx, i++, ((index + 2) % 3) ? 0 : col, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col);
+  }
+  ++index;
+  led_setAllLedsToUniColors(ctx->lcd_ctx, 2u);
+}
+void cycleColorsSingle(mAnim_t* ctx)
+{
+//  led_LedLogicInit(ctx->lcd_ctx);
+  for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
+    led_setLedToColor(ctx->lcd_ctx, i, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col);
 
+  ++index;
+}
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
 mAnim_t anim_mainL = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 100uL, .puState = done};
 mAnim_t anim_mainR = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 100uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
+//mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = cycleColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 50uL, .puState = done};
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
@@ -52,7 +75,6 @@ static void cyclicReSend(mAnim_t *ctx) {
     ctx->lastToggle = HAL_GetTick();
     ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
     ctx->lcd_ctx->lRawNew->rS = e_Precursor;
-    initMea();
     led_txRaw(ctx->lcd_ctx);
     ctx->state = e_waitDmaDone;
     break;
