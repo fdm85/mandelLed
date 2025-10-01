@@ -8,6 +8,7 @@
 /DebugL476/
 
 doc/doxyOut/*
+doc/ReviewMat/*
 .metadata/**
 **/*.autosave
 *.launch
