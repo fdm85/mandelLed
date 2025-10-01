@@ -14,7 +14,7 @@
 #define RAW_LDCNT  16uL
 
 static LedRaw rawLeds[RAW_LDCNT];
-lRawDma_t matrix_dma = {.ledCount = 32uL, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
+lRawDma_t matrix_dma = {.ledCount = 1uL, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
 lRawDma_t mainL_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
 lRawDma_t mainR_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
 

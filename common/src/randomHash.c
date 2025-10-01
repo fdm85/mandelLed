@@ -222,6 +222,6 @@ void anim_random3(mAnim_t *ctx)
 }
 void anim_setAllLedsToUniColors(mAnim_t *ctx)
 {
-  led_setAllLedsToColor(ctx->lcd_ctx, 2u, 4u, 8u);
+  led_setAllLedsToColor(ctx->lcd_ctx, 255u, 255u, 255u);
 }
 /** @} */

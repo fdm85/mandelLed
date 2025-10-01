@@ -199,7 +199,6 @@ LOC_INL_DBG void led_stopTransmitData(LedChainDesc_t *lcd) {
 
 #define inFrame 3uL
 #define outFrame inFrame
-static const LedLogic_t cLed = { .g = 10u }; /*!< converter led set color */
 static LOC_INL_DBG void fadeIn(LedChainDesc_t *lcd) {
   /// assuming dma buffer is at least twice as big as (inFrame + cLed)
 
@@ -212,7 +211,6 @@ static LOC_INL_DBG void fadeIn(LedChainDesc_t *lcd) {
   }
 
   /// add first segment of real data here to simplify implementation of half cycle filler
-  led_convertLed(&cLed, &lcd->lRawNew->lRaw[lcd->lRawNew->iD++]);
   for (lcd->lRawNew->iS = 0uL; (lcd->lRawNew->iS < lcd->lRawNew->ledCount) && (lcd->lRawNew->iD < lcd->lRawNew->rawCount);
       ++lcd->lRawNew->iS, ++lcd->lRawNew->iD)
     led_convertLed(&lcd->lLogic[lcd->lRawNew->iS], &lcd->lRawNew->lRaw[lcd->lRawNew->iD]);

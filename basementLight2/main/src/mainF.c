@@ -77,9 +77,9 @@ void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 {
 	LedChainDesc_t* lcd;
 	if(htim == &htim3)
-	  lcd = &lcd_matrix;
-	if(htim == &htim4)
 	  lcd = &lcd_mainL;
+	if(htim == &htim4)
+	  lcd = &lcd_matrix;
 	if(htim == &htim5)
 	  lcd = &lcd_mainR;
 	lcd->lRawNew->dS = e_FirstHalf;
@@ -91,9 +91,9 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
   LedChainDesc_t* lcd;
   if(htim == &htim3)
-    lcd = &lcd_matrix;
-  if(htim == &htim4)
     lcd = &lcd_mainL;
+  if(htim == &htim4)
+    lcd = &lcd_matrix;
   if(htim == &htim5)
     lcd = &lcd_mainR;
 	lcd->lRawNew->dS = e_SecondHalf;
