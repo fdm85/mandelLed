@@ -33,10 +33,10 @@
 
 typedef enum  {
 	anim_powerUp = 0,
+	anim_powerUpDone,
 
-	anim_min = 1,
-
-	anim_rnd3 = 1,
+	anim_min,
+	anim_rnd3 = anim_min,
 	anim_white,
 	anim_red,
 	anim_green,
@@ -88,7 +88,7 @@ void anim_setMode(LedChainDesc_t *const lcd, anim_mode_e set);
 void anim_setBrightness(uint8_t set);
 void anim_addBrightness(int8_t add);
 void anim_nextMode(LedChainDesc_t *const lcd);
-
+void anim_setAllLedsToUniColors(mAnim_t *ctx);
 typedef struct rider rider_t;
 typedef void (*riderInit)(rider_t*);
 struct rider
@@ -129,7 +129,7 @@ void anim_initRedRider3(LedChainDesc_t *const lcd, rider_t* arg);
 
 #endif
 
-void anim_random3(LedChainDesc_t *const lcd);
+void anim_random3(mAnim_t *ctx);
 
 #if !( (defined(STM32F303xE) | defined(STM32F103xB)) )
 void anim_random1(LedChainDesc_t *const lcd);

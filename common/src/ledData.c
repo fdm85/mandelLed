@@ -71,7 +71,7 @@ static void led_convertLedToZero(LedRaw *r) {
 //}
 
 void led_LedLogicInit(LedChainDesc_t *lcd) {
-  led_setAllLedsToUniColors(lcd, 0u);
+  led_setAllLedsToUniColors(lcd, 2u);
 }
 
 /** @brief Set brightness truncation
@@ -286,6 +286,8 @@ void led_txRaw(LedChainDesc_t *lcd) {
     led_stopTransmitData(lcd);
     initMea();
 
+    break;
+  case e_Inv:
     break;
   default:
     break;

@@ -27,8 +27,8 @@
 #include "physic.h"
 #include "matrix.h"
 #include "msgeq7.h"
-//static uint8_t brightness = 255u;
-//static anim_mode_e currMode = anim_cR2;
+static uint8_t brightness = 255u;
+static anim_mode_e currMode = anim_cR2;
 #if USE_RIDERS
 static rider_t rider1;
 static rider_t rider2;
@@ -208,16 +208,17 @@ static void powerUp(mAnim_t* ctx)
 	}
 
 	case done:
-		return;
+	  ctx->AnimMode = anim_powerUpDone;
+	  break;
 	default:
 		__BKPT(0);
 		break;
 	}
 }
 
-static void layers(LedChainDesc_t *const lcd)
+static void layers(mAnim_t* ctx)
 {
-	anim_random3(lcd);
+	anim_random3(ctx);
 	for (uint8_t i = 0; rA[i + 1] != NULL; ++i)
 	{
 		if (phy_doesCollide(rA[i], rA[i + 1]))
@@ -228,40 +229,36 @@ static void layers(LedChainDesc_t *const lcd)
 	}
 	for (uint8_t i = 0; rA[i] != NULL; ++i)
 	{
-		riderBlanker(lcd, rA[i]);
+		riderBlanker(ctx->lcd_ctx, rA[i]);
 	}
 	for (uint8_t i = 0; rA[i] != NULL; ++i)
 	{
-		riderFiller(lcd, rA[i]);
+		riderFiller(ctx->lcd_ctx, rA[i]);
 	}
 }
 #endif
 void anim_CyclicCall(mAnim_t* ctx)
 {
-#if USE_RIDERS
-	if (ctx->puState != done)
-	{
-		powerUp(ctx);
-		return;
-	}
-#endif
 	switch (ctx->AnimMode)
 	{
-//	case anim_cR1:
-//		anim_circularRun1(ctx->lcd_ctx, brightness);
-//		break;
-//	case anim_cR2:
-//		riderBlanker(ctx->lcd_ctx, &rider1);
-//		riderFiller(ctx->lcd_ctx, &rider1);
-//		break;
-//	case anim_rnd1:
-//		anim_random1(ctx->lcd_ctx);
-//		break;
-//	case anim_rnd2:
-//		anim_random2(ctx->lcd_ctx);
-//		break;
+	case anim_powerUp:
+	  powerUp(ctx);
+	  break;
+	case anim_cR1:
+		anim_circularRun1(ctx->lcd_ctx, brightness);
+		break;
+	case anim_cR2:
+		riderBlanker(ctx->lcd_ctx, &rider1);
+		riderFiller(ctx->lcd_ctx, &rider1);
+		break;
+	case anim_rnd1:
+		anim_random1(ctx->lcd_ctx);
+		break;
+	case anim_rnd2:
+		anim_random2(ctx->lcd_ctx);
+		break;
 	case anim_rnd3:
-		anim_random3(ctx->lcd_ctx);
+		anim_random3(ctx);
 		break;
 #if USE_RIDERS
 	case anim_white:
@@ -299,7 +296,7 @@ void anim_CyclicCall(mAnim_t* ctx)
 		break;
 	}
 	case anim_layers:
-		layers(ctx->lcd_ctx);
+		layers(ctx);
 		break;
 #endif
 	case anim_msqDrv:
@@ -316,6 +313,9 @@ void anim_CyclicCall(mAnim_t* ctx)
 //		   anim_frqFrvRem(ctx->lcd_ctx, frqR[i]);
 //		}
 		break;
+	case anim_powerUpDone:
+		break;
+	case anim_enumAssrt:
 	default:
 		assrt(false);
 		break;

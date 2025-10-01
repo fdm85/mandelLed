@@ -17,7 +17,8 @@
 #define lRawOff ((1uL * PWM_RAW)/3uL)
 
 extern lRawDma_t matrix_dma;
-extern LedChainDesc_t lcd_main;
 extern LedChainDesc_t lcd_matrix;
+extern LedChainDesc_t lcd_mainL;
+extern LedChainDesc_t lcd_mainR;
 #endif /* LEDS_H_ */
 /** @}*/

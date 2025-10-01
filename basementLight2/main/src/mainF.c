@@ -30,8 +30,9 @@
 #include "stm32f4xx_hal.h"
 
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_main = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_main, .triggerTimeMs = 10uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
+mAnim_t anim_mainL = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 10uL, .puState = done};
+mAnim_t anim_mainR = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 10uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 10uL, .puState = done};
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
@@ -62,6 +63,10 @@ static void cyclicReSend(mAnim_t *ctx) {
       ctx->state = e_render;
     break;
 
+  case e_waitTxCplt:
+  case e_paste:
+    break;
+
   default:
     __BKPT(0);
     break;
@@ -70,7 +75,13 @@ static void cyclicReSend(mAnim_t *ctx) {
 
 void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 {
-	LedChainDesc_t* lcd = (htim == &htim3) ? &lcd_matrix : &lcd_main;
+	LedChainDesc_t* lcd;
+	if(htim == &htim3)
+	  lcd = &lcd_matrix;
+	if(htim == &htim4)
+	  lcd = &lcd_mainL;
+	if(htim == &htim5)
+	  lcd = &lcd_mainR;
 	lcd->lRawNew->dS = e_FirstHalf;
 //	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
 	led_txRaw(lcd);
@@ -78,7 +89,13 @@ void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
-	LedChainDesc_t* lcd = (htim == &htim3) ? &lcd_matrix : &lcd_main;
+  LedChainDesc_t* lcd;
+  if(htim == &htim3)
+    lcd = &lcd_matrix;
+  if(htim == &htim4)
+    lcd = &lcd_mainL;
+  if(htim == &htim5)
+    lcd = &lcd_mainR;
 	lcd->lRawNew->dS = e_SecondHalf;
 //	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
 	led_txRaw(lcd);
@@ -101,24 +118,23 @@ int main(void)
 	initClock();
 	initPeripherals();
 
-	anim_main.AnimMode = anim_rnd3;
-	anim_matrix.AnimMode = anim_msqDrv;
-//	anim_setMode(&lcd_main, anim_rnd3);
-	led_setBrightnessTruncation(&lcd_main, 1uL, 1uL);
+	led_setBrightnessTruncation(&lcd_mainL, 1uL, 1uL);
+	led_setBrightnessTruncation(&lcd_mainR, 1uL, 1uL);
+	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
 
 	mtrx_Init();
-//	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
-	led_LedLogicInit(&lcd_main);
-//	mtrx_Init();
-//	led_LedLogicInit(&lcd_matrix);
+	led_LedLogicInit(&lcd_mainL);
+	led_LedLogicInit(&lcd_mainR);
+	led_LedLogicInit(&lcd_matrix);
 
 	__enable_irq();
 	for (;;)
 	{
 //		maintainModeSwitch();
 		msgeq_ticker();
-		cyclicReSend(&anim_main);
-//		cyclicReSend(&anim_matrix);
+//		cyclicReSend(&anim_mainL);
+//		cyclicReSend(&anim_mainR);
+		cyclicReSend(&anim_matrix);
 	}
 }
 /** @}*/

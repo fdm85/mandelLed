@@ -85,7 +85,7 @@ typedef struct lRawDma_tag
 	uint32_t iD; /*!< index counter at destination */
 	const uint32_t ledCount; /*!< count of 'real' leds in the strip */
 	const uint32_t rawCount; /*!< size of dma tx buffer (in units of LedRaw[]) */
-	const uint32_t rawTxCount; /*!< size of dma tx buffer (in units of uint32_t) */
+	const uint16_t rawTxCount; /*!< size of dma tx buffer (in units of ???) */
 	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
 }lRawDma_t;
 
