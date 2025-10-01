@@ -11,27 +11,32 @@
 #include "tim.h"
 
 #define MAIN_LDCNT  256uL
+#define MRTX_LDCNT  256uL
 #define RAW_LDCNT  16uL
 #define RAW_DMA_CNT (3uL*8uL*RAW_LDCNT)
 
 static LedRaw rawLeds[RAW_LDCNT];
-lRawDma_t matrix_dma = {.ledCount = 1uL, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
+lRawDma_t matrix_dma = {.ledCount = MRTX_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
 lRawDma_t mainL_dma = {.ledCount = 1uL, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
 lRawDma_t mainR_dma = {.ledCount = 1uL, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
+
+Led_progColor_t matrix_r3[MRTX_LDCNT];
+diffRunnerCtx_t matrix_diff = {.lDc = &matrix_r3[0], .size = MRTX_LDCNT};
 
 lLogicContainer(mainL, MAIN_LDCNT);
 lRawContainer(mainL, MAIN_LDCNT);
 lLogicContainer(mainR, MAIN_LDCNT);
 lRawContainer(mainR, MAIN_LDCNT);
 
-lLogicContainer(matrix, 256);
-lRawContainer(matrix, 256);
+lLogicContainer(matrix, MRTX_LDCNT);
+lRawContainer(matrix, MRTX_LDCNT);
 
 	LedChainDesc_t lcd_matrix = { \
 				.lLogic = &ledsLog_matrix[0], \
 				.lRawNew = &matrix_dma, \
 				.timer = &htim3, \
 				.timChannel = TIM_CHANNEL_3, \
+				.diffR = &matrix_diff,\
 		};
 	LedChainDesc_t lcd_mainL = { \
 				.lLogic = &ledsLog_mainL[0], \

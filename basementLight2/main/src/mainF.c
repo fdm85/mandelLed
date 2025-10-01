@@ -32,7 +32,7 @@
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
 mAnim_t anim_mainL = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 100uL, .puState = done};
 mAnim_t anim_mainR = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 100uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 100uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = anim_random3, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 100uL, .puState = done};
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
@@ -120,7 +120,7 @@ int main(void)
 
 	led_setBrightnessTruncation(&lcd_mainL, 1uL, 1uL);
 	led_setBrightnessTruncation(&lcd_mainR, 1uL, 1uL);
-	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
+	led_setBrightnessTruncation(&lcd_matrix, 1uL, 12uL);
 
 	mtrx_Init();
 	led_LedLogicInit(&lcd_mainL);
@@ -131,7 +131,7 @@ int main(void)
 	for (;;)
 	{
 //		maintainModeSwitch();
-//		msgeq_ticker();
+		msgeq_ticker();
 		cyclicReSend(&anim_matrix);
 //		cyclicReSend(&anim_mainL);
 //		cyclicReSend(&anim_mainR);

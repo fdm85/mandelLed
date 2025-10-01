@@ -29,6 +29,29 @@
 #include "fpa.h"
 #include "tim.h"
 
+/** @brief led color transition descriptor
+ * @details compound with all needed details to run random diff color animation
+*/
+typedef struct Led_diffColor{
+    fpa_t g; /*!< green diff per iteration */
+    fpa_t r; /*!< red diff per iteration */
+    fpa_t b; /*!< blue diff per iteration */
+    fpa_t gP; /*!< green last set val */
+    fpa_t rP; /*!< red last set val */
+    fpa_t bP; /*!< blue last set val */
+    uint16_t itCur; /*!< iteration counter */
+    uint16_t itMax; /*!< target iteration count */
+}Led_progColor_t;
+
+/** @brief diff runner context
+ * @details adapter to couple diff animation array to a strip */
+typedef struct diffRunnerCtx_tag
+{
+    Led_progColor_t * lDc; /*!< reference to strip to run on */
+    uint32_t size; /*!< size/length of animation on the strip */
+    // todo add start point
+}diffRunnerCtx_t;
+
 /** @brief logical led container */
 typedef struct LedLogic_tag{
 	uint8_t g; /*!< green set val */
@@ -156,6 +179,7 @@ typedef struct LedChainDesc_tag
 	LedLogic_t* lLogic; /*!< pointer to led container, i.e. the RGB values of each single LED in a strip */
 	lRawDma_t *const lRawNew; /*!< pointer to IO-out raw data of the strip */
 	TIM_HandleTypeDef* timer; /*!< pointer to the timer instance responsible for the data output*/
+	diffRunnerCtx_t *const diffR;
 	uint32_t timChannel; /*!< output channel of the timer (as a timer peripheral my have multiple channels) */
 	uint32_t btMult; /*!< brightness truncation multiplier */
 	uint32_t btDiv; /*!< brightness truncation divider */

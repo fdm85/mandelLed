@@ -36,29 +36,6 @@ extern uint32_t hrng;
 #include "rng.h"
 #endif
 
-/** @brief led color transition descriptor
- * @details compound with all needed details to run random diff color animation
-*/
-typedef struct Led_diffColor{
-    fpa_t g; /*!< green diff per iteration */
-    fpa_t r; /*!< red diff per iteration */
-    fpa_t b; /*!< blue diff per iteration */
-    fpa_t gP; /*!< green last set val */
-    fpa_t rP; /*!< red last set val */
-    fpa_t bP; /*!< blue last set val */
-    uint16_t itCur; /*!< iteration counter */
-    uint16_t itMax; /*!< target iteration count */
-}Led_progColor_t;
-
-/** @brief diff runner context
- * @details adapter to couple diff animation array to a strip */
-typedef struct diffRunnerCtx_tag
-{
-    Led_progColor_t * lDc; /*!< reference to strip to run on */
-    uint32_t size; /*!< size/length of animation on the strip */
-    // todo add start point
-}diffRunnerCtx_t;
-
 typedef union
 {
 	uint32_t u32; /*!< */
@@ -71,29 +48,25 @@ typedef union
 	};
 } rand_u;
 
-// todo fix this, create factory macro to allocate
-Led_progColor_t prog_r23[LED_1];
-diffRunnerCtx_t diff = {.lDc = &prog_r23[0], .size = LED_1};
 static uint16_t cycleMin_r23 = 100u;
 static uint16_t it_r2 = 100u;
 #if !(defined(STM32F103xB))
 void anim_r23Init(LedChainDesc_t *const lcd)
 {
-//	if(!diff.lDc)
-//		diff.lDc = malloc(sizeof(Led_progColor_t) * diff.size);
+  assrt(lcd->diffR);
 
-	for (uint32_t i = 0; i < diff.size; ++i)
+	for (uint32_t i = 0; i < lcd->diffR->size; ++i)
 	{
-		diff.lDc[i].r.r = 0L;
-		diff.lDc[i].g.r = 0L;
-		diff.lDc[i].b.r = 0L;
+		lcd->diffR->lDc[i].r.r = 0L;
+		lcd->diffR->lDc[i].g.r = 0L;
+		lcd->diffR->lDc[i].b.r = 0L;
 
-		diff.lDc[i].rP.r = 0L;
-		diff.lDc[i].gP.r = 0L;
-		diff.lDc[i].bP.r = 0L;
+		lcd->diffR->lDc[i].rP.r = 0L;
+		lcd->diffR->lDc[i].gP.r = 0L;
+		lcd->diffR->lDc[i].bP.r = 0L;
 
-		diff.lDc[i].itCur = 0u;
-		diff.lDc[i].itMax = 0u;
+		lcd->diffR->lDc[i].itCur = 0u;
+		lcd->diffR->lDc[i].itMax = 0u;
 	}
 }
 
@@ -121,10 +94,12 @@ void anim_setRandom2CycleCount(uint16_t c)
 	cycleMin_r23 = c;
 }
 #endif
-static void anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
+static void __attribute__ ((noinline)) anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
 {
 	rand_u r;
 	LedLogic_t l;
+  assrt(lcd->diffR);
+  assrt(i<lcd->diffR->size);
 	HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
 	led_getLedColor(lcd, i, &l);
 
@@ -132,15 +107,15 @@ static void anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
 
 	if (isR3)
 	{
-		diff.lDc[i].itCur = 0u;
-		diff.lDc[i].itMax = r.d;
+		lcd->diffR->lDc[i].itCur = 0u;
+		lcd->diffR->lDc[i].itMax = r.d;
 
-		if (diff.lDc[i].itMax == 0u)
+		if (lcd->diffR->lDc[i].itMax == 0u)
 		{
-			++diff.lDc[i].itMax;
+			++lcd->diffR->lDc[i].itMax;
 		}
 
-		div.i = diff.lDc[i].itMax;
+		div.i = lcd->diffR->lDc[i].itMax;
 
 	}
 	else
@@ -148,25 +123,26 @@ static void anim_Diff(LedChainDesc_t *const lcd, uint32_t i, bool isR3)
 		div.i = cycleMin_r23;
 	}
 
-	diff.lDc[i].r.i = l.r;
-	diff.lDc[i].g.i = l.g;
-	diff.lDc[i].b.i = l.b;
+	lcd->diffR->lDc[i].r.i = l.r;
+	lcd->diffR->lDc[i].g.i = l.g;
+	lcd->diffR->lDc[i].b.i = l.b;
 
-	diff.lDc[i].rP = FPA_IntDivFpa(r.a - l.r, div);
-	diff.lDc[i].gP = FPA_IntDivFpa(r.b - l.g, div);
-	diff.lDc[i].bP = FPA_IntDivFpa(r.c - l.b, div);
+	lcd->diffR->lDc[i].rP = FPA_IntDivFpa(r.a - l.r, div);
+	lcd->diffR->lDc[i].gP = FPA_IntDivFpa(r.b - l.g, div);
+	lcd->diffR->lDc[i].bP = FPA_IntDivFpa(r.c - l.b, div);
 }
 
-static void anim_render(LedChainDesc_t *const lcd, uint32_t i)
+static void __attribute__ ((noinline)) anim_render(LedChainDesc_t *const lcd, uint32_t i)
 {
+  assrt(lcd->diffR);
+  assrt(i<lcd->diffR->size);
+	lcd->diffR->lDc[i].r.r += lcd->diffR->lDc[i].rP.r;
+	lcd->diffR->lDc[i].g.r += lcd->diffR->lDc[i].gP.r;
+	lcd->diffR->lDc[i].b.r += lcd->diffR->lDc[i].bP.r;
 
-	diff.lDc[i].r.r += diff.lDc[i].rP.r;
-	diff.lDc[i].g.r += diff.lDc[i].gP.r;
-	diff.lDc[i].b.r += diff.lDc[i].bP.r;
-
-	int32_t rOut = diff.lDc[i].r.i;
-	int32_t gOut = diff.lDc[i].g.i;
-	int32_t bOut = diff.lDc[i].b.i;
+	int32_t rOut = lcd->diffR->lDc[i].r.i;
+	int32_t gOut = lcd->diffR->lDc[i].g.i;
+	int32_t bOut = lcd->diffR->lDc[i].b.i;
 
 	assrt(rOut <= UINT8_MAX);
 	assrt(gOut <= UINT8_MAX);
@@ -208,16 +184,18 @@ void anim_random2(LedChainDesc_t *const lcd)
 #endif
 void anim_random3(mAnim_t *ctx)
 {
+  assrt(ctx->lcd_ctx->diffR);
 	for (uint32_t i = 0; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
 	{
+    assrt(i<ctx->lcd_ctx->diffR->size);
 
-		if (diff.lDc[i].itCur == diff.lDc[i].itMax)
+		if (ctx->lcd_ctx->diffR->lDc[i].itCur == ctx->lcd_ctx->diffR->lDc[i].itMax)
 		{
 			anim_Diff(ctx->lcd_ctx, i, true);
 		}
 
 		anim_render(ctx->lcd_ctx, i);
-		++diff.lDc[i].itCur;
+		++ctx->lcd_ctx->diffR->lDc[i].itCur;
 	}
 }
 void anim_setAllLedsToUniColors(mAnim_t *ctx)

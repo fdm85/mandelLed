@@ -183,7 +183,7 @@ void led_pasteData(LedChainDesc_t *lcd) {
 //static LOC_INL_DBG void led_startTransmitData(LedChainDesc_t* lcd)
 LOC_INL_DBG void led_startTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
-  result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel, (uint32_t*)&lcd->lRawNew->lRaw[0].g[0], (lcd->lRawNew->rawTxCount));
+  result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel, &lcd->lRawNew->lRaw[0].g[0], (lcd->lRawNew->rawTxCount));
   assrt(result == HAL_OK);
   (void) result;
 }
