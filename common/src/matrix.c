@@ -35,7 +35,7 @@ typedef struct channel_tag {
 
 static channel_t lLeft[channelWidth];
 static channel_t lRight[channelWidth];
-static bool inverted = true;
+static bool inverted = false;
 
 static channel_t lAuxLeft[auxChanWidth];
 static channel_t lAuxRight[auxChanWidth];
@@ -61,26 +61,26 @@ static void mtrx_InitAuxR(void) {
 }
 
 static void mtrx_InitL(void) {
-   uint8_t L0[barHeigth] = { 255u, 192u, 191u, 128u, 127u, 64u, 63u, 0u };
-   uint8_t L1[barHeigth] = { 254u, 193u, 190u, 129u, 126u, 65u, 62u, 1u };
+   uint8_t L0[barHeigth] =   { 224u, 223u, 160u, 159u, 96u, 95u, 32u, 31u };
+   uint8_t L1[barHeigth] =   { 225u, 222u, 161u, 158u, 97u, 94u, 33u, 30u };
 
-   uint8_t L2[barHeigth] = { 253u, 194u, 189u, 130u, 125u, 66u, 61u, 2u };
-   uint8_t L3[barHeigth] = { 252u, 195u, 188u, 131u, 124u, 67u, 60u, 3u };
+   uint8_t L2[barHeigth] =   { 226u, 221u, 162u, 157u, 98u, 93u, 34u, 29u };
+   uint8_t L3[barHeigth] =   { 227u, 220u, 163u, 156u, 99u, 92u, 35u, 28u };
 
-   uint8_t L4[barHeigth] = { 251u, 196u, 187u, 132u, 123u, 68u, 59u, 4u };
-   uint8_t L5[barHeigth] = { 250u, 197u, 186u, 133u, 122u, 69u, 58u, 5u };
+   uint8_t L4[barHeigth] =   { 228u, 219u, 164u, 155u, 100u, 91u, 36u, 27u };
+   uint8_t L5[barHeigth] =   { 229u, 218u, 165u, 154u, 101u, 90u, 37u, 26u };
 
-   uint8_t L6[barHeigth] = { 249u, 198u, 185u, 134u, 121u, 70u, 57u, 6u };
-   uint8_t L7[barHeigth] = { 248u, 199u, 184u, 135u, 120u, 71u, 56u, 7u };
+   uint8_t L6[barHeigth] =   { 230u, 217u, 166u, 153u, 102u, 89u, 38u, 25u };
+   uint8_t L7[barHeigth] =   { 231u, 216u, 167u, 152u, 103u, 88u, 39u, 24u };
 
-   uint8_t L8[barHeigth] = { 247u, 200u, 183u, 136u, 119u, 72u, 55u, 8u };
-   uint8_t L9[barHeigth] = { 246u, 201u, 182u, 137u, 118u, 73u, 54u, 9u };
+   uint8_t L8[barHeigth] =   { 232u, 215u, 168u, 151u, 104u, 87u, 40u, 23u };
+   uint8_t L9[barHeigth] =   { 233u, 214u, 169u, 150u, 105u, 86u, 41u, 22u };
 
-   uint8_t L10[barHeigth] = { 245u, 202u, 181u, 138u, 117u, 74u, 53u, 10u };
-   uint8_t L11[barHeigth] = { 244u, 203u, 180u, 139u, 116u, 75u, 52u, 11u };
+   uint8_t L10[barHeigth] =   { 234u, 213u, 170u, 149u, 106u, 85u, 42u, 21u };
+   uint8_t L11[barHeigth] =   { 235u, 212u, 171u, 148u, 107u, 84u, 43u, 20u };
 
-   uint8_t L12[barHeigth] = { 243u, 204u, 179u, 140u, 115u, 76u, 51u, 12u };
-   uint8_t L13[barHeigth] = { 242u, 205u, 178u, 141u, 114u, 77u, 50u, 13u };
+   uint8_t L12[barHeigth] =   { 236u, 211u, 172u, 147u, 108u, 83u, 44u, 19u };
+   uint8_t L13[barHeigth] =   { 237u, 210u, 173u, 146u, 109u, 82u, 45u, 18u };
 
    for (uint8_t i = 0; i < barHeigth; ++i) {
       lLeft[0].bar[0].dots[i] = L0[i];
@@ -107,26 +107,26 @@ static void mtrx_InitL(void) {
 }
 
 static void mtrx_InitR(void) {
-   uint8_t R0[barHeigth] = { 224u, 223u, 160u, 159u, 96u, 95u, 32u, 31u };
-   uint8_t R1[barHeigth] = { 225u, 222u, 161u, 158u, 97u, 94u, 33u, 30u };
+   uint8_t R0[barHeigth] = { 255u, 192u, 191u, 128u, 127u, 64u, 63u, 0u };
+   uint8_t R1[barHeigth] = { 254u, 193u, 190u, 129u, 126u, 65u, 62u, 1u };
 
-   uint8_t R2[barHeigth] = { 226u, 221u, 162u, 157u, 98u, 93u, 34u, 29u };
-   uint8_t R3[barHeigth] = { 227u, 220u, 163u, 156u, 99u, 92u, 35u, 28u };
+   uint8_t R2[barHeigth] = { 253u, 194u, 189u, 130u, 125u, 66u, 61u, 2u };
+   uint8_t R3[barHeigth] = { 252u, 195u, 188u, 131u, 124u, 67u, 60u, 3u };
 
-   uint8_t R4[barHeigth] = { 228u, 219u, 164u, 155u, 100u, 91u, 36u, 27u };
-   uint8_t R5[barHeigth] = { 229u, 218u, 165u, 154u, 101u, 90u, 37u, 26u };
+   uint8_t R4[barHeigth] = { 251u, 196u, 187u, 132u, 123u, 68u, 59u, 4u };
+   uint8_t R5[barHeigth] = { 250u, 197u, 186u, 133u, 122u, 69u, 58u, 5u };
 
-   uint8_t R6[barHeigth] = { 230u, 217u, 166u, 153u, 102u, 89u, 38u, 25u };
-   uint8_t R7[barHeigth] = { 231u, 216u, 167u, 152u, 103u, 88u, 39u, 24u };
+   uint8_t R6[barHeigth] = { 249u, 198u, 185u, 134u, 121u, 70u, 57u, 6u };
+   uint8_t R7[barHeigth] = { 248u, 199u, 184u, 135u, 120u, 71u, 56u, 7u };
 
-   uint8_t R8[barHeigth] = { 232u, 215u, 168u, 151u, 104u, 87u, 40u, 23u };
-   uint8_t R9[barHeigth] = { 233u, 214u, 169u, 150u, 105u, 86u, 41u, 22u };
+   uint8_t R8[barHeigth] = { 247u, 200u, 183u, 136u, 119u, 72u, 55u, 8u };
+   uint8_t R9[barHeigth] = { 246u, 201u, 182u, 137u, 118u, 73u, 54u, 9u };
 
-   uint8_t R10[barHeigth] = { 234u, 213u, 170u, 149u, 106u, 85u, 42u, 21u };
-   uint8_t R11[barHeigth] = { 235u, 212u, 171u, 148u, 107u, 84u, 43u, 20u };
+   uint8_t R10[barHeigth] = { 245u, 202u, 181u, 138u, 117u, 74u, 53u, 10u };
+   uint8_t R11[barHeigth] = { 244u, 203u, 180u, 139u, 116u, 75u, 52u, 11u };
 
-   uint8_t R12[barHeigth] = { 236u, 211u, 172u, 147u, 108u, 83u, 44u, 19u };
-   uint8_t R13[barHeigth] = { 237u, 210u, 173u, 146u, 109u, 82u, 45u, 18u };
+   uint8_t R12[barHeigth] = { 243u, 204u, 179u, 140u, 115u, 76u, 51u, 12u };
+   uint8_t R13[barHeigth] = { 242u, 205u, 178u, 141u, 114u, 77u, 50u, 13u };
 
    for (uint8_t i = 0; i < barHeigth; ++i) {
       lRight[0].bar[0].dots[i] = R0[i];
