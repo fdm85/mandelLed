@@ -66,7 +66,8 @@ static void cyclicReSend(mAnim_t *ctx) {
 //    ctx->a = HAL_GetTick();
     ctx->fpRend(ctx);
 //    ctx->b = HAL_GetTick() - ctx->a;
-    ctx->state = e_StartDma;
+    if(((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTimeMs))
+      ctx->state = e_StartDma;
     break;
 
   case e_StartDma:
@@ -81,8 +82,7 @@ static void cyclicReSend(mAnim_t *ctx) {
     break;
 
   case e_waitDmaDone:
-    if ((ctx->lcd_ctx->lRawNew->rS == e_done)
-        && ((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTimeMs))
+    if (ctx->lcd_ctx->lRawNew->rS == e_done)
       ctx->state = e_render;
     break;
 
