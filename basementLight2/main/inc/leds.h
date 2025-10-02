@@ -13,8 +13,8 @@
 
 
 #define PWM_RAW   27uL
-#define lRawOn (((2uL * PWM_RAW)/3uL) + 2)
-#define lRawOff (((1uL * PWM_RAW)/3uL) + 1)
+#define lRawOn (((2uL * PWM_RAW)/3uL) + 2uL)
+#define lRawOff (((1uL * PWM_RAW)/3uL) - 1uL)
 
 extern lRawDma_t matrix_dma;
 extern LedChainDesc_t lcd_matrix;
