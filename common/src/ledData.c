@@ -182,8 +182,8 @@ LOC_INL_DBG void led_stopTransmitData(LedChainDesc_t *lcd) {
   (void) result;
 }
 
-#define inFrame 3uL
-#define outFrame inFrame
+#define inFrame 2uL
+#define outFrame 1uL
 static void fadeIn(LedChainDesc_t *lcd) {
   /// assuming dma buffer is at least twice as big as (inFrame + cLed)
 
