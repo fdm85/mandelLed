@@ -32,9 +32,6 @@ static uint8_t col = 10;
 static uint8_t index = 0;
 void cycleColors(mAnim_t* ctx)
 {
-  led_setAllLedsToUniColors(ctx->lcd_ctx, 0u);
-  return;
-
   for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount;) {
     led_setLedToColor(ctx->lcd_ctx, i++, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col);
     if(i < ctx->lcd_ctx->lRawNew->ledCount)
@@ -55,8 +52,8 @@ void cycleColorsSingle(mAnim_t* ctx)
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
 mAnim_t anim_mainL = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 100uL, .puState = done};
 mAnim_t anim_mainR = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 100uL, .puState = done};
-//mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 50uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = cycleColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 100uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 40uL, .puState = done};
+//mAnim_t anim_matrix = { .fpRend = cycleColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 200uL, .puState = done};
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
