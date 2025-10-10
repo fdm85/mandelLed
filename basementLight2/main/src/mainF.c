@@ -28,7 +28,7 @@
 #include "com.h"
 #include "cmsis_compiler.h"
 #include "stm32f4xx_hal.h"
-static uint8_t col = 10;
+static uint8_t col = 2;
 static uint8_t index = 0;
 void cycleColors(mAnim_t* ctx)
 {
@@ -52,7 +52,7 @@ void cycleColorsSingle(mAnim_t* ctx)
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
 mAnim_t anim_mainL = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 100uL, .puState = done};
 mAnim_t anim_mainR = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 100uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 40uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 50uL, .puState = done};
 //mAnim_t anim_matrix = { .fpRend = cycleColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 200uL, .puState = done};
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
@@ -63,14 +63,15 @@ static void cyclicReSend(mAnim_t *ctx) {
 //    ctx->a = HAL_GetTick();
     ctx->fpRend(ctx);
 //    ctx->b = HAL_GetTick() - ctx->a;
-    if(((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTimeMs))
-      ctx->state = e_StartDma;
+    ctx->state = e_StartDma;
     break;
 
   case e_StartDma:
 //		ctx->c = HAL_GetTick();
 //		ctx->d = HAL_GetTick() - ctx->c;
 //		ctx->e = HAL_GetTick();
+    if(((HAL_GetTick() - ctx->lastToggle) < ctx->triggerTimeMs))
+      return;
     ctx->lastToggle = HAL_GetTick();
     ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
     ctx->lcd_ctx->lRawNew->rS = e_Precursor;
