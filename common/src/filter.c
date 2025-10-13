@@ -43,11 +43,11 @@ iCtx_t CCRAM_PLACING c1_400 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_400 = {
 static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
-   static fpa_t CCRAM_PLACING scI = _FPA_R(0.65);
-   static fpa_t CCRAM_PLACING scP = _FPA_R(0.35);
+   static fpa_t CCRAM_PLACING scI = _FPA_R(0.5);
+   static fpa_t CCRAM_PLACING scP = _FPA_R(0.3);
    static fpa_t CCRAM_PLACING scDU = _FPA_R(0.7);
    static fpa_t CCRAM_PLACING scDD = _FPA_R(0.3);
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(1.2);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.8);
 
    ctx->v = FPA_mult(scI, ctx->v);
    ctx->v.r += FPA_IntMultFpa(yM, scP).r;
