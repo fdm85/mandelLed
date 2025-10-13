@@ -43,11 +43,11 @@ iCtx_t CCRAM_PLACING c1_400 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_400 = {
 static uint32_t fl_i64(fltCtx_t *ctx_p, uint32_t yM)
 {
    iCtx_t *ctx = (iCtx_t*)(ctx_p->ctx);
-   static fpa_t CCRAM_PLACING scI = _FPA_R(0.5);
-   static fpa_t CCRAM_PLACING scP = _FPA_R(0.3);
+   static fpa_t CCRAM_PLACING scI = _FPA_R(0.6);
+   static fpa_t CCRAM_PLACING scP = _FPA_R(0.4);
    static fpa_t CCRAM_PLACING scDU = _FPA_R(0.7);
-   static fpa_t CCRAM_PLACING scDD = _FPA_R(0.3);
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.8);
+   static fpa_t CCRAM_PLACING scDD = _FPA_R(0.4);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.9);
 
    ctx->v = FPA_mult(scI, ctx->v);
    ctx->v.r += FPA_IntMultFpa(yM, scP).r;
@@ -77,19 +77,19 @@ static uint32_t fl_i160(fltCtx_t *ctx_p, uint32_t yM)
 static uint32_t fl_i400(fltCtx_t *ctx_p, uint32_t yM)
 {
    (void)ctx_p;
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.8);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.5);
    return (uint32_t)FPA_IntMultFpa(yM, scOut).i;
 }
 static uint32_t fl_i1k(fltCtx_t *ctx_p, uint32_t yM)
 {
    (void)ctx_p;
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.75);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.5);
    return (uint32_t)FPA_IntMultFpa(yM, scOut).i;
 }
 static uint32_t fl_i2k5(fltCtx_t *ctx_p, uint32_t yM)
 {
    (void)ctx_p;
-   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.75);
+   static fpa_t CCRAM_PLACING scOut = _FPA_R(0.6);
    return (uint32_t)FPA_IntMultFpa(yM, scOut).i;
 }
 static uint32_t fl_i6k25(fltCtx_t *ctx_p, uint32_t yM)
