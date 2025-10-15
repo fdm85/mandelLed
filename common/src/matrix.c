@@ -240,26 +240,30 @@ static void mtrx_setAuxLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, ui
       led_setLedToColor(lcd, chan->bar[1].dots[((barHeigth / 2u) - 1) - j], r, g, b);
    }
    if (scaled < (barHeigth / 2)) {
-      led_setLedToColor(lcd, chan->bar[0].dots[3], remRF, remGF, remBF);
-      led_setLedToColor(lcd, chan->bar[0].dots[4], remRF, remGF, remBF);
-      led_setLedToColor(lcd, chan->bar[1].dots[i], remR, remG, remB);
-      led_setLedToColor(lcd, chan->bar[1].dots[((barHeigth / 2u) - 1) - j], remR, remG, remB);
+//      led_setLedToColor(lcd, chan->bar[0].dots[3], remRF, remGF, remBF);
+//      led_setLedToColor(lcd, chan->bar[0].dots[4], remRF, remGF, remBF);
+//      led_setLedToColor(lcd, chan->bar[1].dots[i], remR, remG, remB);
+//      led_setLedToColor(lcd, chan->bar[1].dots[((barHeigth / 2u) - 1) - j], remR, remG, remB);
+      led_setLedToColor(lcd, chan->bar[0].dots[3], 0u, remGF, remBF + remRF);
+      led_setLedToColor(lcd, chan->bar[0].dots[4], 0u, remGF, remBF + remRF);
+      led_setLedToColor(lcd, chan->bar[1].dots[i], 0u, remG, remB + remR);
+      led_setLedToColor(lcd, chan->bar[1].dots[((barHeigth / 2u) - 1) - j], 0u, remG, remB + remR);
    }
 }
 
 void mtrx_anim(mAnim_t *ctx) {
-   static uint8_t color = 10u;
+   static uint8_t color = 14u;
    static uint32_t auxLeft = 0uL;
    static uint32_t auxRight = 0uL;
 
    auxLeft = getLChanVal(e63Hz) + getLChanVal(e160Hz) + getLChanVal(e400Hz) + getLChanVal(e1kHz) + getLChanVal(e2_5kHz) + getLChanVal(e6_25kHz) + getLChanVal(e16kHz);
    auxRight = getRChanVal(e63Hz) + getRChanVal(e160Hz) + getRChanVal(e400Hz) + getRChanVal(e1kHz) + getRChanVal(e2_5kHz) + getRChanVal(e6_25kHz) + getRChanVal(e16kHz);
 
-   led_setAllLedsToColor(ctx->lcd_ctx, 4u, 4u, 4u);
+   led_setAllLedsToColor(ctx->lcd_ctx, 3u, 3u, 3u);
 //   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], (4 * MAX_OUT) + 1u, color, color, 2u);
 //   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], (4 * MAX_OUT) + 1u, color, color, 2u);
-   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], auxLeft, color, 0u, 0u);
-   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], auxRight, color, 0u, 0u);
+   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], auxLeft, 2u, color, color/2u);
+   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], auxRight, 2u, color, color/2u);
 //   mtrx_setLedsScaled(ctx->lcd_ctx, &lAuxRight[0], 3100uL, color, 2u, color);
 //   mtrx_setLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], 3100uL, color, color, 2u);
    // comparison mode
