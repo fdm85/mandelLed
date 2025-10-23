@@ -17,11 +17,17 @@
 
 static LedRaw rawLeds[RAW_LDCNT];
 lRawDma_t matrix_dma = {.ledCount = MRTX_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
-lRawDma_t mainL_dma = {.ledCount = 1uL, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
-lRawDma_t mainR_dma = {.ledCount = 1uL, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
+lRawDma_t mainL_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
+lRawDma_t mainR_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
 
 Led_progColor_t matrix_r3[MRTX_LDCNT];
 diffRunnerCtx_t matrix_diff = {.lDc = &matrix_r3[0], .size = MRTX_LDCNT};
+
+Led_progColor_t mainL_r3[MAIN_LDCNT];
+diffRunnerCtx_t mainL_diff = {.lDc = &mainL_r3[0], .size = MAIN_LDCNT};
+
+Led_progColor_t mainR_r3[MAIN_LDCNT];
+diffRunnerCtx_t mainR_diff = {.lDc = &mainR_r3[0], .size = MAIN_LDCNT};
 
 lLogicContainer(mainL, MAIN_LDCNT);
 lRawContainer(mainL, MAIN_LDCNT);
@@ -43,10 +49,12 @@ lRawContainer(matrix, MRTX_LDCNT);
 				.lRawNew = &mainL_dma, \
 				.timer = &htim4, \
 				.timChannel = TIM_CHANNEL_2, \
+				.diffR = &mainL_diff,\
 		};
 	LedChainDesc_t lcd_mainR = { \
 				.lLogic = &ledsLog_mainR[0], \
 				.lRawNew = &mainR_dma, \
 				.timer = &htim2, \
 				.timChannel = TIM_CHANNEL_1, \
+				.diffR = &mainR_diff,\
 		};

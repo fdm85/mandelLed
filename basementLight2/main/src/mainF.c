@@ -28,7 +28,7 @@
 #include "com.h"
 #include "cmsis_compiler.h"
 #include "stm32f4xx_hal.h"
-static uint8_t col = 2;
+static uint8_t col = 5;
 static uint8_t index = 0;
 void cycleColors(mAnim_t* ctx)
 {
@@ -50,8 +50,8 @@ void cycleColorsSingle(mAnim_t* ctx)
   ++index;
 }
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 100uL, .puState = done};
-mAnim_t anim_mainR = { .fpRend = anim_setAllLedsToUniColors, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 100uL, .puState = done};
+mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 200uL, .puState = done};
+mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 200uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 50uL, .puState = done};
 //mAnim_t anim_matrix = { .fpRend = cycleColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 200uL, .puState = done};
 
@@ -153,8 +153,8 @@ int main(void)
 	{
 //		maintainModeSwitch();
 		msgeq_ticker();
-		cyclicReSend(&anim_matrix);
-//		cyclicReSend(&anim_mainL);
+//		cyclicReSend(&anim_matrix);
+		cyclicReSend(&anim_mainL);
 //		cyclicReSend(&anim_mainR);
 	}
 }
