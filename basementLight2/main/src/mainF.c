@@ -129,6 +129,7 @@ int main(void)
 	initClock();
 	initPeripherals();
 
+
 	led_setBrightnessTruncation(&lcd_mainL, 1uL, 1uL);
 	led_setBrightnessTruncation(&lcd_mainR, 1uL, 1uL);
 	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
