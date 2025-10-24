@@ -10,8 +10,8 @@
 #include "leds.h"
 #include "tim.h"
 
-#define MAIN_LDCNT  256uL
-#define MRTX_LDCNT  256uL
+#define MAIN_LDCNT  10uL
+#define MRTX_LDCNT  10uL
 #define RAW_LDCNT  16uL
 #define RAW_DMA_CNT (3uL*8uL*RAW_LDCNT)
 
@@ -41,7 +41,7 @@ lRawContainer(matrix, MRTX_LDCNT);
 				.lLogic = &ledsLog_matrix[0], \
 				.lRawNew = &matrix_dma, \
 				.timer = &htim3, \
-				.timChannel = TIM_CHANNEL_3, \
+				.timChannel = TIM_CHANNEL_2, \
 				.diffR = &matrix_diff,\
 		};
 	LedChainDesc_t lcd_mainL = { \
@@ -55,6 +55,6 @@ lRawContainer(matrix, MRTX_LDCNT);
 				.lLogic = &ledsLog_mainR[0], \
 				.lRawNew = &mainR_dma, \
 				.timer = &htim3, \
-				.timChannel = TIM_CHANNEL_2, \
+				.timChannel = TIM_CHANNEL_3, \
 				.diffR = &mainR_diff,\
 		};

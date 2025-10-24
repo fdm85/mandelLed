@@ -49,10 +49,12 @@ void cycleColorsSingle(mAnim_t* ctx)
 
   ++index;
 }
+
+/// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 2000uL, .puState = done};
-mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 2000uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 500uL, .puState = done};
+mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 20000uL, .puState = done};
+mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 20000uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 1000uL, .puState = done};
 //mAnim_t anim_matrix = { .fpRend = cycleColors, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 200uL, .puState = done};
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
@@ -145,8 +147,8 @@ int main(void)
 //		maintainModeSwitch();
 		msgeq_ticker();
 //		cyclicReSend(&anim_matrix);
-		cyclicReSend(&anim_mainL);
-//		cyclicReSend(&anim_mainR);
+//		cyclicReSend(&anim_mainL);
+		cyclicReSend(&anim_mainR);
 	}
 }
 

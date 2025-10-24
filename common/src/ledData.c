@@ -95,7 +95,8 @@ static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, u
  */
 void led_setLedToColor(LedChainDesc_t *lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b) {
   if (i > lcd->lRawNew->ledCount)
-    assrt(false);
+    return;
+    //    assrt(false);
   led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
 }
 
@@ -168,6 +169,8 @@ void led_pasteData(LedChainDesc_t *lcd) {
 //static LOC_INL_DBG void led_startTransmitData(LedChainDesc_t* lcd)
 LOC_INL_DBG void led_startTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
+  if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
+    __BKPT(0);
   result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel, &lcd->lRawNew->lRaw[0].g[0], (lcd->lRawNew->rawTxCount));
   assrt(result == HAL_OK);
   (void) result;
@@ -178,6 +181,10 @@ LOC_INL_DBG void led_startTransmitData(LedChainDesc_t *lcd) {
 LOC_INL_DBG void led_stopTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
   result = HAL_TIM_PWM_Stop_DMA(lcd->timer, lcd->timChannel);
+  if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
+      __BKPT(0);
+  if(result != HAL_OK)
+      __BKPT(0);
   assrt(result == HAL_OK);
   (void) result;
 }

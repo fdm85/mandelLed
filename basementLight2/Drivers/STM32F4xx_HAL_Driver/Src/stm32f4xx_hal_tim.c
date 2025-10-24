@@ -6553,7 +6553,8 @@ static void TIM_DMADelayPulseCplt(DMA_HandleTypeDef *hdma)
   htim->Channel = HAL_TIM_ACTIVE_CHANNEL_CLEARED;
 }
 typedef struct LedChainDesc_t LedChainDesc_t;
-extern LedChainDesc_t lcd_matrix, lcd_mainR;
+extern LedChainDesc_t lcd_matrix, lcd_mainR, lcd_mainL;
+extern TIM_HandleTypeDef htim4;
 /**
   * @brief  TIM DMA Delay Pulse half complete callback.
   * @param  hdma pointer to DMA handle.
@@ -6570,12 +6571,12 @@ void TIM_DMADelayPulseHalfCplt(DMA_HandleTypeDef *hdma)
   else if (hdma == htim->hdma[TIM_DMA_ID_CC2])
   {
     htim->Channel = HAL_TIM_ACTIVE_CHANNEL_2;
-    htim->ctx = &lcd_mainR;
+    htim->ctx = (htim == &htim4) ? &lcd_mainL : &lcd_matrix;
   }
   else if (hdma == htim->hdma[TIM_DMA_ID_CC3])
   {
     htim->Channel = HAL_TIM_ACTIVE_CHANNEL_3;
-    htim->ctx = &lcd_matrix;
+    htim->ctx = &lcd_mainR;
   }
   else if (hdma == htim->hdma[TIM_DMA_ID_CC4])
   {
