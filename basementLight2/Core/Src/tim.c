@@ -21,7 +21,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "leds.h"
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim1;
@@ -262,7 +262,10 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim_pwmHandle)
     hdma_tim2_ch1.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
     hdma_tim2_ch1.Init.Mode = DMA_CIRCULAR;
     hdma_tim2_ch1.Init.Priority = DMA_PRIORITY_HIGH;
-    hdma_tim2_ch1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    hdma_tim2_ch1.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+    hdma_tim2_ch1.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_HALFFULL;
+    hdma_tim2_ch1.Init.MemBurst = DMA_MBURST_SINGLE;
+    hdma_tim2_ch1.Init.PeriphBurst = DMA_PBURST_SINGLE;
     if (HAL_DMA_Init(&hdma_tim2_ch1) != HAL_OK)
     {
       Error_Handler();
@@ -293,7 +296,10 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim_pwmHandle)
     hdma_tim3_ch3.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
     hdma_tim3_ch3.Init.Mode = DMA_CIRCULAR;
     hdma_tim3_ch3.Init.Priority = DMA_PRIORITY_VERY_HIGH;
-    hdma_tim3_ch3.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    hdma_tim3_ch3.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+    hdma_tim3_ch3.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_HALFFULL;
+    hdma_tim3_ch3.Init.MemBurst = DMA_MBURST_SINGLE;
+    hdma_tim3_ch3.Init.PeriphBurst = DMA_PBURST_SINGLE;
     if (HAL_DMA_Init(&hdma_tim3_ch3) != HAL_OK)
     {
       Error_Handler();
@@ -324,7 +330,10 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim_pwmHandle)
     hdma_tim4_ch2.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
     hdma_tim4_ch2.Init.Mode = DMA_CIRCULAR;
     hdma_tim4_ch2.Init.Priority = DMA_PRIORITY_HIGH;
-    hdma_tim4_ch2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    hdma_tim4_ch2.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+    hdma_tim4_ch2.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_HALFFULL;
+    hdma_tim4_ch2.Init.MemBurst = DMA_MBURST_SINGLE;
+    hdma_tim4_ch2.Init.PeriphBurst = DMA_PBURST_SINGLE;
     if (HAL_DMA_Init(&hdma_tim4_ch2) != HAL_OK)
     {
       Error_Handler();

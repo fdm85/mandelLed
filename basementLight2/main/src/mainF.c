@@ -96,13 +96,8 @@ static void cyclicReSend(mAnim_t *ctx) {
 
 void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 {
-	LedChainDesc_t* lcd;
-	if(htim == &htim3)
-	  lcd = &lcd_matrix;
-	if(htim == &htim4)
-	  lcd = &lcd_mainL;
-	if(htim == &htim2)
-	  lcd = &lcd_mainR;
+  LedChainDesc_t* lcd = htim->ctx;
+
 	lcd->lRawNew->dS = e_FirstHalf;
 //	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
 	led_txRaw(lcd);
@@ -110,13 +105,8 @@ void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
-  LedChainDesc_t* lcd;
-  if(htim == &htim3)
-    lcd = &lcd_matrix;
-  if(htim == &htim4)
-    lcd = &lcd_mainL;
-  if(htim == &htim2)
-    lcd = &lcd_mainR;
+  LedChainDesc_t* lcd = htim->ctx;
+
 	lcd->lRawNew->dS = e_SecondHalf;
 //	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
 	led_txRaw(lcd);
