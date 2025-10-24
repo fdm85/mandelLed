@@ -8,11 +8,10 @@
 #ifndef LEDS_H_
 #define LEDS_H_
 
-#define CCRAM_PLACING
 #include "ledData.h"
 
 
-#define PWM_RAW   27uL
+#define PWM_RAW   105uL
 #define lRawOn (((2uL * PWM_RAW)/3uL) + 2uL)
 #define lRawOff (((1uL * PWM_RAW)/3uL) - 1uL)
 

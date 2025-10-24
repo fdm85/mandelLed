@@ -54,7 +54,7 @@ lRawContainer(matrix, MRTX_LDCNT);
 	LedChainDesc_t lcd_mainR = { \
 				.lLogic = &ledsLog_mainR[0], \
 				.lRawNew = &mainR_dma, \
-				.timer = &htim2, \
-				.timChannel = TIM_CHANNEL_1, \
+				.timer = &htim3, \
+				.timChannel = TIM_CHANNEL_2, \
 				.diffR = &mainR_diff,\
 		};

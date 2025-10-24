@@ -65,9 +65,9 @@ typedef struct LedLogic_tag{
  * @ingroup Led_Data */
 typedef struct LedRaw
 {
-	uint32_t g[8]; /*!< green data */
-	uint32_t r[8]; /*!< red data */
-	uint32_t b[8]; /*!< blue data */
+	uint16_t g[8]; /*!< green data */
+	uint16_t r[8]; /*!< red data */
+	uint16_t b[8]; /*!< blue data */
 } LedRaw;
 
 /** @brief raw content context of a strip
