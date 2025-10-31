@@ -10,15 +10,17 @@
 #include "leds.h"
 #include "tim.h"
 
-#define MAIN_LDCNT  10uL
+#define MAIN_LDCNT  32uL
 #define MRTX_LDCNT  256uL
 #define RAW_LDCNT  16uL
 #define RAW_DMA_CNT (3uL*8uL*RAW_LDCNT)
 
-static LedRaw rawLeds[RAW_LDCNT];
-lRawDma_t matrix_dma = {.ledCount = MRTX_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
-lRawDma_t mainL_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
-lRawDma_t mainR_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds, .rawTxCount = RAW_DMA_CNT};
+static LedRaw rawLeds1[RAW_LDCNT];
+static LedRaw rawLeds2[RAW_LDCNT];
+static LedRaw rawLeds3[RAW_LDCNT];
+lRawDma_t matrix_dma = {.ledCount = MRTX_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds1, .rawTxCount = RAW_DMA_CNT};
+lRawDma_t mainL_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds2, .rawTxCount = RAW_DMA_CNT};
+lRawDma_t mainR_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds3, .rawTxCount = RAW_DMA_CNT};
 
 Led_progColor_t matrix_r3[MRTX_LDCNT];
 diffRunnerCtx_t matrix_diff = {.lDc = &matrix_r3[0], .size = MRTX_LDCNT};
