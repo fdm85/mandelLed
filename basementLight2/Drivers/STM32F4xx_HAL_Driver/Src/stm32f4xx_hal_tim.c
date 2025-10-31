@@ -6517,7 +6517,7 @@ static void TIM_DMADelayPulseCplt(DMA_HandleTypeDef *hdma)
   else if (hdma == htim->hdma[TIM_DMA_ID_CC2])
   {
     htim->Channel = HAL_TIM_ACTIVE_CHANNEL_2;
-    htim->ctx = (htim == &htim4) ? &lcd_mainL : &lcd_mainR;
+    htim->ctx = (htim == &htim4) ? &lcd_mainR : &lcd_mainL;
     if (hdma->Init.Mode == DMA_NORMAL)
     {
       TIM_CHANNEL_STATE_SET(htim, TIM_CHANNEL_2, HAL_TIM_CHANNEL_STATE_READY);
@@ -6571,7 +6571,7 @@ void TIM_DMADelayPulseHalfCplt(DMA_HandleTypeDef *hdma)
   else if (hdma == htim->hdma[TIM_DMA_ID_CC2])
   {
     htim->Channel = HAL_TIM_ACTIVE_CHANNEL_2;
-    htim->ctx = (htim == &htim4) ? &lcd_mainL : &lcd_mainR;
+    htim->ctx = (htim == &htim4) ? &lcd_mainR : &lcd_mainL;
   }
   else if (hdma == htim->hdma[TIM_DMA_ID_CC3])
   {

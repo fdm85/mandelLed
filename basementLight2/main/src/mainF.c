@@ -87,7 +87,7 @@ void cycleColorsNone(mAnim_t* ctx)
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = cycleColorsS, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 1000uL, .puState = done};
+mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 1000uL, .puState = done};
 mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 1000uL, .puState = done};
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
@@ -181,8 +181,8 @@ int main(void)
 	{
 //		maintainModeSwitch();
 		msgeq_ticker();
-		cyclicReSend(&anim_matrix);
-//		cyclicReSend(&anim_mainL);
+//		cyclicReSend(&anim_matrix);
+		cyclicReSend(&anim_mainL);
 //		cyclicReSend(&anim_mainR);
 	}
 }
