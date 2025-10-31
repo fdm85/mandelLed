@@ -53,29 +53,29 @@ void cycleColorsS(mAnim_t* ctx)
   for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
     led_setLedToColor(ctx->lcd_ctx, i, 0,0,0);
 
-//  led_setLedToColor(ctx->lcd_ctx, 0, 0,0,0);
-//  led_setLedToColor(ctx->lcd_ctx, 1, 5,0,0);
-//  led_setLedToColor(ctx->lcd_ctx, 2, 0,5,0);
-//  led_setLedToColor(ctx->lcd_ctx, 3, 0,0,5);
-//  led_setLedToColor(ctx->lcd_ctx, 4, 0,0,0);
-//  led_setLedToColor(ctx->lcd_ctx, 5, 5,5,5);
-//  led_setLedToColor(ctx->lcd_ctx, 6, 5,0,5);
+  led_setLedToColor(ctx->lcd_ctx, 0, 0,0,0);
+  led_setLedToColor(ctx->lcd_ctx, 1, 5,0,0);
+  led_setLedToColor(ctx->lcd_ctx, 2, 0,5,0);
+  led_setLedToColor(ctx->lcd_ctx, 3, 0,0,5);
+  led_setLedToColor(ctx->lcd_ctx, 4, 0,0,0);
+  led_setLedToColor(ctx->lcd_ctx, 5, 5,5,5);
+  led_setLedToColor(ctx->lcd_ctx, 6, 5,0,5);
 
-//  led_setLedToColor(ctx->lcd_ctx, 64, 0,0,0);
-//  led_setLedToColor(ctx->lcd_ctx, 65, 5,0,0);
-//  led_setLedToColor(ctx->lcd_ctx, 66, 0,5,0);
-//  led_setLedToColor(ctx->lcd_ctx, 67, 0,0,5);
-//  led_setLedToColor(ctx->lcd_ctx, 68, 0,0,0);
-//  led_setLedToColor(ctx->lcd_ctx, 69, 5,5,5);
-//  led_setLedToColor(ctx->lcd_ctx, 70, 5,0,5);
-//
-//  led_setLedToColor(ctx->lcd_ctx, 255, 0,0,0);
-//  led_setLedToColor(ctx->lcd_ctx, 254, 5,0,0);
-//  led_setLedToColor(ctx->lcd_ctx, 253, 0,5,0);
-//  led_setLedToColor(ctx->lcd_ctx, 252, 0,0,5);
-//  led_setLedToColor(ctx->lcd_ctx, 251, 0,0,0);
-//  led_setLedToColor(ctx->lcd_ctx, 250, 5,5,5);
-//  led_setLedToColor(ctx->lcd_ctx, 249, 5,0,5);
+  led_setLedToColor(ctx->lcd_ctx, 64, 0,0,0);
+  led_setLedToColor(ctx->lcd_ctx, 65, 5,0,0);
+  led_setLedToColor(ctx->lcd_ctx, 66, 0,5,0);
+  led_setLedToColor(ctx->lcd_ctx, 67, 0,0,5);
+  led_setLedToColor(ctx->lcd_ctx, 68, 0,0,0);
+  led_setLedToColor(ctx->lcd_ctx, 69, 5,5,5);
+  led_setLedToColor(ctx->lcd_ctx, 70, 5,0,5);
+
+  led_setLedToColor(ctx->lcd_ctx, 255, 0,0,0);
+  led_setLedToColor(ctx->lcd_ctx, 254, 5,0,0);
+  led_setLedToColor(ctx->lcd_ctx, 253, 0,5,0);
+  led_setLedToColor(ctx->lcd_ctx, 252, 0,0,5);
+  led_setLedToColor(ctx->lcd_ctx, 251, 0,0,0);
+  led_setLedToColor(ctx->lcd_ctx, 250, 5,5,5);
+  led_setLedToColor(ctx->lcd_ctx, 249, 5,0,5);
 }
 
 void cycleColorsNone(mAnim_t* ctx)
@@ -88,9 +88,9 @@ void cycleColorsNone(mAnim_t* ctx)
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
 mAnim_t anim_mainL = { .fpRend = cycleColorsS, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 1000uL, .puState = done};
-mAnim_t anim_mainR = { .fpRend = cycleColorsS, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 1000uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
-//mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
+mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 1000uL, .puState = done};
+//mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
@@ -181,9 +181,9 @@ int main(void)
 	{
 //		maintainModeSwitch();
 		msgeq_ticker();
-//		cyclicReSend(&anim_matrix);
+		cyclicReSend(&anim_matrix);
 //		cyclicReSend(&anim_mainL);
-		cyclicReSend(&anim_mainR);
+//		cyclicReSend(&anim_mainR);
 	}
 }
 
