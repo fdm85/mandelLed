@@ -172,18 +172,18 @@ int main(void)
 	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
 
 	mtrx_Init();
+	led_LedLogicInit(&lcd_matrix);
 	led_LedLogicInit(&lcd_mainL);
 	led_LedLogicInit(&lcd_mainR);
-	led_LedLogicInit(&lcd_matrix);
 
 	__enable_irq();
 	for (;;)
 	{
 //		maintainModeSwitch();
 		msgeq_ticker();
-//		cyclicReSend(&anim_matrix);
+		cyclicReSend(&anim_matrix);
 		cyclicReSend(&anim_mainL);
-//		cyclicReSend(&anim_mainR);
+		cyclicReSend(&anim_mainR);
 	}
 }
 

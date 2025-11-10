@@ -10,8 +10,8 @@
 #include "leds.h"
 #include "tim.h"
 
-#define MAIN_LDCNT  256uL
-#define MRTX_LDCNT  256uL
+#define MAIN_LDCNT  512uL
+#define MRTX_LDCNT  512uL
 #define RAW_LDCNT  16uL
 #define RAW_DMA_CNT (3uL*8uL*RAW_LDCNT)
 
