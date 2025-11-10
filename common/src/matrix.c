@@ -252,6 +252,8 @@ static void mtrx_setAuxLedsScaled(LedChainDesc_t *const lcd, channel_t *chan, ui
 }
 
 void mtrx_anim(mAnim_t *ctx) {
+#define CM  3u
+#define CC  2u
    static uint8_t color = 14u;
    static uint32_t auxLeft = 0uL;
    static uint32_t auxRight = 0uL;
@@ -259,11 +261,11 @@ void mtrx_anim(mAnim_t *ctx) {
    auxLeft = getLChanVal(e63Hz) + getLChanVal(e160Hz) + getLChanVal(e400Hz) + getLChanVal(e1kHz) + getLChanVal(e2_5kHz) + getLChanVal(e6_25kHz) + getLChanVal(e16kHz);
    auxRight = getRChanVal(e63Hz) + getRChanVal(e160Hz) + getRChanVal(e400Hz) + getRChanVal(e1kHz) + getRChanVal(e2_5kHz) + getRChanVal(e6_25kHz) + getRChanVal(e16kHz);
 
-   led_setAllLedsToColor(ctx->lcd_ctx, 3u, 3u, 3u);
+   led_setAllLedsToColor(ctx->lcd_ctx, CM, CM, CM);
 //   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], (4 * MAX_OUT) + 1u, color, color, 2u);
 //   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], (4 * MAX_OUT) + 1u, color, color, 2u);
-   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], auxLeft, 2u, color, color/2u);
-   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], auxRight, 2u, color, color/2u);
+   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], auxLeft, CC, color, color/2u);
+   mtrx_setAuxLedsScaled(ctx->lcd_ctx, &lAuxRight[0], auxRight, CC, color, color/2u);
 //   mtrx_setLedsScaled(ctx->lcd_ctx, &lAuxRight[0], 3100uL, color, 2u, color);
 //   mtrx_setLedsScaled(ctx->lcd_ctx, &lAuxLeft[0], 3100uL, color, color, 2u);
    // comparison mode
@@ -283,21 +285,21 @@ void mtrx_anim(mAnim_t *ctx) {
 //   mtrx_setLedsScaled2(ctx->lcd_ctx, &lRight[5], getRChanVal(e6_25kHz), getRChanVal2(e6_25kHz), color, 2u, 2u);
 //   mtrx_setLedsScaled2(ctx->lcd_ctx, &lRight[6], getRChanVal(e16kHz), getRChanVal2(e16kHz), color / 2, color, color / 2);
    // comparions mode
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[0], getLChanVal2(e63Hz), 0u, 0u, color);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[1], getLChanVal2(e160Hz), color, 2u, color);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[2], getLChanVal2(e400Hz), color, color, 2u);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[3], getLChanVal2(e1kHz), 2u, color, 2u);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[4], getLChanVal2(e2_5kHz), 2u, color, color);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[5], getLChanVal2(e6_25kHz), color, 2u, 2u);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[6], getLChanVal2(e16kHz), 0u, color, 0u);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[0], getLChanVal2(e63Hz), CC, CC, color);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[1], getLChanVal2(e160Hz), color, CC, color);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[2], getLChanVal2(e400Hz), color, color, CC);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[3], getLChanVal2(e1kHz), CC, color, CC);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[4], getLChanVal2(e2_5kHz), CC, color, color);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[5], getLChanVal2(e6_25kHz), color, CC, CC);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lLeft[6], getLChanVal2(e16kHz), CC, color, CC);
 
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[0], getRChanVal2(e63Hz), 0u, 0u, color);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[1], getRChanVal2(e160Hz), color, 2u, color);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[2], getRChanVal2(e400Hz), color, color, 2u);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[3], getRChanVal2(e1kHz), 2u, color, 2u);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[4], getRChanVal2(e2_5kHz), 2u, color, color);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[5], getRChanVal2(e6_25kHz), color, 2u, 2u);
-   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[6], getRChanVal2(e16kHz), 0u, color, 0u);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[0], getRChanVal2(e63Hz), CC, CC, color);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[1], getRChanVal2(e160Hz), color, CC, color);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[2], getRChanVal2(e400Hz), color, color, CC);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[3], getRChanVal2(e1kHz), CC, color, CC);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[4], getRChanVal2(e2_5kHz), CC, color, color);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[5], getRChanVal2(e6_25kHz), color, CC, CC);
+   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[6], getRChanVal2(e16kHz), CC, color, CC);
 
 //   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[0], 3100uL /* getRChanVal2(e63Hz)*/, 2u, color, color);
 //   mtrx_setLedsScaled(ctx->lcd_ctx, &lRight[1], 3100uL /* getRChanVal2(e160Hz)*/, color, 2u, color);
