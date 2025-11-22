@@ -168,7 +168,7 @@ int main(void)
 {
 	initClock();
 	initPeripherals();
-	com_TxInit();
+	com_SetDump();
 
 	led_setBrightnessTruncation(&lcd_mainL, 1uL, 1uL);
 	led_setBrightnessTruncation(&lcd_mainR, 1uL, 1uL);
@@ -181,7 +181,8 @@ int main(void)
 
 	__enable_irq();
 
-	com_TxInit();
+	com_Init();
+
 	for (;;)
 	{
 //		maintainModeSwitch();

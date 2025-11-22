@@ -29,8 +29,8 @@
 #define CONV_BUF_SZ 16u
 extern char convBuf[CONV_BUF_SZ];
 
-
-void com_TxInit(void);
+void com_SetDump(void);
+void com_Init(void);
 void com_RstTxBuf(void);
 void com_Tx(void);
 void com_TxBuff(const char * buff, size_t sz);
