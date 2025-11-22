@@ -22,10 +22,10 @@ lRawDma_t matrix_dma = {.ledCount = MRTX_LDCNT, .rawCount = RAW_LDCNT, .lRaw = r
 lRawDma_t mainL_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds2, .rawTxCount = RAW_DMA_CNT};
 lRawDma_t mainR_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds3, .rawTxCount = RAW_DMA_CNT};
 
-Led_progColor_t mainL_r3[MAIN_LDCNT] __attribute__ ((section (".bssmram")));
+Led_progColor_t mainL_r3[MAIN_LDCNT] __attribute__ ((section (".bssmram"))) = {0};
 diffRunnerCtx_t mainL_diff __attribute__ ((section (".ccmram"))) = {.lDc = &mainL_r3[0], .size = MAIN_LDCNT};
 
-Led_progColor_t mainR_r3[MAIN_LDCNT] __attribute__ ((section (".bssmram")));
+Led_progColor_t mainR_r3[MAIN_LDCNT] __attribute__ ((section (".bssmram"))) = {0};
 diffRunnerCtx_t mainR_diff __attribute__ ((section (".ccmram"))) = {.lDc = &mainR_r3[0], .size = MAIN_LDCNT};
 
 lLogicContainer(mainL, MAIN_LDCNT);

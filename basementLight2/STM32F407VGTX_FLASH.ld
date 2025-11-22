@@ -133,7 +133,35 @@ SECTIONS
     . = ALIGN(4);
   } >FLASH
 
-  /* Used by the startup to initialize data */
+  _siccmram = LOADADDR(.ccmram);
+
+  /* CCM-RAM section
+  *
+  * IMPORTANT NOTE!
+  * If initialized variables will be placed in this section,
+  * the startup code needs to be modified to copy the init-values.
+  */
+  .bssmram (NOLOAD): 
+  {
+    . = ALIGN(4);
+    _sccbss = .;
+    *filter.o(.bss)
+    *(.bssmram)
+    . = ALIGN(4);
+    _eccbss = .;
+  } >CCMRAM
+    
+  .ccmram : 
+  {
+    . = ALIGN(4);
+    _sccmram = .;       /* create a global symbol at ccmram start */
+    *filter.o(.data)
+    *(.ccmram)
+    . = ALIGN(4);
+    _eccmram = .;       /* create a global symbol at ccmram end */
+  } >CCMRAM AT> FLASH
+
+ /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
   /* Initialized data sections into "RAM" Ram type memory */
@@ -150,35 +178,6 @@ SECTIONS
     _edata = .;        /* define a global symbol at data end */
 
   } >RAM AT> FLASH
-
-  _siccmram = LOADADDR(.ccmram);
-
-  /* CCM-RAM section
-  *
-  * IMPORTANT NOTE!
-  * If initialized variables will be placed in this section,
-  * the startup code needs to be modified to copy the init-values.
-  */
-    
-  .ccmram : 
-  {
-    . = ALIGN(4);
-    _sccmram = .;       /* create a global symbol at ccmram start */
-    *filter.o(.data)
-    *(.ccmram)
-    . = ALIGN(4);
-    _eccmram = .;       /* create a global symbol at ccmram end */
-  } >CCMRAM AT> RAM
-
-  .bssmram (NOLOAD): 
-  {
-    . = ALIGN(4);
-    _sccbss = .;
-    *(.bssmram)
-    *filter.o(.bss)
-    . = ALIGN(4);
-    _eccbss = .;
-  } >CCMRAM
 
   /* Uninitialized data section into "RAM" Ram type memory */
   . = ALIGN(4);
