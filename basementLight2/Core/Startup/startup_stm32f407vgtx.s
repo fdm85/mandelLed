@@ -123,6 +123,33 @@ LoopFillZerobss:
 
 .size  Reset_Handler, .-Reset_Handler
 
+.thumb
+    .section ".text"
+    .align   2
+
+  .thumb_func
+    .type    FaultHandler, %function
+    .global  FaultHandler
+    .fnstart
+    .cantunwind
+FaultHandler:
+
+  // In order to call FaultHandler_C with r7, r13 (sp) and r14 (lr)
+  // as parameters, in that order, we have to get those values
+  // into r0, r1 and r2 respectively. sp may be MSP or PSP, which
+  // is revealed by bit 2 of LR (EXC_RETURN).
+
+  TST LR, #4
+  ITE EQ
+  MRSEQ R1, MSP
+  MRSNE R1, PSP
+  MOV R2, LR
+  MOV R0, R7
+  B FaultHandler_C
+
+  .fnend
+    .size    FaultHandler, .-FaultHandler
+
 /**
  * @brief  This is the code that gets called when the processor receives an 
  *         unexpected interrupt.  This simply enters an infinite loop, preserving

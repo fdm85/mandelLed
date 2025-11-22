@@ -28,6 +28,15 @@
 #include "com.h"
 #include "cmsis_compiler.h"
 #include "stm32f4xx_hal.h"
+
+#include "faultHandling.h"
+
+static char faultDumpBuffer[FAULT_HANDLING_DUMP_SIZE];
+
+static void noopDumpProcessor(void) {
+  // Wot, no peripherals to send the faultDump to, not even a serial port!
+}
+
 static uint8_t col = 5;
 static uint8_t index = 0;
 void cycleColors(mAnim_t* ctx)
@@ -166,6 +175,8 @@ int main(void)
 	initClock();
 	initPeripherals();
 
+  faultHandlingSetDumpProcessor( faultDumpBuffer, noopDumpProcessor );
+  faultHandlingSetPostFaultAction( POSTHANDLER_DEBUG );
 
 	led_setBrightnessTruncation(&lcd_mainL, 1uL, 1uL);
 	led_setBrightnessTruncation(&lcd_mainR, 1uL, 1uL);
