@@ -171,7 +171,7 @@ LOC_INL_DBG void led_startTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
   if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
     __BKPT(0);
-  result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel, &lcd->lRawNew->lRaw[0].g[0], (lcd->lRawNew->rawTxCount));
+  result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel,(const uint32_t *) &lcd->lRawNew->lRaw[0].g[0], (lcd->lRawNew->rawTxCount));
   assrt(result == HAL_OK);
   (void) result;
 }

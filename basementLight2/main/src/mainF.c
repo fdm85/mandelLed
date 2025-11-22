@@ -31,31 +31,25 @@
 
 #include "faultHandling.h"
 
-static char faultDumpBuffer[FAULT_HANDLING_DUMP_SIZE];
-
-static void noopDumpProcessor(void) {
-  // Wot, no peripherals to send the faultDump to, not even a serial port!
-}
-
 static uint8_t col = 5;
-static uint8_t index = 0;
+static uint8_t idx = 0;
 void cycleColors(mAnim_t* ctx)
 {
   for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount;) {
-    led_setLedToColor(ctx->lcd_ctx, i++, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col);
+    led_setLedToColor(ctx->lcd_ctx, i++, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col);
     if(i < ctx->lcd_ctx->lRawNew->ledCount)
-      led_setLedToColor(ctx->lcd_ctx, i++, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col, ((index + 0) % 3) ? 0 : col);
+      led_setLedToColor(ctx->lcd_ctx, i++, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col, ((idx + 0) % 3) ? 0 : col);
     if(i < ctx->lcd_ctx->lRawNew->ledCount)
-      led_setLedToColor(ctx->lcd_ctx, i++, ((index + 2) % 3) ? 0 : col, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col);
+      led_setLedToColor(ctx->lcd_ctx, i++, ((idx + 2) % 3) ? 0 : col, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col);
   }
-  ++index;
+  ++idx;
 }
 void cycleColorsSingle(mAnim_t* ctx)
 {
   for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
-    led_setLedToColor(ctx->lcd_ctx, i, ((index + 0) % 3) ? 0 : col, ((index + 1) % 3) ? 0 : col, ((index + 2) % 3) ? 0 : col);
+    led_setLedToColor(ctx->lcd_ctx, i, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col);
 
-  ++index;
+  ++idx;
 }
 void cycleColorsS(mAnim_t* ctx)
 {
@@ -174,9 +168,7 @@ int main(void)
 {
 	initClock();
 	initPeripherals();
-
-  faultHandlingSetDumpProcessor( faultDumpBuffer, noopDumpProcessor );
-  faultHandlingSetPostFaultAction( POSTHANDLER_DEBUG );
+	com_TxInit();
 
 	led_setBrightnessTruncation(&lcd_mainL, 1uL, 1uL);
 	led_setBrightnessTruncation(&lcd_mainR, 1uL, 1uL);
@@ -188,6 +180,8 @@ int main(void)
 	led_LedLogicInit(&lcd_mainR);
 
 	__enable_irq();
+
+	com_TxInit();
 	for (;;)
 	{
 //		maintainModeSwitch();

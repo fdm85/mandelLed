@@ -24,8 +24,22 @@
 #ifndef COM_H_
 #define COM_H_
 
-void com_testSend(void);
+#include <stdint.h>
+#include <string.h>
+#define CONV_BUF_SZ 16u
+extern char convBuf[CONV_BUF_SZ];
+
+
+void com_TxInit(void);
+void com_RstTxBuf(void);
+void com_Tx(void);
+void com_TxBuff(const char * buff, size_t sz);
+
 void com_enableRx(void);
 void com_parse(void);
+
+void com_RstConvBuff(void);
+void com_uIntToStr(uint32_t v);
+
 #endif /* COM_H_ */
 /** @}*/

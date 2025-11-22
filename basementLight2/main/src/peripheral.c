@@ -51,6 +51,7 @@ void initPeripherals(void)
 	MX_ADC1_Init();
 	MX_ADC2_Init();
 	MX_ADC3_Init();
+	MX_USART2_UART_Init();
 }
 
 void greenLedToggle(void)
