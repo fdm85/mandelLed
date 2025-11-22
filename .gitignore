@@ -1,6 +1,6 @@
 **/Debug/**
 **/Release/**
-
+**/~$*.*
 **/.settings/**
 /Debug/
 /DebugF407/
@@ -8,6 +8,7 @@
 /DebugL476/
 
 doc/doxyOut/*
+doc/ReviewMat/*
 .metadata/**
 **/*.autosave
 *.launch
@@ -17,3 +18,4 @@ dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pd
 VisitenKartePlexiGlas.JPG
 
 cad/base/base-backups/*
+/.metadata/

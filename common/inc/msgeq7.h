@@ -26,7 +26,7 @@
 #define MSGEQ7_H_
 
 #include "peripheral.h"
-
+#include <stdint.h>
 /*! @brief max ADC value */
 #define MAX_OUT		3100uL
 

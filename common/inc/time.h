@@ -26,8 +26,8 @@
 #define TIME_H_
 
 #include <stdint.h>
-#ifdef STM32F303xE
-#include "stm32f3xx_hal.h"
+#ifdef STM32F407xx
+#include "stm32f4xx_hal.h"
 #endif
 
 typedef struct time_s

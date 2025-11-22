@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+  <section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+    <language id="org.eclipse.cdt.core.assembly" name="s,S"/>
+    <language id="org.eclipse.cdt.core.gcc" name="C Source File">
+      <includepath>C:\ST\STM32CubeIDE_1.16.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.200.202406191623\tools\arm-none-eabi\include</includepath>
+      <includepath workspace_path="true">/desklightF401/Core/Inc</includepath>
+      <includepath workspace_path="true">/desklightF401/Drivers/STM32F4xx_HAL_Driver/Inc</includepath>
+      <includepath workspace_path="true">/desklightF401/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy</includepath>
+      <includepath workspace_path="true">/desklightF401/Drivers/CMSIS/Include</includepath>
+      <includepath workspace_path="true">/desklightF401/Drivers/CMSIS/Device/ST/STM32F4xx/Include</includepath>
+      <includepath workspace_path="true">/desklightF401/main/inc</includepath>
+      <includepath workspace_path="true">/desklightF401/common/inc</includepath>
+    </language>
+    <language name="Object File"/>
+  </section>
+  <section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.Macros">
+    <language id="org.eclipse.cdt.core.assembly" name="s,S">
+      <macro>
+        <name>DEBUG</name>
+        <value/>
+      </macro>
+    </language>
+    <language id="org.eclipse.cdt.core.gcc" name="C Source File">
+      <macro>
+        <name>FPA_FRAC</name>
+        <value>5</value>
+      </macro>
+      <macro>
+        <name>GLOBAL_IQ</name>
+        <value>15</value>
+      </macro>
+      <macro>
+        <name>LEFT</name>
+        <value>hadc1</value>
+      </macro>
+      <macro>
+        <name>RIGHT</name>
+        <value>hadc2</value>
+      </macro>
+      <macro>
+        <name>LED_1</name>
+        <value>30</value>
+      </macro>
+      <macro>
+        <name>DEBUG</name>
+        <value/>
+      </macro>
+      <macro>
+        <name>USE_HAL_DRIVER</name>
+        <value/>
+      </macro>
+      <macro>
+        <name>STM32F401xE</name>
+        <value/>
+      </macro>
+    </language>
+    <language name="Object File"/>
+  </section>
+</cdtprojectproperties>

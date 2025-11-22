@@ -22,41 +22,37 @@
  */
 
 #include "ledData.h"
-#include "stdint.h"
+#include <stdint.h>
 #include "assrt.h"
-
+#include "leds.h"
 #include "tim.h"
 
+//#define LOC_INLINE	inline
+#define LOC_INL_DBG	__attribute__ ((noinline))
 
-uint32_t getLedCount(LedChainDesc_t* lcd)
-{
-	return lcd->lRaw->ledCount;
+uint32_t getLedCount(LedChainDesc_t *lcd) {
+  return lcd->lRawNew->ledCount;
 }
 
 /// raw bits are stored MSB first, order is green, red, blue
-static void led_convertLed(LedChainDesc_t* lcd, LedLogic_t *l, LedRaw *r)
-{
-	for (uint8_t i = 0; i < 8u; ++i)
-	{
-		r->g[i] = (l->g & (0x80u >> i)) ? lcd->rawOn : lcd->rawOff;
-		r->r[i] = (l->r & (0x80u >> i)) ? lcd->rawOn : lcd->rawOff;
-		r->b[i] = (l->b & (0x80u >> i)) ? lcd->rawOn : lcd->rawOff;
-	}
+static void led_convertLed(const LedLogic_t *l, LedRaw *r) {
+  for (uint8_t i = 0; i < 8u; ++i) {
+    r->g[i] = (l->g & (0x80u >> i)) ? lRawOn : lRawOff;
+    r->r[i] = (l->r & (0x80u >> i)) ? lRawOn : lRawOff;
+    r->b[i] = (l->b & (0x80u >> i)) ? lRawOn : lRawOff;
+  }
+}
+/// raw bits are stored MSB first, order is green, red, blue
+static void led_convertLedToZero(LedRaw *r) {
+  for (uint8_t i = 0; i < 8u; ++i) {
+    r->g[i] = 0u;
+    r->r[i] = 0u;
+    r->b[i] = 0u;
+  }
 }
 
-void led_initDataRaw(LedChainDesc_t* lcd)
-{
-	lcd->lRaw->rI[0] = 0uL;
-	lcd->lRaw->rO[0] = 0uL;
-	LedLogic_t init = {12u, 0u, 0u};
-	led_convertLed(lcd, &init, lcd->lRaw->lConverterLed);
-	for (uint16_t i = 1; i < resLength; ++i)
-	{
-		lcd->lRaw->rI[i] = 0;
-		lcd->lRaw->rO[i] = 0;
-	}
-	led_setAllLedsToUniColors(lcd, 0u);
-	led_pasteData(lcd);
+void led_LedLogicInit(LedChainDesc_t *lcd) {
+  led_setAllLedsToUniColors(lcd, 2u);
 }
 
 /** @brief Set brightness truncation
@@ -64,10 +60,9 @@ void led_initDataRaw(LedChainDesc_t* lcd)
  *  @param mult Multiplier
  *  @param div Divider
  */
-void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div)
-{
-	lcd->btMult = mult;
-	lcd->btDiv = div;
+void led_setBrightnessTruncation(LedChainDesc_t *lcd, uint32_t mult, uint32_t div) {
+  lcd->btMult = mult;
+  lcd->btDiv = div;
 }
 
 /** @brief Set a specific led's colors
@@ -78,18 +73,17 @@ void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t di
  *  @param mult multiplier
  *  @param div divider
  */
-static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, uint32_t mult, uint32_t div)
-{
-	uint32_t rOut = (uint32_t) (r * mult) / div;
-	uint32_t gOut = (uint32_t) (g * mult) / div;
-	uint32_t bOut = (uint32_t) (b * mult) / div;
+static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, uint32_t mult, uint32_t div) {
+  uint32_t rOut = (uint32_t) (r * mult) / div;
+  uint32_t gOut = (uint32_t) (g * mult) / div;
+  uint32_t bOut = (uint32_t) (b * mult) / div;
 
-	assrt(rOut <= UINT8_MAX);
-	assrt(gOut <= UINT8_MAX);
-	assrt(bOut <= UINT8_MAX);
-	led->r = (uint8_t) rOut;
-	led->g = (uint8_t) gOut;
-	led->b = (uint8_t) bOut;
+  assrt(rOut <= UINT8_MAX);
+  assrt(gOut <= UINT8_MAX);
+  assrt(bOut <= UINT8_MAX);
+  led->r = (uint8_t) rOut;
+  led->g = (uint8_t) gOut;
+  led->b = (uint8_t) bOut;
 }
 
 /** @brief Set a specific led's colors
@@ -99,11 +93,11 @@ static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, u
  *  @param g green color
  *  @param b blue color
  */
-void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b)
-{
-	if(i > lcd->lRaw->ledCount)
-		assrt(false);
-	led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
+void led_setLedToColor(LedChainDesc_t *lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b) {
+  if (i > lcd->lRawNew->ledCount)
+    return;
+    //    assrt(false);
+  led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
 }
 
 /** @brief Get a specific led's colors
@@ -111,14 +105,13 @@ void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, ui
  *  @param i index of led to set
  *  @param l were to write the colors to
  */
-void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l)
-{
-	assrt(l);
-	if(i > lcd->lRaw->ledCount)
-		assrt(false);
-	l->b = lcd->lLogic[i].b;
-	l->g = lcd->lLogic[i].g;
-	l->r = lcd->lLogic[i].r;
+void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l) {
+  assrt(l);
+  if (i > lcd->lRawNew->ledCount)
+    assrt(false);
+  l->b = lcd->lLogic[i].b;
+  l->g = lcd->lLogic[i].g;
+  l->r = lcd->lLogic[i].r;
 }
 
 /** @brief Set all leds of the strip to the same color
@@ -127,12 +120,11 @@ void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l)
  *  @param g green color
  *  @param b blue color
  */
-void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b)
-{
-	for (uint16_t i = 0; i < lcd->lRaw->ledCount; ++i)
-	{
-		led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
-	}
+void led_setAllLedsToColor(LedChainDesc_t *lcd, uint8_t r, uint8_t g, uint8_t b) {
+
+  for (uint16_t i = 0; i < lcd->lRawNew->ledCount; ++i)
+    led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
+
 }
 
 /** @brief Set leds [s,e] of the strip to the same color
@@ -143,45 +135,137 @@ void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b)
  *  @param s start
  *  @param e end
  */
-void led_setFromToLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b, uint32_t s, uint32_t e)
-{
-	for (uint32_t i = s; i < e; ++i)
-	{
-		led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
-	}
+void led_setFromToLedsToColor(LedChainDesc_t *lcd, uint8_t r, uint8_t g, uint8_t b, uint32_t s, uint32_t e) {
+
+  for (uint32_t i = s; i < e; ++i)
+    led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
+
 }
 
 /** @brief Set all leds of the strip to the same color (uni color)
  *  @param lcd strip context to work on
  *  @param brightness brightness set val
  */
-void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness)
-{
-	for (uint16_t i = 0; i < lcd->lRaw->ledCount; ++i)
-	{
-		led_setLedColors(&lcd->lLogic[i], brightness, brightness, brightness, lcd->btMult, lcd->btDiv);
-	}
+void led_setAllLedsToUniColors(LedChainDesc_t *lcd, uint8_t brightness) {
+
+  for (uint16_t i = 0; i < lcd->lRawNew->ledCount; ++i)
+    led_setLedColors(&lcd->lLogic[i], brightness, brightness, brightness, lcd->btMult, lcd->btDiv);
+
 }
 
 /** @brief Convert/Paste logic rgb colors to the raw data out field
  *  @param lcd strip context to work on
  */
-void led_pasteData(LedChainDesc_t* lcd)
-{
-	for (uint16_t i = 0; i < lcd->lRaw->ledCount; ++i)
-	{
-		led_convertLed(lcd, &lcd->lLogic[i], &lcd->lRaw->lRaw[i]);
-	}
+void led_pasteData(LedChainDesc_t *lcd) {
+
+  for (uint16_t i = 0; i < lcd->lRawNew->ledCount; ++i)
+    led_convertLed(&lcd->lLogic[i], &lcd->lRawNew->lRaw[i]);
+
 }
 
 /** @brief Trigger data transmission
  *  @param lcd strip context to work on
  */
-void led_transmitData(LedChainDesc_t* lcd)
-{
-	volatile HAL_StatusTypeDef result;
-	result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel, &lcd->lRaw->rI[0], lcd->lRaw->txCountInUi32);
-	assrt(result == HAL_OK);
-	(void) result;
+//static LOC_INL_DBG void led_startTransmitData(LedChainDesc_t* lcd)
+LOC_INL_DBG void led_startTransmitData(LedChainDesc_t *lcd) {
+  volatile HAL_StatusTypeDef result;
+  if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
+    __BKPT(0);
+  result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel,(const uint32_t *) &lcd->lRawNew->lRaw[0].g[0], (lcd->lRawNew->rawTxCount));
+  assrt(result == HAL_OK);
+  (void) result;
 }
+/** @brief Trigger data transmission
+ *  @param lcd strip context to work on
+ */
+LOC_INL_DBG void led_stopTransmitData(LedChainDesc_t *lcd) {
+  volatile HAL_StatusTypeDef result;
+  result = HAL_TIM_PWM_Stop_DMA(lcd->timer, lcd->timChannel);
+  if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
+      __BKPT(0);
+  if(result != HAL_OK)
+      __BKPT(0);
+  assrt(result == HAL_OK);
+  (void) result;
+}
+
+#define inFrame 2uL
+#define outFrame 1uL
+static void fadeIn(LedChainDesc_t *lcd) {
+  /// assuming dma buffer is at least twice as big as (inFrame + cLed)
+
+  lcd->lRawNew->iD = 0uL;
+
+  for (; lcd->lRawNew->iD < inFrame; ++lcd->lRawNew->iD)
+    led_convertLedToZero(&lcd->lRawNew->lRaw[lcd->lRawNew->iD]);
+
+
+  /// add first segment of real data here to simplify implementation of half cycle filler
+  for (lcd->lRawNew->iS = 0uL; (lcd->lRawNew->iS < lcd->lRawNew->ledCount) && (lcd->lRawNew->iD < lcd->lRawNew->rawCount);
+      ++lcd->lRawNew->iS, ++lcd->lRawNew->iD)
+    led_convertLed(&lcd->lLogic[lcd->lRawNew->iS], &lcd->lRawNew->lRaw[lcd->lRawNew->iD]);
+
+  /// set possible remainder to zero
+  for (; (lcd->lRawNew->iD < lcd->lRawNew->rawCount); ++lcd->lRawNew->iD)
+    led_convertLedToZero(&lcd->lRawNew->lRaw[lcd->lRawNew->iD]);
+
+}
+
+static void fadeOut(LedChainDesc_t *lcd) {
+  /// assuming dma buffer is at least twice as big as (inFrame + cLed)
+
+  const uint32_t iMax = (lcd->lRawNew->rawCount / 2u);
+  const uint32_t iOffset = (lcd->lRawNew->dS == e_SecondHalf) ? (lcd->lRawNew->rawCount / 2u) : 0;
+  for (lcd->lRawNew->iD = 0uL; (lcd->lRawNew->iD < iMax); ++lcd->lRawNew->iD)
+    led_convertLedToZero(&lcd->lRawNew->lRaw[lcd->lRawNew->iD + iOffset]);
+}
+
+void fillRealData(LedChainDesc_t *lcd) {
+  const uint32_t iMax = (lcd->lRawNew->rawCount / 2u);
+  const uint32_t iOffset = (lcd->lRawNew->dS == e_SecondHalf) ? (lcd->lRawNew->rawCount / 2u) : 0;
+
+  for (lcd->lRawNew->iD = 0uL; (lcd->lRawNew->iD < iMax) && (lcd->lRawNew->iS < lcd->lRawNew->ledCount);
+      ++lcd->lRawNew->iS, ++lcd->lRawNew->iD)
+    led_convertLed(&lcd->lLogic[lcd->lRawNew->iS], &lcd->lRawNew->lRaw[lcd->lRawNew->iD + iOffset]);
+
+  /// set possible remainder to zero
+  for (; (lcd->lRawNew->iD < iMax); ++lcd->lRawNew->iD)
+    led_convertLedToZero(&lcd->lRawNew->lRaw[lcd->lRawNew->iD + iOffset]);
+}
+
+void led_txRaw(LedChainDesc_t *lcd) {
+  /// is it possible to change dma size during active run?
+  switch (lcd->lRawNew->rS) {
+  case e_Precursor:
+    fadeIn(lcd);
+    led_startTransmitData(lcd);
+    lcd->lRawNew->rS = e_realData;
+    break;
+  case e_realData:
+    if (lcd->lRawNew->iS == lcd->lRawNew->ledCount) {
+      lcd->lRawNew->rS = e_Tail_1;
+      fadeOut(lcd);
+    }
+    else
+      fillRealData(lcd);
+    break;
+  case e_Tail_1:
+    fadeOut(lcd);
+    lcd->lRawNew->rS = e_Tail_2;
+    break;
+  case e_Tail_2:
+    fadeOut(lcd);
+    lcd->lRawNew->rS = e_done;
+    break;
+  case e_done:
+    led_stopTransmitData(lcd);
+
+    break;
+  case e_Inv:
+    break;
+  default:
+    break;
+  }
+}
+
 /** @}*/

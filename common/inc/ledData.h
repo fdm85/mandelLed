@@ -29,6 +29,29 @@
 #include "fpa.h"
 #include "tim.h"
 
+/** @brief led color transition descriptor
+ * @details compound with all needed details to run random diff color animation
+*/
+typedef struct Led_diffColor{
+    fpa_t g; /*!< green diff per iteration */
+    fpa_t r; /*!< red diff per iteration */
+    fpa_t b; /*!< blue diff per iteration */
+    fpa_t gP; /*!< green last set val */
+    fpa_t rP; /*!< red last set val */
+    fpa_t bP; /*!< blue last set val */
+    uint16_t itCur; /*!< iteration counter */
+    uint16_t itMax; /*!< target iteration count */
+}Led_progColor_t;
+
+/** @brief diff runner context
+ * @details adapter to couple diff animation array to a strip */
+typedef struct diffRunnerCtx_tag
+{
+    Led_progColor_t * lDc; /*!< reference to strip to run on */
+    uint32_t size; /*!< size/length of animation on the strip */
+    // todo add start point
+}diffRunnerCtx_t;
+
 /** @brief logical led container */
 typedef struct LedLogic_tag{
 	uint8_t g; /*!< green set val */
@@ -42,9 +65,9 @@ typedef struct LedLogic_tag{
  * @ingroup Led_Data */
 typedef struct LedRaw
 {
-	uint32_t g[8]; /*!< green data */
-	uint32_t r[8]; /*!< red data */
-	uint32_t b[8]; /*!< blue data */
+	uint16_t g[8]; /*!< green data */
+	uint16_t r[8]; /*!< red data */
+	uint16_t b[8]; /*!< blue data */
 } LedRaw;
 
 /** @brief raw content context of a strip
@@ -52,14 +75,39 @@ typedef struct LedRaw
  * @ingroup Led_Data */
 typedef struct lRawCont_tag
 {
-	uint32_t* rI; /*!< fade in dummy part, to create low level */
-	uint32_t* rO; /*!< fade out dummy part, to create low level */
-	LedRaw* lConverterLed; /*!< Converter led is used as 'cheap' level shifter, so it is the first 'real' led in the strip (will be painted in plain green) */
 	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
 	uint32_t ledCount; /*!< count of 'real' leds in the strip */
-	uint16_t txCountInUi32; /*!< count of 'total to transmit' raw led data packets */
-	uint16_t padding; /*!< padding/reserved */
 }lRawCont_t;
+
+typedef enum
+{
+	e_fadeIn,
+	e_FirstHalf, /*!< fill first half (called from dma half complete) */
+	e_SecondHalf, /*!< fill second half (called from dma complete) */
+	e_Inv2
+} dmaState_t;
+
+typedef enum {
+	e_Precursor, /*!< fill full struct */
+	e_realData,
+	e_Tail_1, /*!<  */
+	e_Tail_2, /*!<  */
+	e_done,
+	e_Inv
+}eDmaRawFill;
+
+typedef struct lRawDma_tag
+{
+	dmaState_t dS;
+	eDmaRawFill rS;
+	uint32_t iS; /*!< index counter at source */
+	uint32_t iD; /*!< index counter at destination */
+	const uint32_t ledCount; /*!< count of 'real' leds in the strip */
+	const uint32_t rawCount; /*!< size of dma tx buffer (in units of LedRaw[]) */
+	const uint16_t rawTxCount; /*!< size of dma tx buffer (in units of ???) */
+	LedRaw* lRaw; /*!< pointer to 'real' raw led ctx */
+}lRawDma_t;
+
 
 /** @defgroup MemoryAbstraction Memory Abstraction
  *  @ingroup Led_Data*/
@@ -79,18 +127,11 @@ typedef struct lRawCont_tag
 #define lRawContainer(name, ledCnt) \
 	static struct \
 	{ \
-		uint32_t rI[resLength]; \
-		LedRaw converterLed[1]; \
 		LedRaw ledRaw[ledCnt]; \
-		uint32_t rO[resLength]; \
 	} lRawContainer_##name; \
 	const lRawCont_t lRawCont_##name = { \
-			.rI = &lRawContainer_##name.rI[0], \
-			.rO = &lRawContainer_##name.rO[0], \
-			.lConverterLed = &lRawContainer_##name.converterLed[0], \
 			.lRaw = &lRawContainer_##name.ledRaw[0], \
 			.ledCount = ledCnt, \
-			.txCountInUi32 = (sizeof(lRawContainer_##name)/sizeof(uint32_t)), \
 	}
 /** @brief factory macro to create the logical LED data container
  *  @details will create logic data struct needed to handle a strip
@@ -127,26 +168,26 @@ typedef struct lRawCont_tag
 typedef struct LedChainDesc_tag
 {
 	LedLogic_t* lLogic; /*!< pointer to led container, i.e. the RGB values of each single LED in a strip */
-	const lRawCont_t *const lRaw; /*!< pointer to IO-out raw data of the strip */
+	lRawDma_t *const lRawNew; /*!< pointer to IO-out raw data of the strip */
 	TIM_HandleTypeDef* timer; /*!< pointer to the timer instance responsible for the data output*/
+	diffRunnerCtx_t *const diff;
 	uint32_t timChannel; /*!< output channel of the timer (as a timer peripheral my have multiple channels) */
-	uint32_t rawOn; /*!< pwm setval to produce a set bit*/
-	uint32_t rawOff; /*!< pwm setval to produce a reset bit*/
 	uint32_t btMult; /*!< brightness truncation multiplier */
 	uint32_t btDiv; /*!< brightness truncation divider */
 } LedChainDesc_t;
 
-void led_initDataRaw(LedChainDesc_t* lcd);
+void led_LedLogicInit(LedChainDesc_t* lcd);
 void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness);
 void led_setFromToLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b, uint32_t s, uint32_t e);
 void led_setLedToColor(LedChainDesc_t* lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b);
 void led_getLedColor(LedChainDesc_t* lcd, uint32_t i, LedLogic_t *l);
 void led_pasteData(LedChainDesc_t* lcd);
 void led_transmitData(LedChainDesc_t* lcd);
+void led_txRaw(LedChainDesc_t* lcd);
 void led_setBrightnessTruncation(LedChainDesc_t* lcd, uint32_t mult, uint32_t div);
 void led_setAllLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b);
 uint32_t getLedCount(LedChainDesc_t* lcd);
-
+void initMea(void);
 /** @}*/
 
 #endif /* LEDDATA_H_ */

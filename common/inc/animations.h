@@ -33,10 +33,10 @@
 
 typedef enum  {
 	anim_powerUp = 0,
+	anim_powerUpDone,
 
-	anim_min = 1,
-
-	anim_rnd3 = 1,
+	anim_min,
+	anim_rnd3 = anim_min,
 	anim_white,
 	anim_red,
 	anim_green,
@@ -59,7 +59,11 @@ typedef enum
 
 typedef enum
 {
-	e_render, e_waitTxCplt, e_paste
+	e_render,
+	e_waitTxCplt,
+	e_paste,
+	e_StartDma,
+	e_waitDmaDone
 } eSm;
 
 typedef struct mAnim_tag mAnim_t;
@@ -75,6 +79,7 @@ struct mAnim_tag
 	eSm state; /*!< */
 	puState_t puState; /*!< */
 	uint16_t padd2; /*!< */
+	anim_mode_e AnimMode;
 };
 
 void anim_setCirc(bool shrt);
@@ -83,7 +88,7 @@ void anim_setMode(LedChainDesc_t *const lcd, anim_mode_e set);
 void anim_setBrightness(uint8_t set);
 void anim_addBrightness(int8_t add);
 void anim_nextMode(LedChainDesc_t *const lcd);
-
+void anim_setAllLedsToUniColors(mAnim_t *ctx);
 typedef struct rider rider_t;
 typedef void (*riderInit)(rider_t*);
 struct rider
@@ -124,16 +129,26 @@ void anim_initRedRider3(LedChainDesc_t *const lcd, rider_t* arg);
 
 #endif
 
+void anim_random3(mAnim_t *ctx);
 
 #if !( (defined(STM32F303xE) | defined(STM32F103xB)) )
 void anim_random1(LedChainDesc_t *const lcd);
 void anim_setRandom2CycleCount(uint16_t c);
 void anim_random2(LedChainDesc_t *const lcd);
-void anim_random3(LedChainDesc_t *const lcd);
 void anim_r23Init(LedChainDesc_t *const lcd);
 void anim_r23DeInit(LedChainDesc_t *const lcd);
 void anim_layerRedRider(uint32_t pos);
 
+#else
+#define anim_random1(x)
+#define anim_setRandom2CycleCount(x)
+#define anim_random2(x)
+#define anim_r23Init(x)
+
+#define anim_r23DeInit(x)
+#define anim_layerRedRider(x)
+
+#endif
 #include "msgeq7.h"
 
 typedef struct frqBand {
@@ -163,17 +178,5 @@ extern const frqString_t *frqS[];
 
 void anim_frqDrv(LedChainDesc_t *const lcd, const frqBand_t *fB);
 void anim_frqFrvRem(LedChainDesc_t *const lcd, const frqBand_t *fB);
-#else
-#define anim_random1(x)
-#define anim_setRandom2CycleCount(x)
-#define anim_random2(x)
-#define anim_random3(x)
-#define anim_r23Init(x)
-
-#define anim_r23DeInit(x)
-#define anim_layerRedRider(x)
-
-#endif
-
 #endif /* ANIMATIONS_H_ */
 /** @}*/
