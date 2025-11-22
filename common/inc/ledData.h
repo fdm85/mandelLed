@@ -170,7 +170,7 @@ typedef struct LedChainDesc_tag
 	LedLogic_t* lLogic; /*!< pointer to led container, i.e. the RGB values of each single LED in a strip */
 	lRawDma_t *const lRawNew; /*!< pointer to IO-out raw data of the strip */
 	TIM_HandleTypeDef* timer; /*!< pointer to the timer instance responsible for the data output*/
-	diffRunnerCtx_t *const diffR;
+	diffRunnerCtx_t *const diff;
 	uint32_t timChannel; /*!< output channel of the timer (as a timer peripheral my have multiple channels) */
 	uint32_t btMult; /*!< brightness truncation multiplier */
 	uint32_t btDiv; /*!< brightness truncation divider */

@@ -10,8 +10,8 @@
 #include "leds.h"
 #include "tim.h"
 
-#define MAIN_LDCNT  512uL
-#define MRTX_LDCNT  512uL
+#define MAIN_LDCNT  750uL
+#define MRTX_LDCNT  256uL
 #define RAW_LDCNT  16uL
 #define RAW_DMA_CNT (3uL*8uL*RAW_LDCNT)
 
@@ -22,14 +22,11 @@ lRawDma_t matrix_dma = {.ledCount = MRTX_LDCNT, .rawCount = RAW_LDCNT, .lRaw = r
 lRawDma_t mainL_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds2, .rawTxCount = RAW_DMA_CNT};
 lRawDma_t mainR_dma = {.ledCount = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds3, .rawTxCount = RAW_DMA_CNT};
 
-Led_progColor_t matrix_r3[MRTX_LDCNT];
-diffRunnerCtx_t matrix_diff = {.lDc = &matrix_r3[0], .size = MRTX_LDCNT};
+Led_progColor_t mainL_r3[MAIN_LDCNT] __attribute__ ((section (".bssmram")));
+diffRunnerCtx_t mainL_diff __attribute__ ((section (".ccmram"))) = {.lDc = &mainL_r3[0], .size = MAIN_LDCNT};
 
-Led_progColor_t mainL_r3[MAIN_LDCNT];
-diffRunnerCtx_t mainL_diff = {.lDc = &mainL_r3[0], .size = MAIN_LDCNT};
-
-Led_progColor_t mainR_r3[MAIN_LDCNT];
-diffRunnerCtx_t mainR_diff = {.lDc = &mainR_r3[0], .size = MAIN_LDCNT};
+Led_progColor_t mainR_r3[MAIN_LDCNT] __attribute__ ((section (".bssmram")));
+diffRunnerCtx_t mainR_diff __attribute__ ((section (".ccmram"))) = {.lDc = &mainR_r3[0], .size = MAIN_LDCNT};
 
 lLogicContainer(mainL, MAIN_LDCNT);
 lRawContainer(mainL, MAIN_LDCNT);
@@ -44,19 +41,19 @@ lRawContainer(matrix, MRTX_LDCNT);
 				.lRawNew = &matrix_dma, \
 				.timer = &htim3, \
 				.timChannel = TIM_CHANNEL_3, \
-				.diffR = &matrix_diff,\
+				.diff = NULL,\
 		};
 	LedChainDesc_t lcd_mainR = { \
 				.lLogic = &ledsLog_mainR[0], \
 				.lRawNew = &mainR_dma, \
 				.timer = &htim4, \
 				.timChannel = TIM_CHANNEL_2, \
-				.diffR = &mainR_diff,\
+				.diff = &mainR_diff,\
 		};
 	LedChainDesc_t lcd_mainL = { \
 				.lLogic = &ledsLog_mainL[0], \
-				.lRawNew = &mainR_dma, \
+				.lRawNew = &mainL_dma, \
 				.timer = &htim3, \
 				.timChannel = TIM_CHANNEL_2, \
-				.diffR = &mainL_diff,\
+				.diff = &mainL_diff,\
 		};

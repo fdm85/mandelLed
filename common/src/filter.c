@@ -32,9 +32,9 @@ typedef struct iCtx{
    uint32_t oM;
 }iCtx_t;
 
-iCtx_t CCRAM_PLACING c1_64 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_64 = {.v = {.r = 0}, .oM = 0};
-iCtx_t CCRAM_PLACING c1_160 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_160 = {.v = {.r = 0}, .oM = 0};
-iCtx_t CCRAM_PLACING c1_400 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_400 = {.v = {.r = 0}, .oM = 0};
+iCtx_t __attribute__ ((section (".bssmram"))) c1_64 = {.v = {.r = 0}, .oM = 0}, __attribute__ ((section (".bssmram"))) c2_64 = {.v = {.r = 0}, .oM = 0};
+iCtx_t __attribute__ ((section (".bssmram"))) c1_160 = {.v = {.r = 0}, .oM = 0}, __attribute__ ((section (".bssmram"))) c2_160 = {.v = {.r = 0}, .oM = 0};
+iCtx_t __attribute__ ((section (".bssmram"))) c1_400 = {.v = {.r = 0}, .oM = 0}, __attribute__ ((section (".bssmram"))) c2_400 = {.v = {.r = 0}, .oM = 0};
 //iCtx_t CCRAM_PLACING c1_1k = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_1k = {.v = {.r = 0}, .oM = 0};
 //iCtx_t CCRAM_PLACING c1_2k5 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_2k5 = {.v = {.r = 0}, .oM = 0};
 //iCtx_t CCRAM_PLACING c1_6k25 = {.v = {.r = 0}, .oM = 0}, CCRAM_PLACING c2_6k25 = {.v = {.r = 0}, .oM = 0};

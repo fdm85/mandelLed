@@ -35,14 +35,23 @@
 /* start address for the initialization values of the .data section. 
 defined in linker script */
 .word  _sidata
+.word  _siccmram
 /* start address for the .data section. defined in linker script */  
 .word  _sdata
+.word  _sccmram
 /* end address for the .data section. defined in linker script */
 .word  _edata
+.word  _eccmram
 /* start address for the .bss section. defined in linker script */
 .word  _sbss
+.word  _sccbss
 /* end address for the .bss section. defined in linker script */
 .word  _ebss
+.word  _eccbss
+/* start address for the .bss section. defined in linker script */
+/* end address for the .bss section. defined in linker script */
+/* start address for the .data section in ccram. defined in linker script */
+/* end address for the .data section in ccram. defined in linker script */
 /* stack used for SystemInit_ExtMemCtl; always internal RAM used */
 
 /**
@@ -68,7 +77,14 @@ Reset_Handler:
   ldr r1, =_edata
   ldr r2, =_sidata
   movs r3, #0
-  b LoopCopyDataInit
+  bl LoopCopyDataInit
+
+  ldr r0, =_sccmram
+  ldr r1, =_eccmram
+  ldr r2, =_siccmram
+  movs r3, #0
+  bl LoopCopyDataInit
+  b  BssInit
 
 CopyDataInit:
   ldr r4, [r2, r3]
@@ -79,13 +95,22 @@ LoopCopyDataInit:
   adds r4, r0, r3
   cmp r4, r1
   bcc CopyDataInit
+  bx  lr
   
 /* Zero fill the bss segment. */
+BssInit:
   ldr r2, =_sbss
   ldr r4, =_ebss
   movs r3, #0
-  b LoopFillZerobss
-
+  bl LoopFillZerobss
+/* Zero fill the bss segment. */
+  ldr r2, =_sccbss
+  ldr r4, =_eccbss
+  movs r3, #0
+  bl LoopFillZerobss
+  bl __libc_init_array
+  bl  main
+  bx  lr
 FillZerobss:
   str  r3, [r2]
   adds r2, r2, #4
@@ -93,12 +118,9 @@ FillZerobss:
 LoopFillZerobss:
   cmp r2, r4
   bcc FillZerobss
+  bx  lr
 
-/* Call static constructors */
-    bl __libc_init_array
-/* Call the application's entry point.*/
-  bl  main
-  bx  lr    
+
 .size  Reset_Handler, .-Reset_Handler
 
 /**
