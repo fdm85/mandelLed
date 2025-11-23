@@ -1,2 +1,5 @@
 /.metadata/
 **/build/*
+**/helpers.txt
+uart_async_rxtxtasks/*
+restful_server/front/mandelledctrl/*
