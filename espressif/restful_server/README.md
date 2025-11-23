@@ -92,7 +92,7 @@ npm run build
 
 After a while, you will see a `dist` directory which contains all the website files (e.g. html, js, css, images).
 
-Run `idf.py -p PORT flash monitor` to build and flash the project..
+Run `idf.py -p COM7 flash monitor` to build and flash the project..
 
 (To exit the serial monitor, type ``Ctrl-]``.)
 
