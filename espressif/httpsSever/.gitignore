@@ -1,6 +1,0 @@
-**/*.csr
-**/*.key
-**/prvtkey.pem
-**/cakey.pem
-**/client_key.pem
-/build/
