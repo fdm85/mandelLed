@@ -93,7 +93,7 @@ void cycleColorsNone(mAnim_t* ctx)
 mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 1000uL, .puState = done};
 mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 1000uL, .puState = done};
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
@@ -161,7 +161,44 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 	 the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file
 	 */
 }
+static void maintainStatusLeds(void)
+{
+  static const uint32_t blueLedToggleTimeMs = 100uL;
+  static uint32_t lastToggle = 0uL;
+  static uint8_t mrtxOff = 1u;
+  if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
+  {
+    lastToggle = HAL_GetTick();
 
+    static uint8_t swCount = 0u;
+    if (!getModeSwitch())
+    {
+      ++swCount;
+      if (swCount > 5u)
+      {
+        swCount = 0u;
+        orangeLedToggle();
+        if(mrtxOff)
+        {
+          --mrtxOff;
+          anim_matrix.fpRend = mtrx_anim;
+        }
+        else
+        {
+          if(lcd_mainL.lRawNew->ledCount > 20)
+            lcd_mainL.lRawNew->ledCount -= 20;
+          else
+            lcd_mainL.lRawNew->ledCount = lcd_mainL.lRawNew->ledCountMax;
+
+          if(lcd_mainR.lRawNew->ledCount > 20)
+            lcd_mainR.lRawNew->ledCount -= 20;
+          else
+            lcd_mainR.lRawNew->ledCount = lcd_mainR.lRawNew->ledCountMax;
+        }
+      }
+    }
+  }
+}
 /** @brief main function
  */
 int main(void)
@@ -185,7 +222,7 @@ int main(void)
 
 	for (;;)
 	{
-//		maintainModeSwitch();
+	  maintainStatusLeds();
 		msgeq_ticker();
 		cyclicReSend(&anim_matrix);
 		cyclicReSend(&anim_mainL);
