@@ -185,7 +185,8 @@ void anim_random2(LedChainDesc_t *const lcd)
 void anim_random3(mAnim_t *ctx)
 {
   assrt(ctx->lcd_ctx->diff);
-	for (uint32_t i = 0; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
+  uint32_t i;
+	for (i = 0; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
 	{
     assrt(i<ctx->lcd_ctx->diff->size);
 
@@ -197,6 +198,8 @@ void anim_random3(mAnim_t *ctx)
 		anim_render(ctx->lcd_ctx, i);
 		++ctx->lcd_ctx->diff->lDc[i].itCur;
 	}
+	for (; i < ctx->lcd_ctx->lRawNew->ledCountMax; ++i)
+	  led_setLedToColor(ctx->lcd_ctx, i, 0,0,0);
 }
 void anim_setAllLedsToUniColors(mAnim_t *ctx)
 {

@@ -94,7 +94,7 @@ static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, u
  *  @param b blue color
  */
 void led_setLedToColor(LedChainDesc_t *lcd, uint32_t i, uint8_t r, uint8_t g, uint8_t b) {
-  if (i > lcd->lRawNew->ledCount)
+  if (i > lcd->lRawNew->ledCountMax)
     return;
     //    assrt(false);
   led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
@@ -107,7 +107,7 @@ void led_setLedToColor(LedChainDesc_t *lcd, uint32_t i, uint8_t r, uint8_t g, ui
  */
 void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l) {
   assrt(l);
-  if (i > lcd->lRawNew->ledCount)
+  if (i > lcd->lRawNew->ledCountMax)
     assrt(false);
   l->b = lcd->lLogic[i].b;
   l->g = lcd->lLogic[i].g;
@@ -122,7 +122,7 @@ void led_getLedColor(LedChainDesc_t *const lcd, uint32_t i, LedLogic_t *l) {
  */
 void led_setAllLedsToColor(LedChainDesc_t *lcd, uint8_t r, uint8_t g, uint8_t b) {
 
-  for (uint16_t i = 0; i < lcd->lRawNew->ledCount; ++i)
+  for (uint16_t i = 0; i < lcd->lRawNew->ledCountMax; ++i)
     led_setLedColors(&lcd->lLogic[i], r, g, b, lcd->btMult, lcd->btDiv);
 
 }
@@ -148,7 +148,7 @@ void led_setFromToLedsToColor(LedChainDesc_t *lcd, uint8_t r, uint8_t g, uint8_t
  */
 void led_setAllLedsToUniColors(LedChainDesc_t *lcd, uint8_t brightness) {
 
-  for (uint16_t i = 0; i < lcd->lRawNew->ledCount; ++i)
+  for (uint16_t i = 0; i < lcd->lRawNew->ledCountMax; ++i)
     led_setLedColors(&lcd->lLogic[i], brightness, brightness, brightness, lcd->btMult, lcd->btDiv);
 
 }
@@ -158,7 +158,7 @@ void led_setAllLedsToUniColors(LedChainDesc_t *lcd, uint8_t brightness) {
  */
 void led_pasteData(LedChainDesc_t *lcd) {
 
-  for (uint16_t i = 0; i < lcd->lRawNew->ledCount; ++i)
+  for (uint16_t i = 0; i < lcd->lRawNew->ledCountMax; ++i)
     led_convertLed(&lcd->lLogic[i], &lcd->lRawNew->lRaw[i]);
 
 }
@@ -201,7 +201,7 @@ static void fadeIn(LedChainDesc_t *lcd) {
 
 
   /// add first segment of real data here to simplify implementation of half cycle filler
-  for (lcd->lRawNew->iS = 0uL; (lcd->lRawNew->iS < lcd->lRawNew->ledCount) && (lcd->lRawNew->iD < lcd->lRawNew->rawCount);
+  for (lcd->lRawNew->iS = 0uL; (lcd->lRawNew->iS < lcd->lRawNew->ledCountMax) && (lcd->lRawNew->iD < lcd->lRawNew->rawCount);
       ++lcd->lRawNew->iS, ++lcd->lRawNew->iD)
     led_convertLed(&lcd->lLogic[lcd->lRawNew->iS], &lcd->lRawNew->lRaw[lcd->lRawNew->iD]);
 
@@ -224,7 +224,7 @@ void fillRealData(LedChainDesc_t *lcd) {
   const uint32_t iMax = (lcd->lRawNew->rawCount / 2u);
   const uint32_t iOffset = (lcd->lRawNew->dS == e_SecondHalf) ? (lcd->lRawNew->rawCount / 2u) : 0;
 
-  for (lcd->lRawNew->iD = 0uL; (lcd->lRawNew->iD < iMax) && (lcd->lRawNew->iS < lcd->lRawNew->ledCount);
+  for (lcd->lRawNew->iD = 0uL; (lcd->lRawNew->iD < iMax) && (lcd->lRawNew->iS < lcd->lRawNew->ledCountMax);
       ++lcd->lRawNew->iS, ++lcd->lRawNew->iD)
     led_convertLed(&lcd->lLogic[lcd->lRawNew->iS], &lcd->lRawNew->lRaw[lcd->lRawNew->iD + iOffset]);
 
@@ -242,7 +242,7 @@ void led_txRaw(LedChainDesc_t *lcd) {
     lcd->lRawNew->rS = e_realData;
     break;
   case e_realData:
-    if (lcd->lRawNew->iS == lcd->lRawNew->ledCount) {
+    if (lcd->lRawNew->iS == lcd->lRawNew->ledCountMax) {
       lcd->lRawNew->rS = e_Tail_1;
       fadeOut(lcd);
     }

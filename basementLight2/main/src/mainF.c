@@ -161,36 +161,33 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 	 the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file
 	 */
 }
-static void maintainStatusLeds(void)
-{
+static void maintainStatusLeds(void) {
   static const uint32_t blueLedToggleTimeMs = 100uL;
   static uint32_t lastToggle = 0uL;
-  static uint8_t mrtxOff = 1u;
-  if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs)
-  {
+  static uint8_t mrtxPuState = 0u;
+  if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs) {
     lastToggle = HAL_GetTick();
 
     static uint8_t swCount = 0u;
-    if (!getModeSwitch())
-    {
+    if (getModeSwitch()) {
       ++swCount;
-      if (swCount > 5u)
-      {
+      if (swCount > 5u) {
         swCount = 0u;
         orangeLedToggle();
-        if(mrtxOff)
-        {
-          --mrtxOff;
+
+        if (mrtxPuState < 3)
+          ++mrtxPuState;
+        if (mrtxPuState == 1)
           anim_matrix.fpRend = mtrx_anim;
-        }
-        else
-        {
-          if(lcd_mainL.lRawNew->ledCount > 20)
+        else if (mrtxPuState == 2)
+          anim_matrix.fpRend = cycleColorsNone;
+        else {
+          if (lcd_mainL.lRawNew->ledCount > 20)
             lcd_mainL.lRawNew->ledCount -= 20;
           else
             lcd_mainL.lRawNew->ledCount = lcd_mainL.lRawNew->ledCountMax;
 
-          if(lcd_mainR.lRawNew->ledCount > 20)
+          if (lcd_mainR.lRawNew->ledCount > 20)
             lcd_mainR.lRawNew->ledCount -= 20;
           else
             lcd_mainR.lRawNew->ledCount = lcd_mainR.lRawNew->ledCountMax;
