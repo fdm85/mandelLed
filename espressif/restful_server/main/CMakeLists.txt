@@ -1,5 +1,6 @@
 idf_component_register(SRCS "esp_rest_main.c"
                             "rest_server.c"
+                            "uart_tasks.c"
                     PRIV_REQUIRES esp_driver_uart esp_http_server esp_driver_gpio fatfs json spiffs nvs_flash
                     INCLUDE_DIRS ".")
 
