@@ -10,12 +10,6 @@
 #include "leds.h"
 #include "tim.h"
 
-#define MAIN_R_LDCNT  530uL
-#define MAIN_L_LDCNT  532uL
-#define MRTX_LDCNT  256uL
-#define RAW_LDCNT  16uL
-#define RAW_DMA_CNT (3uL*8uL*RAW_LDCNT)
-
 static LedRaw rawLeds1[RAW_LDCNT];
 static LedRaw rawLeds2[RAW_LDCNT];
 static LedRaw rawLeds3[RAW_LDCNT];

@@ -161,6 +161,8 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 	 the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file
 	 */
 }
+
+
 static void maintainStatusLeds(void) {
   static const uint32_t blueLedToggleTimeMs = 100uL;
   static uint32_t lastToggle = 0uL;
@@ -175,22 +177,40 @@ static void maintainStatusLeds(void) {
         swCount = 0u;
         orangeLedToggle();
 
-        if (mrtxPuState < 3)
+        if (mrtxPuState < 5)
           ++mrtxPuState;
         if (mrtxPuState == 1)
           anim_matrix.fpRend = mtrx_anim;
         else if (mrtxPuState == 2)
+        {
+          anim_mainL.triggerTimeMs = 550uL;
+          anim_mainL.fpRend = anim_frqDrvL;
+          anim_mainR.triggerTimeMs = 550uL;
+          anim_mainR.fpRend = anim_frqDrvR;
+        }
+        else if (mrtxPuState == 3)
           anim_matrix.fpRend = cycleColorsNone;
+        else if (mrtxPuState == 4)
+        {
+          anim_mainL.triggerTimeMs = 1000uL;
+          anim_mainL.fpRend = anim_random3;
+          anim_mainR.triggerTimeMs = 1000uL;
+          anim_mainR.fpRend = anim_random3;
+        }
         else {
-          if (lcd_mainL.lRawNew->ledCount > 20)
-            lcd_mainL.lRawNew->ledCount -= 20;
+          if (anim_mainL.lcd_ctx->lRawNew->ledCount > 20)
+            anim_mainL.lcd_ctx->lRawNew->ledCount -= 20;
           else
-            lcd_mainL.lRawNew->ledCount = lcd_mainL.lRawNew->ledCountMax;
+            anim_mainL.lcd_ctx->lRawNew->ledCount = anim_mainL.lcd_ctx->lRawNew->ledCountMax;
 
-          if (lcd_mainR.lRawNew->ledCount > 20)
-            lcd_mainR.lRawNew->ledCount -= 20;
+          if (anim_mainR.lcd_ctx->lRawNew->ledCount > 20)
+            anim_mainR.lcd_ctx->lRawNew->ledCount -= 20;
           else
-            lcd_mainR.lRawNew->ledCount = lcd_mainR.lRawNew->ledCountMax;
+          {
+            anim_mainL.lcd_ctx->lRawNew->ledCount = anim_mainL.lcd_ctx->lRawNew->ledCountMax;
+            anim_mainR.lcd_ctx->lRawNew->ledCount = anim_mainR.lcd_ctx->lRawNew->ledCountMax;
+            mrtxPuState = 0u;
+          }
         }
       }
     }

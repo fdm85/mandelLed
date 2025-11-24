@@ -300,15 +300,10 @@ void anim_CyclicCall(mAnim_t* ctx)
 		break;
 #endif
 	case anim_msqDrv:
-		for (uint8_t i = 0; frqS[i] != NULL; ++i) {
-          led_setFromToLedsToColor(ctx->lcd_ctx, frqS[i]->backGround.r, frqS[i]->backGround.g, frqS[i]->backGround.b, frqS[i]->start, frqS[i]->end);
-		   for (uint8_t j = 0; frqS[i]->frqB[j] != NULL; ++j) {
-		         frqS[i]->f(ctx->lcd_ctx, frqS[i]->frqB[j]);
-		   }
-		}
-//		for (uint8_t i = 0; frqB[i] != NULL; ++i) {
+
+//		for (uint8_t i = 0; frqB[i] != NULL; ++i)
 //			anim_frqDrv(ctx->lcd_ctx, frqB[i]);
-//		}
+
 //		for (uint8_t i = 0; frqR[i] != NULL; ++i) {
 //		   anim_frqFrvRem(ctx->lcd_ctx, frqR[i]);
 //		}
