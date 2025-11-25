@@ -17,7 +17,7 @@
 
 static const int RX_BUF_SIZE = 127;
 
-#define UART_TASK_STACK_SIZE 2048
+#define UART_TASK_STACK_SIZE (2*2048)
 
 static void init(void) {
 	const uart_config_t uart_config = {
@@ -54,33 +54,28 @@ static void tx_task(void *arg) {
 
 static void rx_task(void *arg) {
 	static const char *RX_TASK_TAG = "RX_TASK";
-	esp_log_level_set(RX_TASK_TAG, ESP_LOG_INFO);
 	uint8_t *data = (uint8_t *)malloc(RX_BUF_SIZE + 1);
 	while (1) {
-		const int rxBytes = uart_read_bytes(UART_NUM_2, data, RX_BUF_SIZE,
+		const int rxBytes = uart_read_bytes(UART_NUM_2, data, 1,
 											1000 / portTICK_PERIOD_MS);
+											(void)rxBytes;
 		if (rxBytes > 0) {
 			data[rxBytes] = 0;
 			ESP_LOGI(RX_TASK_TAG, "Read %d bytes: '%s'", rxBytes, data);
-
-			ESP_LOG_BUFFER_HEXDUMP(RX_TASK_TAG, data, rxBytes, ESP_LOG_VERBOSE);
 		}
 	}
-	esp_log_level_set(RX_TASK_TAG, ESP_LOG_DEBUG);
 	free(data);
 }
 
 esp_err_t uart_main(void) {
 	init();
-	BaseType_t RxInitSucc =
-		xTaskCreate(rx_task, "uart_rx_task", UART_TASK_STACK_SIZE, NULL,
-					configMAX_PRIORITIES - 1, NULL);
+	BaseType_t RxInitSucc = xTaskCreate(rx_task, "uart_rx_task", UART_TASK_STACK_SIZE, NULL,	configMAX_PRIORITIES - 1, NULL);
 	if (!RxInitSucc)
 		ESP_LOGE("uart_rx", "Create uart_rx task failed");
-	BaseType_t TxInitSucc =
-		xTaskCreate(tx_task, "uart_tx_task", UART_TASK_STACK_SIZE, NULL,
+	BaseType_t TxInitSucc = xTaskCreate(tx_task, "uart_tx_task", UART_TASK_STACK_SIZE, NULL,
 					configMAX_PRIORITIES - 2, NULL);
 	if (!TxInitSucc)
 		ESP_LOGE("uart_tx", "Create uart_tx task failed");
-	return (RxInitSucc && TxInitSucc) ? ESP_OK : ESP_FAIL;
+//	return (RxInitSucc && TxInitSucc) ? ESP_OK : ESP_FAIL;
+	return ESP_OK;
 }
