@@ -224,14 +224,14 @@ int main(void)
 	initPeripherals();
 	com_SetDump();
 
-	led_setBrightnessTruncation(&lcd_mainL, 1uL, 1uL);
-	led_setBrightnessTruncation(&lcd_mainR, 1uL, 1uL);
-	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
+	led_setBrightnessTruncation(anim_mainL.lcd_ctx, 1uL, 1uL);
+	led_setBrightnessTruncation(anim_mainR.lcd_ctx, 1uL, 1uL);
+	led_setBrightnessTruncation(anim_matrix.lcd_ctx, 1uL, 1uL);
 
 	mtrx_Init();
-	led_LedLogicInit(&lcd_matrix);
-	led_LedLogicInit(&lcd_mainL);
-	led_LedLogicInit(&lcd_mainR);
+	led_LedLogicInit(anim_matrix.lcd_ctx);
+	led_LedLogicInit(anim_mainL.lcd_ctx);
+	led_LedLogicInit(anim_mainR.lcd_ctx);
 
 	__enable_irq();
 
