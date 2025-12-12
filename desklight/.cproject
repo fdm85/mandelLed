@@ -400,11 +400,14 @@
 			<resource resourceType="PROJECT" workspacePath="/desklight"/>
 		</configuration>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
-		<buildTargets/>
-	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.2130411148;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.2130411148.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.322512593;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.81480499">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.708820127;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.708820127.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1553374253;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.532971280">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.437989034;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.437989034.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1019163357;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1970925748">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
@@ -420,13 +423,22 @@
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.1017341392;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.1017341392.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.59519214;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1741872450">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.2039944077;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.2039944077.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.841253568;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1735693593">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.460549189;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.460549189.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1897326886;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.926958861">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.726176617;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.726176617.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1258255522;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.30618092">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.297904225;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.297904225.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.745531135;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1264898659">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.45316077;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.45316077.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.2024552222;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.561007072">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.57381323;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.57381323.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1074312799;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1111166683">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.170752355;ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.170752355.;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.43005855;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1256316245">
@@ -450,5 +462,28 @@
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1099706025;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1099706025.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.914304788;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.327246651">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.1977285274;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.1977285274.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.713330512;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.816385127">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="clean" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments>-k -j32</buildArguments>
+				<buildTarget>clean</buildTarget>
+				<stopOnError>false</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="all" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments>-k -j32</buildArguments>
+				<buildTarget>all</buildTarget>
+				<stopOnError>false</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
 	</storageModule>
 </cproject>
