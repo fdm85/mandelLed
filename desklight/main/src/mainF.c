@@ -39,7 +39,7 @@ static void cycleColorsSingle(mAnim_t* ctx)
 static void cycleColor(mAnim_t* ctx)
 {
   led_LedLogicInit(ctx->lcd_ctx);
-  led_setAllLedsToColor(ctx->lcd_ctx, 15, 15, 15);
+  led_setAllLedsToColor(ctx->lcd_ctx, 0xff, 0xff, 0xff);
 }
 
 mAnim_t anim_main = { .fpRend = cycleColor, .lcd_ctx = &lcd_main, .triggerTimeMs = 10uL, .puState = done};
