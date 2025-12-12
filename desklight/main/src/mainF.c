@@ -58,7 +58,6 @@ static void cyclicReSend(mAnim_t *ctx) {
     ctx->lastToggle = HAL_GetTick();
     ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
     ctx->lcd_ctx->lRawNew->rS = e_Precursor;
-    initMea();
     led_txRaw(ctx->lcd_ctx);
     ctx->state = e_waitDmaDone;
     break;

@@ -11,7 +11,7 @@
 #define CCRAM_PLACING
 #include "ledData.h"
 
-#define MAIN_LDCNT  350uL
+#define MAIN_LDCNT  200uL
 #define RAW_LDCNT  16uL
 #define RAW_DMA_CNT (3uL*8uL*RAW_LDCNT)
 
