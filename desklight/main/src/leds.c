@@ -10,48 +10,17 @@
 #include "leds.h"
 #include "tim.h"
 
-#define LDCNT  256uL
+static LedRaw rawLeds1[RAW_LDCNT];
+lRawDma_t main_dma = {.ledCount = MAIN_LDCNT, .ledCountMax = MAIN_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds1, .rawTxCount = RAW_DMA_CNT};
+Led_progColor_t main_r3[MAIN_LDCNT] = {0};
+diffRunnerCtx_t main_diff = {.lDc = &main_r3[0], .size = MAIN_LDCNT};
+lLogicContainer(main, MAIN_LDCNT);
+lRawContainer(main, MAIN_LDCNT);
 
-static LedRaw rawLeds[16];
-lRawDma_t matrix_dma = {.ledCount = 256uL, .rawCount = 16uL, .lRaw = rawLeds};
-lRawDma_t main_dma = {.ledCount = LDCNT, .rawCount = (sizeof(rawLeds) / sizeof(rawLeds[0])), .lRaw = rawLeds, .rawTxCount = sizeof(rawLeds)/4};
-
-lLogicContainer(main, LDCNT);
-//lRawContainer(main, LED_1);
-lRawContainer(main, 8);
-//lChainDesc(main, htim4, TIM_CHANNEL_2, lRawOn, lRawOff);
-
-
-lLogicContainer(matrix, 256);
-//lRawContainer(matrix, 32);
-//lChainDesc(matrix, htim3, TIM_CHANNEL_1, lRawOn, lRawOff);
-
-static struct \
-	{ \
-		uint32_t rI[41u]; \
-		LedRaw converterLed[1]; \
-		LedRaw ledRaw[32]; \
-		uint32_t rO[41u]; \
-	} lRawContainer_matrix; \
-	const lRawCont_t lRawCont_matrix = { \
-			.rI = &lRawContainer_matrix.rI[0], \
-			.rO = &lRawContainer_matrix.rO[0], \
-			.lConverterLed = &lRawContainer_matrix.converterLed[0], \
-			.lRaw = &lRawContainer_matrix.ledRaw[0], \
-			.ledCount = 32, \
-			.txCountInUi32 = (sizeof(lRawContainer_matrix)/sizeof(uint32_t)), \
-	};
-
-
-	LedChainDesc_t lcd_matrix = { \
-				.lLogic = &ledsLog_matrix[0], \
-				.lRawNew = &matrix_dma, \
-				.timer = &htim3, \
-				.timChannel = TIM_CHANNEL_1, \
-		};
-	LedChainDesc_t lcd_main = { \
-				.lLogic = &ledsLog_main[0], \
-				.lRawNew = &main_dma, \
-				.timer = &htim4, \
-				.timChannel = TIM_CHANNEL_2, \
-		};
+LedChainDesc_t lcd_main = { \
+      .lLogic = &ledsLog_main[0], \
+      .lRawNew = &main_dma, \
+      .timer = &htim3, \
+      .timChannel = TIM_CHANNEL_1, \
+      .diff = &main_diff,\
+  };

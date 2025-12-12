@@ -47,16 +47,6 @@
 			<locationURI>PROJECT_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_adc.c</name>
-			<type>1</type>
-			<locationURI>PROJECT_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_adc_ex.c</name>
-			<type>1</type>
-			<locationURI>PROJECT_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc_ex.c</locationURI>
-		</link>
-		<link>
 			<name>Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_cortex.c</name>
 			<type>1</type>
 			<locationURI>PROJECT_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c</locationURI>
@@ -122,6 +112,11 @@
 			<locationURI>PROJECT_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_uart.c</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/Core/adc.c</name>
 			<type>1</type>
 			<locationURI>PROJECT_LOC/Core/Src/adc.c</locationURI>
@@ -160,6 +155,11 @@
 			<name>Application/User/Core/tim.c</name>
 			<type>1</type>
 			<locationURI>PROJECT_LOC/Core/Src/tim.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/Core/usart.c</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/Core/Src/usart.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

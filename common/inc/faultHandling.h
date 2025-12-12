@@ -46,7 +46,14 @@
    We did not invent this approach.  ARM use it for their RTOS2/RTX
    builds.
 */
+#ifdef STM32F407xx
 #include "stm32f4xx.h"
+#endif
+#ifdef STM32F103xB
+#include "stm32f1xx.h"
+#endif
+
+
 
 /**
  * @author Stuart Maclean
