@@ -31,7 +31,7 @@
 #define LOC_INL_DBG	__attribute__ ((noinline))
 
 uint32_t getLedCount(LedChainDesc_t *lcd) {
-  return lcd->lRawNew->ledCount;
+  return lcd->lRawNew->ledCountMax;
 }
 
 /// raw bits are stored MSB first, order is green, red, blue
@@ -49,6 +49,14 @@ static void led_convertLedToZero(LedRaw *r) {
     r->r[i] = 0u;
     r->b[i] = 0u;
   }
+}
+
+void led_SetStartAndEnd(LedChainDesc_t* lcd, uint32_t start, uint32_t end)
+{
+  if(start < lcd->lRawNew->ledCountMax)
+    lcd->lRawNew->ledStart = start;
+  if(end < lcd->lRawNew->ledCountMax)
+    lcd->lRawNew->ledEnd = end;
 }
 
 void led_LedLogicInit(LedChainDesc_t *lcd) {

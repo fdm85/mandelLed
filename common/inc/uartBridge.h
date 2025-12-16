@@ -24,9 +24,9 @@
 #ifndef INC_UARTBRIDGE_H_
 #define INC_UARTBRIDGE_H_
 
-#include "animations.h"
-
-typedef void(*gtParam)(mAnim_t *const ctx, const uint32_t * params);
+#include <stdint.h>
+typedef struct mAnim_tag mAnim_t;
+typedef void(*gtParam)(mAnim_t *const ctx, const void * params);
 typedef struct uBrdg_Leaf_t{
   gtParam gtFp; /*!< set function */
   const char * des; /*!< descriptor text */

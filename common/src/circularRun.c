@@ -56,7 +56,7 @@ void anim_circularRun1(LedChainDesc_t* lcd, uint8_t brightness)
 		led_setLedToColor(lcd, (index + 42u), brightness, 0u, 0u);
 
 		index = (uint32_t)((int32_t)index + sign);
-		if((index + 43 == lcd->lRawNew->ledCount) || (index == 0))
+		if((index + 43 == lcd->lRawNew->ledEnd) || (index == 0))
 			sign *= -1;
 		cycleCount = cycleShort;
 	}

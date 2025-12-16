@@ -13,9 +13,9 @@
 static LedRaw rawLeds1[RAW_LDCNT];
 static LedRaw rawLeds2[RAW_LDCNT];
 static LedRaw rawLeds3[RAW_LDCNT];
-lRawDma_t matrix_dma = {.ledCount = MRTX_LDCNT, .ledCountMax = MRTX_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds1, .rawTxCount = RAW_DMA_CNT};
-lRawDma_t mainL_dma = {.ledCount = MAIN_L_LDCNT, .ledCountMax = MAIN_L_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds2, .rawTxCount = RAW_DMA_CNT};
-lRawDma_t mainR_dma = {.ledCount = MAIN_R_LDCNT, .ledCountMax = MAIN_R_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds3, .rawTxCount = RAW_DMA_CNT};
+lRawDma_t matrix_dma = {.ledEnd = MRTX_LDCNT, .ledCountMax = MRTX_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds1, .rawTxCount = RAW_DMA_CNT};
+lRawDma_t mainL_dma = {.ledEnd = MAIN_L_LDCNT, .ledCountMax = MAIN_L_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds2, .rawTxCount = RAW_DMA_CNT};
+lRawDma_t mainR_dma = {.ledEnd = MAIN_R_LDCNT, .ledCountMax = MAIN_R_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds3, .rawTxCount = RAW_DMA_CNT};
 
 Led_progColor_t mainL_r3[MAIN_L_LDCNT] __attribute__ ((section (".bssmram"))) = {0};
 diffRunnerCtx_t mainL_diff __attribute__ ((section (".ccmram"))) = {.lDc = &mainL_r3[0], .size = MAIN_L_LDCNT};

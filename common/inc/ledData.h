@@ -102,7 +102,8 @@ typedef struct lRawDma_tag
 	eDmaRawFill rS;
 	uint32_t iS; /*!< index counter at source */
 	uint32_t iD; /*!< index counter at destination */
-	uint32_t ledCount; /*!< count of 'real' leds in the strip */
+	uint32_t ledEnd; /*!< count of 'real' leds in the strip */
+	uint32_t ledStart; /*!< count of 'real' leds in the strip */
 	const uint32_t ledCountMax; /*!< count of 'real' leds in the strip */
 	const uint32_t rawCount; /*!< size of dma tx buffer (in units of LedRaw[]) */
 	const uint16_t rawTxCount; /*!< size of dma tx buffer (in units of ???) */
@@ -177,6 +178,7 @@ typedef struct LedChainDesc_tag
 	uint32_t btDiv; /*!< brightness truncation divider */
 } LedChainDesc_t;
 
+void led_SetStartAndEnd(LedChainDesc_t* lcd, uint32_t start, uint32_t end);
 void led_LedLogicInit(LedChainDesc_t* lcd);
 void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness);
 void led_setFromToLedsToColor(LedChainDesc_t* lcd, uint8_t r, uint8_t g, uint8_t b, uint32_t s, uint32_t e);

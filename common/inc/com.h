@@ -26,8 +26,11 @@
 
 #include <stdint.h>
 #include <string.h>
+#include "uartBridge.h"
+
 #define CONV_BUF_SZ 16u
 extern char convBuf[CONV_BUF_SZ];
+extern const uBrdg_Leaf *const leafs[];
 
 void com_SetDump(void);
 void com_Init(void);

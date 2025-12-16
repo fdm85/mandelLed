@@ -76,6 +76,14 @@ void com_SetDump(void) {
   faultHandlingSetDumpProcessor( faultDumpBuffer, com_DumpFault );
   faultHandlingSetPostFaultAction( POSTHANDLER_DEBUG );
 }
+
+static size_t com_StrLen(const char * str){
+  size_t res = 0;
+  while (str[res] != '0')
+    ++res;
+
+  return res;
+}
 void com_RstTxBuf(void)
 {
   for (uint32_t i = 0; i < TX_BUF_SZ; ++i)
@@ -142,6 +150,10 @@ void com_enableRx(void) {
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	doParse = true;
 	rxSize = huart->RxXferCount;
+	if(rxBuf[0] == '?')
+	  for (uint32_t i = 0; leafs[i] != NULL; ++i) {
+	    com_TxBuff(leafs[i]->des, com_StrLen(leafs[i]->des));
+    }
 	com_TxBuff(rxBuf, sizeof(RX_BUF_SZ));
 	doParse = false;
 }
