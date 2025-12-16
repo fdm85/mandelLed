@@ -22,6 +22,7 @@
  */
 #include "peripheral.h"
 #include "leds.h"
+#include "uartBridge.h"
 #include "msgeq7.h"
 #include "animations.h"
 #include "matrix.h"
@@ -95,43 +96,48 @@ mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTi
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 
+const uBrdg_Leaf mainL[6] = { {.gtFp = NULL, .des = "anim_mainL", .par = &anim_mainL, .pCt = 5},
+                              {.gtFp = NULL, .des = "OnOff", .par = NULL, .pCt = 1},
+};
+
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
 
-  switch (ctx->state) {
-  case e_render:
-//    ctx->a = HAL_GetTick();
-    ctx->fpRend(ctx);
-//    ctx->b = HAL_GetTick() - ctx->a;
-    ctx->state = e_StartDma;
-    break;
+  if(ctx->isEnabled)
+    switch (ctx->state) {
+    case e_render:
+  //    ctx->a = HAL_GetTick();
+      ctx->fpRend(ctx);
+  //    ctx->b = HAL_GetTick() - ctx->a;
+      ctx->state = e_StartDma;
+      break;
 
-  case e_StartDma:
-//		ctx->c = HAL_GetTick();
-//		ctx->d = HAL_GetTick() - ctx->c;
-//		ctx->e = HAL_GetTick();
-    if(((HAL_GetTick() - ctx->lastToggle) < ctx->triggerTimeMs))
-      return;
-    ctx->lastToggle = HAL_GetTick();
-    ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
-    ctx->lcd_ctx->lRawNew->rS = e_Precursor;
-    led_txRaw(ctx->lcd_ctx);
-    ctx->state = e_waitDmaDone;
-    break;
+    case e_StartDma:
+  //		ctx->c = HAL_GetTick();
+  //		ctx->d = HAL_GetTick() - ctx->c;
+  //		ctx->e = HAL_GetTick();
+      if(((HAL_GetTick() - ctx->lastToggle) < ctx->triggerTimeMs))
+        return;
+      ctx->lastToggle = HAL_GetTick();
+      ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
+      ctx->lcd_ctx->lRawNew->rS = e_Precursor;
+      led_txRaw(ctx->lcd_ctx);
+      ctx->state = e_waitDmaDone;
+      break;
 
-  case e_waitDmaDone:
-    if (ctx->lcd_ctx->lRawNew->rS == e_done)
-      ctx->state = e_render;
-    break;
+    case e_waitDmaDone:
+      if (ctx->lcd_ctx->lRawNew->rS == e_done)
+        ctx->state = e_render;
+      break;
 
-  case e_waitTxCplt:
-  case e_paste:
-    break;
+    case e_waitTxCplt:
+    case e_paste:
+      break;
 
-  default:
-    __BKPT(0);
-    break;
-  }
+    default:
+      __BKPT(0);
+      break;
+    }
 }
 
 void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)

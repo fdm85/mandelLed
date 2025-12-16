@@ -75,10 +75,10 @@ struct mAnim_tag
 	uint32_t triggerTimeMs; /*!< */
 	uint32_t lastToggle; /*!< */
 	volatile uint32_t sendLock; /*!< */
-	volatile uint32_t a, b, c, d, e, f; /*!< */
 	eSm state; /*!< */
 	puState_t puState; /*!< */
 	uint16_t padd2; /*!< */
+	uint8_t isEnabled; /*!< en/disable switch */
 	anim_mode_e AnimMode;
 };
 
