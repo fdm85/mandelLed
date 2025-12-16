@@ -300,4 +300,22 @@ uint32_t HAL_GetTick(void)
 {
   return __HAL_TIM_GET_COUNTER(&htim2);
 }
+
+void _close(void)
+{
+}
+
+void _lseek(void)
+{
+
+}
+
+void _read(void)
+{
+}
+
+void _write(void)
+{
+}
+
 /** @}*/

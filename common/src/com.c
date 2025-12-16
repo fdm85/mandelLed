@@ -22,8 +22,8 @@
  */
 
 #include "com.h"
+#include <stdlib.h>
 #include "assrt.h"
-#include "stdbool.h"
 #include "stdio.h"
 #include "animations.h"
 #include "usart.h"
@@ -150,13 +150,19 @@ void com_enableRx(void) {
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	doParse = true;
 	rxSize = huart->RxXferCount;
-	size_t len;
+	char tmp[128];
+	size_t len, tot;
+	uint32_t cast;
+	cast = strtoul("123", NULL, 10);
 	if(rxBuf[0] == '?')
 	  for (uint32_t i = 0; leafs[i] != NULL; ++i) {
+      tot = (size_t)snprintf(tmp, 128, "%lu Name is %s, %lu\r\n", i, leafs[i]->des, cast);
+	    com_TxBuff(tmp, tot + 1);
 	    len = com_StrLen(leafs[i]->des);
 	    com_TxBuff(leafs[i]->des, len);
 	    com_TxBuff("\r\n", 2u);
     }
+
 	com_TxBuff(rxBuf, sizeof(RX_BUF_SZ));
 	doParse = false;
 }

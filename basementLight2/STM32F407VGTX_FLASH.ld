@@ -39,7 +39,7 @@ ENTRY(Reset_Handler)
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM) + LENGTH(RAM); /* end of "RAM" Ram type memory */
 
-_Min_Heap_Size = 0x0; /* required amount of heap */
+_Min_Heap_Size = 0x300; /* required amount of heap */
 _Min_Stack_Size = 0x600; /* required amount of stack */
 
 /* Memories definition */
@@ -194,8 +194,19 @@ SECTIONS
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
   } >RAM
+  
 
-  /* Remove information from the compiler libraries */
+  .heap : {
+        __heap_start__ = .;
+        end = __heap_start__;
+        _end = end;
+        __end = end;
+       . += _Min_Heap_Size;
+        __heap_end__ = .;
+        __HeapLimit = __heap_end__;
+    } > RAM
+  
+/* Remove information from the compiler libraries */
   /DISCARD/ :
   {
     libc.a ( * )
