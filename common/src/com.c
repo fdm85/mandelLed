@@ -79,7 +79,7 @@ void com_SetDump(void) {
 
 static size_t com_StrLen(const char * str){
   size_t res = 0;
-  while (str[res] != '0')
+  while (str[res] != '\0')
     ++res;
 
   return res;
@@ -150,9 +150,12 @@ void com_enableRx(void) {
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	doParse = true;
 	rxSize = huart->RxXferCount;
+	size_t len;
 	if(rxBuf[0] == '?')
 	  for (uint32_t i = 0; leafs[i] != NULL; ++i) {
-	    com_TxBuff(leafs[i]->des, com_StrLen(leafs[i]->des));
+	    len = com_StrLen(leafs[i]->des);
+	    com_TxBuff(leafs[i]->des, len);
+	    com_TxBuff("\r\n", 2u);
     }
 	com_TxBuff(rxBuf, sizeof(RX_BUF_SZ));
 	doParse = false;
