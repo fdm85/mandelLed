@@ -22,6 +22,12 @@ void bPar_SetIdcs(uint8_t iO, uint8_t jO, uint8_t kO){
   k = kO;
 }
 
+void bPar_GetIdcs(uint8_t *iO, uint8_t *jO, uint8_t *kO){
+  *iO = i;
+  *jO = j;
+  *kO = k;
+}
+
 
 /**
  * @fn uint8_t pb_IsComplete(pb_Ctx* const)
@@ -71,6 +77,10 @@ void bp_Reset(pb_Ctx *const ctx){
 pb_ParserState bp_Parse(pb_Ctx *const ctx) { 
   uint32_t aux;
   uint8_t i, j, k;
+
+  if(ctx->rd && (ctx->rd == ctx->wr))
+    bp_Reset(ctx);
+
   if(ctx->prsrStt == pb_eIdle)
     return pb_eIdle;
 
@@ -92,8 +102,6 @@ pb_ParserState bp_Parse(pb_Ctx *const ctx) {
     bPar_SetIdcs(i, j, k);
   }
 
-  if(ctx->rd && (ctx->rd == ctx->wr))
-    bp_Reset(ctx);
   return ctx->prsrStt;
 }
 
@@ -104,7 +112,20 @@ uint32_t pb_Convert(pb_Ctx *const ctx) {
   
   if(dlt >= 0){
     ctx->rd += (uint8_t)dlt;
-    if(ctx->pl[ctx->rd] == '.')
+    if((ctx->pl[ctx->rd] != '\r') && ((ctx->pl[ctx->rd] < '0') || (ctx->pl[ctx->rd] > '9')))
+      ++ctx->rd;
+  }
+  return res;
+}
+
+uint32_t pb_putOut(pb_Ctx *const ctx, uint32_t val) {
+  char *rdO = &ctx->pl[ctx->rd], *rdN;
+  uint32_t res = strtoul(&ctx->pl[ctx->rd], &rdN, 10);
+  int32_t dlt = (rdN - rdO);
+
+  if(dlt >= 0){
+    ctx->rd += (uint8_t)dlt;
+    if((ctx->pl[ctx->rd] != '\r') && ((ctx->pl[ctx->rd] < '0') || (ctx->pl[ctx->rd] > '9')))
       ++ctx->rd;
   }
   return res;

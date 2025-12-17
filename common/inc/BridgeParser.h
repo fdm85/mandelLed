@@ -44,6 +44,6 @@ static inline void bp_IsrCb(pb_Ctx *const ctx) {
 }
 pb_ParserState bp_Parse(pb_Ctx *const ctx);
 uint32_t pb_Convert(pb_Ctx *const ctx);
-
+void bPar_GetIdcs(uint8_t *iO, uint8_t *jO, uint8_t *kO);
 
 #endif /* MAIN_BRIDGEPARSER_H_ */

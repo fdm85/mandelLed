@@ -26,11 +26,11 @@
 
 #include <stdint.h>
 typedef struct mAnim_tag mAnim_t;
-typedef void(*gtParam)(mAnim_t *const ctx, const void * params, uint8_t isEnq);
+typedef void(*gtParam)(mAnim_t *const ctx, uint32_t *params, uint8_t isEnq);
 typedef struct uBrdg_Leaf_t{
   gtParam gtFp; /*!< set function */
   const char * des; /*!< descriptor text */
-  void * par; /*!< parameter array */
+  uint32_t *par; /*!< parameter array */
   uint8_t pCt; /*!< size of parameter array */
 }uBrdg_Leaf;
 

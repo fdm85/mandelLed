@@ -78,7 +78,7 @@ struct mAnim_tag
 	eSm state; /*!< */
 	puState_t puState; /*!< */
 	uint16_t padd2; /*!< */
-	uint8_t isEnabled; /*!< en/disable switch */
+	uint32_t isEnabled; /*!< en/disable switch */
 	anim_mode_e AnimMode;
 };
 
