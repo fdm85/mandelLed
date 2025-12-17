@@ -72,7 +72,7 @@ struct mAnim_tag
 {
 	fpRender fpRend; /*!< */
 	LedChainDesc_t *const lcd_ctx; /*!< */
-	uint32_t triggerTimeMs; /*!< */
+	uint32_t triggerTime; /*!< */
 	uint32_t lastToggle; /*!< */
 	volatile uint32_t sendLock; /*!< */
 	eSm state; /*!< */

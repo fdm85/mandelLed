@@ -117,6 +117,20 @@ static void cycleAnimMainR(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
       *param = idx;
 }
 
+static void enDisAble(mAnim_t *ctx, uint32_t *param, uint8_t isAck){
+  if(isAck)
+    ctx->isEnabled ^= 1u;
+
+  *param = ctx->isEnabled;
+}
+
+static void triggerTime(mAnim_t *ctx, uint32_t *param, uint8_t isAck){
+  if(isAck)
+    ctx->triggerTime = (param[0] > 100uL) ? param[0] : ctx->triggerTime;
+
+  *param = ctx->triggerTime;
+}
+
 static void setBrightnessTruncation(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
   if (isAck) {
@@ -145,27 +159,31 @@ static void setStartAndEnd(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 1000uL, .puState = done, .isEnabled = 1u};
-mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 1000uL, .puState = done, .isEnabled = 1u};
+mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
+mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = anim_random3, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done, .isEnabled = 0u};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 550uL, .puState = done, .isEnabled = 0u};
 uint32_t brightnessMainL[2];
 uint32_t LedStartEndMainL[2];
 uint32_t AnimIdxMainL;
+uint32_t enabledMainL;
+uint32_t trgTimeMainL;
 uint32_t brightnessMainR[2];
 uint32_t LedStartEndMainR[2];
 uint32_t AnimIdxMainR;
+uint32_t enabledMainR;
+uint32_t trgTimeMainR;
 
 static const uBrdg_Leaf mainL[6] = { {.gtFp = NULL, .des = "anim_mainL", .par = (uint32_t*)&anim_mainL, .pCt = 5},
-                              {.gtFp = NULL, .des = "OnOff", .par = &anim_mainL.isEnabled, .pCt = 1},
-                              {.gtFp = NULL, .des = "trgIntervall(100us)", .par = &anim_mainL.triggerTimeMs, .pCt = 1},
+                              {.gtFp = enDisAble, .des = "OnOff", .par = &enabledMainL, .pCt = 1},
+                              {.gtFp = triggerTime, .des = "trgIntervall(100us)", .par = &trgTimeMainL, .pCt = 1},
                               {.gtFp = setBrightnessTruncation, .des = "Brightness (Mult, Div)", .par = brightnessMainL, .pCt = 2},
                               {.gtFp = setStartAndEnd, .des = "activeLeds (start / end)", .par = LedStartEndMainL, .pCt = 2},
                               {.gtFp = cycleAnimMainL, .des = "fRender (+1;-1)", .par = &AnimIdxMainL, .pCt = 1},
 };
 static const uBrdg_Leaf mainR[6] = { {.gtFp = NULL, .des = "anim_mainR", .par = (uint32_t*)&anim_mainR, .pCt = 5},
-                              {.gtFp = NULL, .des = "OnOff", .par = &anim_mainR.isEnabled, .pCt = 1},
-                              {.gtFp = NULL, .des = "trgIntervall(100us)", .par = &anim_mainR.triggerTimeMs, .pCt = 1},
+                              {.gtFp = enDisAble, .des = "OnOff", .par = &enabledMainR, .pCt = 1},
+                              {.gtFp = triggerTime, .des = "trgIntervall(100us)", .par = &trgTimeMainR, .pCt = 1},
                               {.gtFp = setBrightnessTruncation, .des = "Brightness (Mult, Div)", .par = brightnessMainR, .pCt = 2},
                               {.gtFp = setStartAndEnd, .des = "activeLeds (start / end)", .par = LedStartEndMainR, .pCt = 2},
                               {.gtFp = cycleAnimMainR, .des = "fRender (+1;-1)", .par = &AnimIdxMainR, .pCt = 1},
@@ -175,18 +193,24 @@ const uBrdg_Leaf *const leafs[3] = {
     mainL, mainR, NULL
 };
 
-static void acLeaf(pb_Ctx *const ctx, uint8_t isEnq)
+static void acLeaf(pb_Ctx *const rCtx, pb_Ctx *const tCtx, uint8_t isEnq)
 {
   uint8_t i, j, k, idx = 0u;
 
   bPar_GetIdcs(&i, &j, &k);
-  while(idx < leafs[i][j].pCt){
-    leafs[i][j].par[idx] = pb_Convert(ctx);
-    ++idx;
-  }
+  if(isEnq)
+    while(idx < leafs[i][j].pCt){
+      leafs[i][j].par[idx] = pb_Convert(rCtx);
+      ++idx;
+    }
 
   if(*(leafs[i])[j].gtFp)
     leafs[i][j].gtFp((mAnim_t *)leafs[i][0].par, leafs[i][j].par, isEnq);
+
+  while(idx < leafs[i][j].pCt){
+    pb_txPutVal(tCtx, leafs[i][j].par[idx]);
+        ++idx;
+      }
 }
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
@@ -202,7 +226,7 @@ static void cyclicReSend(mAnim_t *ctx) {
       break;
 
     case e_StartDma:
-      if(((HAL_GetTick() - ctx->lastToggle) < ctx->triggerTimeMs))
+      if(((HAL_GetTick() - ctx->lastToggle) < ctx->triggerTime))
         return;
       ctx->lastToggle = HAL_GetTick();
       ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
@@ -265,28 +289,28 @@ static void maintainStatusLeds(void) {
     static uint8_t swCount = 0u;
     if (getModeSwitch()) {
       ++swCount;
-      if (swCount > 5u) {
+      if (swCount > 7u) {
         swCount = 0u;
         orangeLedToggle();
 
         if (mrtxPuState < 5)
           ++mrtxPuState;
         if (mrtxPuState == 1)
-          anim_matrix.fpRend = mtrx_anim;
+          anim_matrix.isEnabled ^= 1u;
         else if (mrtxPuState == 2)
         {
-          anim_mainL.triggerTimeMs = 550uL;
+          anim_mainL.triggerTime = 550uL;
           anim_mainL.fpRend = anim_frqDrvL;
-          anim_mainR.triggerTimeMs = 550uL;
+          anim_mainR.triggerTime = 550uL;
           anim_mainR.fpRend = anim_frqDrvR;
         }
         else if (mrtxPuState == 3)
-          anim_matrix.fpRend = allLedsOff;
+          anim_matrix.isEnabled ^= 1u;
         else if (mrtxPuState == 4)
         {
-          anim_mainL.triggerTimeMs = 1000uL;
+          anim_mainL.triggerTime = 1000uL;
           anim_mainL.fpRend = anim_random3;
-          anim_mainR.triggerTimeMs = 1000uL;
+          anim_mainR.triggerTime = 1000uL;
           anim_mainR.fpRend = anim_random3;
         }
         else {
@@ -336,7 +360,7 @@ int main(void)
 		msgeq_ticker();
 		parStt = bp_Parse(&rxCtx);
 		if(parStt > pb_eTimeOut)
-		  acLeaf(&rxCtx, parStt == pb_eAck ? 1u : 0u);
+		  acLeaf(&rxCtx, &txCtx, parStt == pb_eAck ? 1u : 0u);
 
 
 		cyclicReSend(&anim_matrix);

@@ -43,9 +43,8 @@ pb_Ctx rxCtx = {.pl = rxBuf, .hwCtx = &huart2, .sz = RX_BUF_SZ, .to = 5000uL};
 
 #define TX_BUF_SZ 64u
 static char txBuf[TX_BUF_SZ];
+pb_Ctx txCtx = {.pl = txBuf, .hwCtx = &huart2, .sz = TX_BUF_SZ};
 
-static size_t txPos = 0uL;
-static char * txPtr = txBuf;
 static char faultDumpBuffer[FAULT_HANDLING_DUMP_SIZE];
 #define FailStr "snprintf failed!"
 #define FailSz (sizeof(FailStr))
@@ -58,36 +57,19 @@ void com_SetDump(void) {
   faultHandlingSetPostFaultAction( POSTHANDLER_DEBUG );
 }
 
-void com_RstTxBuf(void)
-{
-  for (uint32_t i = 0; i < TX_BUF_SZ; ++i)
-    txBuf[i] = 0u;
-  txPos = 0uL;
-  txPtr = txBuf;
-}
 
-static void com_Copy2Tx(const char * in)
-{
-  size_t len = strlen(in);
-  if((len + txPos) < TX_BUF_SZ)
-  {
-    strncpy(txPtr, in, (TX_BUF_SZ - txPos));
-    txPos += len;
-    txPtr = &txPtr[txPos];
-  }
-}
 /**
  * @brief Trigger TX of hello
  */
 void com_Init(void) {
-	com_RstTxBuf();
-	com_Copy2Tx("Hello World\r");
+  bp_ResetTx(&txCtx);
+  pb_txPutStr(&txCtx, "Hello World\r\n");
   com_enableRx();
 	com_Tx();
 }
 void com_Tx(void)
 {
-  HAL_UART_Transmit(&huart2, (const uint8_t*)txBuf, (uint16_t)txPos, 1000uL);
+  HAL_UART_Transmit_IT(txCtx.hwCtx, (const uint8_t*)&txCtx.pl[txCtx.rd], (uint16_t)txCtx.wr - txCtx.rd);
 }
 void com_TxBuff(const char * buff, size_t sz)
 {
@@ -103,11 +85,17 @@ void com_enableRx(void) {
 
 	if(res != HAL_OK)
 	{
-	  com_Copy2Tx("Uart RX Init failed!");
-	  com_Copy2Tx("\r");
+	  pb_txPutStr(&txCtx, "Uart RX Init failed!");
 	}
 	else
-	  com_Copy2Tx("Uart RX Init succeeded\r");
+	  pb_txPutStr(&txCtx, "Uart RX Init succeeded!");
+	pb_txPutStr(&txCtx, "\r\n");
+}
+
+
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+  bp_ResetTx(&txCtx);
 }
 
 /**

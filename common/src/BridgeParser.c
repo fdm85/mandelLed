@@ -7,6 +7,7 @@
 
 #include "BridgeParser.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <limits.h>
 #include "usart.h"
 
@@ -41,93 +42,104 @@ void bPar_GetIdcs(uint8_t *iO, uint8_t *jO, uint8_t *kO){
  * @param ctx
  * @return
  */
-static uint8_t pb_IsComplete(pb_Ctx *const ctx) {
+static uint8_t pb_IsComplete(pb_Ctx *const rCtx) {
   uint8_t res = 0u;
-  for (uint8_t i = ctx->rd; i < ctx->wr; ++i) {
-    if(!res && (ctx->pl[i] == '!' || ctx->pl[i] == '?')){
-      ctx->rd = i;
+  for (uint8_t i = rCtx->rd; i < rCtx->wr; ++i) {
+    if(!res && (rCtx->pl[i] == '!' || rCtx->pl[i] == '?')){
+      rCtx->rd = i;
       ++res;
     } 
-    if((res == 1u) && (ctx->pl[i] == '\r'))
+    if((res == 1u) && (rCtx))
       ++res;
   }
   return (res == 2) ? 1u : 0u;
 }
 
 
-static inline pb_ParserState Eval(pb_Ctx *const ctx) {
-  pb_ParserState res = ctx->prsrStt;
-  uint8_t len = ctx->wr - ctx->rd;
-  if((len > 3u) && pb_IsComplete(ctx)) {
-      res = (ctx->pl[ctx->rd] == '?') ? pb_eEnq : pb_eAck;
-      ++ctx->rd;
+static inline pb_ParserState Eval(pb_Ctx *const rCtx) {
+  pb_ParserState res = rCtx->prsrStt;
+  uint8_t len = rCtx->wr - rCtx->rd;
+  if((len > 3u) && pb_IsComplete(rCtx)) {
+      res = (rCtx->pl[rCtx->rd] == '?') ? pb_eEnq : pb_eAck;
+      ++rCtx->rd;
   }
 
   return res;
 }
 
-void bp_Reset(pb_Ctx *const ctx){
-  for (uint16_t i = 0u; i < ctx->sz; ++i) 
-    ctx->pl[i] = 0u;
-  ctx->rd = ctx->wr = 0u;
-  ((UART_HandleTypeDef*)ctx->hwCtx)->pRxBuffPtr = (uint8_t*)ctx->pl;
-  ctx->prsrStt = pb_eIdle;
+void bp_ResetRx(pb_Ctx *const rCtx){
+  for (uint16_t i = 0u; i < rCtx->sz; ++i)
+    rCtx->pl[i] = 0u;
+  rCtx->rd = rCtx->wr = 0u;
+  ((UART_HandleTypeDef*)rCtx->hwCtx)->pRxBuffPtr = (uint8_t*)rCtx->pl;
+  rCtx->prsrStt = pb_eIdle;
 }
 
-pb_ParserState bp_Parse(pb_Ctx *const ctx) { 
+void bp_ResetTx(pb_Ctx *const tCtx){
+  for (uint16_t i = 0u; i < tCtx->sz; ++i)
+    tCtx->pl[i] = 0u;
+  tCtx->rd = tCtx->wr = 0u;
+  ((UART_HandleTypeDef*)tCtx->hwCtx)->pTxBuffPtr = (uint8_t*)tCtx->pl;
+  tCtx->prsrStt = pb_eIdle;
+}
+
+pb_ParserState bp_Parse(pb_Ctx *const rCtx) {
   uint32_t aux;
   uint8_t i, j, k;
 
-  if(ctx->rd && (ctx->rd == ctx->wr))
-    bp_Reset(ctx);
+  if(rCtx->rd && (rCtx->rd == rCtx->wr))
+    bp_ResetRx(rCtx);
 
-  if(ctx->prsrStt == pb_eIdle)
+  if(rCtx->prsrStt == pb_eIdle)
     return pb_eIdle;
 
-  if(((HAL_GetTick() - ctx->lastToggle) > ctx->to)){
-    bp_Reset(ctx);
+  if(((HAL_GetTick() - rCtx->lastToggle) > rCtx->to)){
+    bp_ResetRx(rCtx);
     return pb_eTimeOut;
   }
   else
-    ctx->prsrStt = Eval(ctx);
+    rCtx->prsrStt = Eval(rCtx);
   
-  if(ctx->prsrStt > pb_eTimeOut)
+  if(rCtx->prsrStt > pb_eTimeOut)
   {
-    aux = pb_Convert(ctx);
+    aux = pb_Convert(rCtx);
     i = (aux != ULONG_MAX) ? (0xffuL & aux) : 0u;
-    aux = pb_Convert(ctx);
+    aux = pb_Convert(rCtx);
     j = (aux != ULONG_MAX) ? (0xffuL & aux) : 0u;
-    aux = pb_Convert(ctx);
+    aux = pb_Convert(rCtx);
     k = (aux != ULONG_MAX) ? (0xffuL & aux) : 0u;
     bPar_SetIdcs(i, j, k);
   }
 
-  return ctx->prsrStt;
+  return rCtx->prsrStt;
 }
 
-uint32_t pb_Convert(pb_Ctx *const ctx) {
-  char *rdO = &ctx->pl[ctx->rd], *rdN;
-  uint32_t res = strtoul(&ctx->pl[ctx->rd], &rdN, 10);
+uint32_t pb_Convert(pb_Ctx *const rCtx) {
+  char *rdO = &rCtx->pl[rCtx->rd], *rdN;
+  uint32_t res = strtoul(&rCtx->pl[rCtx->rd], &rdN, 10);
   int32_t dlt = (rdN - rdO);
   
   if(dlt >= 0){
-    ctx->rd += (uint8_t)dlt;
-    if((ctx->pl[ctx->rd] != '\r') && ((ctx->pl[ctx->rd] < '0') || (ctx->pl[ctx->rd] > '9')))
-      ++ctx->rd;
+    rCtx->rd += (uint8_t)dlt;
+    if((rCtx->pl[rCtx->rd] != '\r') && ((rCtx->pl[rCtx->rd] < '0') || (rCtx->pl[rCtx->rd] > '9')))
+      ++rCtx->rd;
   }
   return res;
 }
 
-uint32_t pb_putOut(pb_Ctx *const ctx, uint32_t val) {
-  char *rdO = &ctx->pl[ctx->rd], *rdN;
-  uint32_t res = strtoul(&ctx->pl[ctx->rd], &rdN, 10);
-  int32_t dlt = (rdN - rdO);
+void pb_txPutVal(pb_Ctx *const tCtx, uint32_t val) {
 
-  if(dlt >= 0){
-    ctx->rd += (uint8_t)dlt;
-    if((ctx->pl[ctx->rd] != '\r') && ((ctx->pl[ctx->rd] < '0') || (ctx->pl[ctx->rd] > '9')))
-      ++ctx->rd;
-  }
-  return res;
+  int32_t dlt = snprintf(&tCtx->pl[tCtx->wr], tCtx->sz - tCtx->wr, "/t%lu", val);
+
+  if(dlt >= 0)
+    tCtx->wr += (uint8_t)dlt;
+}
+
+void pb_txPutStr(pb_Ctx *const tCtx, const char * str) {
+
+  int32_t dlt = snprintf(&tCtx->pl[tCtx->wr], tCtx->sz - tCtx->wr, "%s", str);
+
+  if(dlt >= 0)
+    tCtx->wr += (uint8_t)dlt;
 }
    

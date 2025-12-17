@@ -31,10 +31,10 @@
 
 extern const uBrdg_Leaf *const leafs[];
 extern pb_Ctx rxCtx;
+extern pb_Ctx txCtx;
 
 void com_SetDump(void);
 void com_Init(void);
-void com_RstTxBuf(void);
 void com_Tx(void);
 void com_TxBuff(const char * buff, size_t sz);
 
