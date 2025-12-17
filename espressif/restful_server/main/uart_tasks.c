@@ -71,7 +71,7 @@ static int sendData(const char *logName, const char *data) {
 
 static void tx_task(void *arg) {
 	while (1) {
-		sendData(TX_TASK_TAG, "\r0?\n");
+		sendData(TX_TASK_TAG, "?0\n");
 		vTaskDelay(t2w);
 	}
 }

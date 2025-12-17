@@ -1,7 +1,7 @@
 /**
  * @file      uartBridge.h.h
  * @authors   Clemens Grünberger
- * @copyright 2022  Clemens Grünberger
+ * @copyright 2025  Clemens Grünberger
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation version 2
