@@ -81,37 +81,66 @@ void cycleColorsS(mAnim_t* ctx)
   led_setLedToColor(ctx->lcd_ctx, 249, 5,0,5);
 }
 
-void allLedsOff(mAnim_t* ctx)
-{
-  led_setAllLedsToColor(ctx->lcd_ctx, 0,0,0);
+void allLedsOff(mAnim_t *ctx) {
+  led_setAllLedsToColor(ctx->lcd_ctx, 0, 0, 0);
 }
 
-static void cycleAnimMainL(mAnim_t *ctx, const void * param){
-  static const void* fpMainL[] =  {anim_frqDrvL, anim_random3, cycleColorsSingle, cycleColors, NULL};
-  uint8_t idx = *(uint8_t *)param;
-  if(idx >= (sizeof(fpMainL)/sizeof(fpMainL[0])))
-    idx = 0;
-  ctx->fpRend = fpMainL[idx];
+static void cycleAnimMainL(mAnim_t *ctx, const void *param, uint8_t isAck) {
+  static const void *fpMainL[] = { anim_frqDrvL, anim_random3, cycleColorsSingle, cycleColors, NULL };
+  uint8_t idx;
+
+  if (isAck) {
+    idx = *(uint8_t*) param;
+    if (fpMainL[idx] == NULL)
+      idx = 0;
+    ctx->fpRend = fpMainL[idx];
+  }
+
+  for (idx = 0; fpMainL[idx] != NULL; ++idx)
+    if (fpMainL[idx] == ctx->fpRend)
+      *(uint8_t*) param = idx;
 }
 
-static void cycleAnimMainR(mAnim_t *ctx, const void * param){
-  static const void* fpMainR[] =  {anim_frqDrvR, anim_random3, cycleColorsSingle, cycleColors, NULL};
-  uint8_t idx = *(uint8_t *)param;
-  if(idx >= (sizeof(fpMainR)/sizeof(fpMainR[0])))
-    idx = 0;
-  ctx->fpRend = fpMainR[idx];
+static void cycleAnimMainR(mAnim_t *ctx, const void *param, uint8_t isAck) {
+  static const void *fpMainR[] = { anim_frqDrvR, anim_random3, cycleColorsSingle, cycleColors, NULL };
+  uint8_t idx;
+
+  if (isAck) {
+    idx = *(uint8_t*) param;
+    if (fpMainR[idx] == NULL)
+      idx = 0;
+    ctx->fpRend = fpMainR[idx];
+  }
+
+  for (idx = 0; fpMainR[idx] != NULL; ++idx)
+    if (fpMainR[idx] == ctx->fpRend)
+      *(uint8_t*) param = idx;
 }
 
-static void setBrightnessTruncation(mAnim_t *ctx, const void * param){
-  uint32_t mul = ((uint32_t *)param)[0];
-  uint32_t div = ((uint32_t *)param)[1];
-  led_setBrightnessTruncation(ctx->lcd_ctx, mul, div);
+static void setBrightnessTruncation(mAnim_t *ctx, const void *param, uint8_t isAck) {
+
+  if (isAck) {
+    uint32_t mul = ((uint32_t*) param)[0];
+    uint32_t div = ((uint32_t*) param)[1];
+    led_setBrightnessTruncation(ctx->lcd_ctx, mul, div);
+  }
+
+  ((uint32_t*) param)[0] = ctx->lcd_ctx->btMult;
+  ((uint32_t*) param)[1] = ctx->lcd_ctx->btDiv;
 }
 
-static void setStartAndEnd(mAnim_t *ctx, const void * param){
-  uint32_t start = ((uint32_t *)param)[0];
-  uint32_t end = ((uint32_t *)param)[1];
-  led_SetStartAndEnd(ctx->lcd_ctx, start, end);
+static void setStartAndEnd(mAnim_t *ctx, const void *param, uint8_t isAck) {
+
+
+  if (isAck) {
+    uint32_t start = ((uint32_t*) param)[0];
+    uint32_t end = ((uint32_t*) param)[1];
+    led_SetStartAndEnd(ctx->lcd_ctx, start, end);
+  }
+
+  ((uint32_t*) param)[0] = ctx->lcd_ctx->btMult;
+  ((uint32_t*) param)[1] = ctx->lcd_ctx->btDiv;
+
 }
 
 /// .triggerTimeMs = 20000uL == 2 seconds
