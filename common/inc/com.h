@@ -27,10 +27,10 @@
 #include <stdint.h>
 #include <string.h>
 #include "uartBridge.h"
+#include "BridgeParser.h"
 
-#define CONV_BUF_SZ 16u
-extern char convBuf[CONV_BUF_SZ];
 extern const uBrdg_Leaf *const leafs[];
+extern pb_Ctx rxCtx;
 
 void com_SetDump(void);
 void com_Init(void);
@@ -39,10 +39,6 @@ void com_Tx(void);
 void com_TxBuff(const char * buff, size_t sz);
 
 void com_enableRx(void);
-void com_parse(void);
-
-void com_RstConvBuff(void);
-void com_uIntToStr(uint32_t v);
 
 #endif /* COM_H_ */
 /** @}*/

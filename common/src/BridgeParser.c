@@ -8,6 +8,7 @@
 #include "BridgeParser.h"
 #include <stdlib.h>
 #include <limits.h>
+#include "usart.h"
 
 static uint8_t i, j, k;
 
@@ -19,11 +20,6 @@ void bPar_SetIdcs(uint8_t iO, uint8_t jO, uint8_t kO){
   i = iO;
   j = jO;
   k = kO;
-}
-
-
-static inline void Rewind(pb_Ctx *const ctx) {
-    ctx->tc = ctx->to;
 }
 
 
@@ -55,7 +51,6 @@ static uint8_t pb_IsComplete(pb_Ctx *const ctx) {
 
 static inline pb_ParserState Eval(pb_Ctx *const ctx) {
   pb_ParserState res = pb_eIdle;
-
   if(pb_IsComplete(ctx)) {
       res = (ctx->pl[ctx->rd] == '?') ? pb_eEnq : pb_eAck;
   }
@@ -66,40 +61,21 @@ static inline pb_ParserState Eval(pb_Ctx *const ctx) {
 void bp_Reset(pb_Ctx *const ctx){
   for (uint16_t i = 0u; i < ctx->sz; ++i) 
     ctx->pl[i] = 0u;
-  
   ctx->rd = ctx->wr = 0u;
-}
-void bp_Init(pb_Ctx *const ctx, uint8_t to, uint16_t size) {
-  *((uint16_t*)&ctx->sz) = size;
-  *((uint8_t*)&ctx->to) = to;
-  ctx->pl = (char *) malloc(ctx->sz);
-  
-  bp_Reset(ctx);
-}
-
-void bp_Fill(pb_Ctx *const ctx, uint16_t inc) { 
-  if(inc){
-    ctx->wr += 0xffu & inc;
-    if(ctx->wr >= ctx->sz){
-      bp_Reset(ctx);
-    }
-    
-    Rewind(ctx);
-  } 
+  ((UART_HandleTypeDef*)ctx->hwCtx)->pRxBuffPtr = (uint8_t*)ctx->pl;
 }
 
 pb_ParserState bp_Parse(pb_Ctx *const ctx) { 
   pb_ParserState res = pb_eIdle;
   uint32_t aux;
   uint8_t i, j, k;
-  if(ctx->tc == 1){
+
+  if(((HAL_GetTick() - ctx->lastToggle) > ctx->to)){
     bp_Reset(ctx);
     res = pb_eTimeOut;
   }
-  else{
-    --ctx->tc;
+  else
     res = Eval(ctx);
-  }
   
   if(res > pb_eTimeOut)
   {

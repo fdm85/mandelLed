@@ -3264,7 +3264,7 @@ HAL_StatusTypeDef UART_Start_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pDat
 {
   huart->pRxBuffPtr = pData;
   huart->RxXferSize = Size;
-  huart->RxXferCount = Size;
+  huart->RxXferCount = 0;
 
   huart->ErrorCode = HAL_UART_ERROR_NONE;
   huart->RxState = HAL_UART_STATE_BUSY_RX;
@@ -3658,19 +3658,20 @@ static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
       huart->pRxBuffPtr += 1U;
     }
 
-    if (--huart->RxXferCount == 0U)
+//    if (huart->RxXferCount == 0U)
     {
+      ++huart->RxXferCount;
       /* Disable the UART Data Register not empty Interrupt */
-      __HAL_UART_DISABLE_IT(huart, UART_IT_RXNE);
+//      __HAL_UART_DISABLE_IT(huart, UART_IT_RXNE);
 
       /* Disable the UART Parity Error Interrupt */
-      __HAL_UART_DISABLE_IT(huart, UART_IT_PE);
+//      __HAL_UART_DISABLE_IT(huart, UART_IT_PE);
 
       /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error) */
-      __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
+//      __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
 
       /* Rx process is completed, restore huart->RxState to Ready */
-      huart->RxState = HAL_UART_STATE_READY;
+      huart->RxState = HAL_UART_STATE_BUSY_RX;
 
       /* Initialize type of RxEvent to Transfer Complete */
       huart->RxEventType = HAL_UART_RXEVENT_TC;
@@ -3714,6 +3715,7 @@ static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
 
       return HAL_OK;
     }
+
     return HAL_OK;
   }
   else

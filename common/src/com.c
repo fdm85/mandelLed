@@ -36,39 +36,20 @@
 #include "stm32f3xx_hal_uart.h"
 #endif
 
+
 #define RX_BUF_SZ 64u
 static char rxBuf[RX_BUF_SZ];
+pb_Ctx rxCtx = {.pl = rxBuf, .hwCtx = &huart2, .sz = RX_BUF_SZ, .to = 5u};
+
 #define TX_BUF_SZ 64u
 static char txBuf[TX_BUF_SZ];
-char convBuf[CONV_BUF_SZ];
-static size_t rxSize;
-static bool doParse = false;
+
 static size_t txPos = 0uL;
 static char * txPtr = txBuf;
 static char faultDumpBuffer[FAULT_HANDLING_DUMP_SIZE];
 #define FailStr "snprintf failed!"
 #define FailSz (sizeof(FailStr))
 
-void com_RstConvBuff(void)
-{
-  for (uint32_t i = 0; i < CONV_BUF_SZ; ++i)
-    convBuf[i] = 0u;
-}
-void com_uIntToStr(uint32_t v)
-{
-  static char tmp[CONV_BUF_SZ];
-  uint8_t i = 0u;
-  uint32_t j;
-  com_RstConvBuff();
-  do {
-    tmp[i] = ((char)0xFFu & (v%10uL));
-    v /= 10;
-    ++i;
-  } while (v && (i < (sizeof(tmp)/sizeof(tmp[0]))));
-
-  for (j = 0uL; (j < i) && (j < CONV_BUF_SZ); ++j)
-    convBuf[j] = tmp[i-j];
-}
 static void com_DumpFault(void) {
   HAL_UART_Transmit(&huart2, (const uint8_t *)faultDumpBuffer, sizeof(FAULT_HANDLING_DUMP_SIZE), 1000uL);
 }
@@ -77,13 +58,6 @@ void com_SetDump(void) {
   faultHandlingSetPostFaultAction( POSTHANDLER_DEBUG );
 }
 
-static size_t com_StrLen(const char * str){
-  size_t res = 0;
-  while (str[res] != '\0')
-    ++res;
-
-  return res;
-}
 void com_RstTxBuf(void)
 {
   for (uint32_t i = 0; i < TX_BUF_SZ; ++i)
@@ -107,7 +81,7 @@ static void com_Copy2Tx(const char * in)
  */
 void com_Init(void) {
 	com_RstTxBuf();
-	com_Copy2Tx("Hello World\n\r");
+	com_Copy2Tx("Hello World\r");
   com_enableRx();
 	com_Tx();
 }
@@ -119,27 +93,21 @@ void com_TxBuff(const char * buff, size_t sz)
 {
   HAL_UART_Transmit(&huart2, (const uint8_t*)buff, (uint16_t)sz, 1000uL);
 }
+
 /**
  * @brief Enable receive interrupt
  */
 void com_enableRx(void) {
-	doParse = false;
-	rxSize = 0u;
-	for (uint16_t i = 0; i < RX_BUF_SZ; ++i) {
-		rxBuf[i] = 0u;
-	}
 
-//	HAL_StatusTypeDef res = HAL_UARTEx_ReceiveToIdle_IT(&huart2, (uint8_t*) rxBuf, 1);
-	HAL_StatusTypeDef res = UART_Start_Receive_IT(&huart2, (uint8_t*) rxBuf, 1);
+	HAL_StatusTypeDef res = HAL_UART_Receive_IT(&huart2, (uint8_t*) rxBuf, RX_BUF_SZ);
 
 	if(res != HAL_OK)
 	{
 	  com_Copy2Tx("Uart RX Init failed!");
-	  com_uIntToStr(res);
-	  com_Copy2Tx("\n\r");
+	  com_Copy2Tx("\r");
 	}
 	else
-	  com_Copy2Tx("Uart RX Init succeeded\n\r");
+	  com_Copy2Tx("Uart RX Init succeeded\r");
 }
 
 /**
@@ -147,24 +115,10 @@ void com_enableRx(void) {
  * @param  huart  Pointer to a UART_HandleTypeDef structure that contains
  *                the configuration information for the specified UART module.
  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	doParse = true;
-	rxSize = huart->RxXferCount;
-	char tmp[128];
-	size_t len, tot;
-	uint32_t cast;
-	cast = strtoul("123", NULL, 10);
-	if(rxBuf[0] == '?')
-	  for (uint32_t i = 0; leafs[i] != NULL; ++i) {
-      tot = (size_t)snprintf(tmp, 128, "%lu Name is %s, %lu\r\n", i, leafs[i]->des, cast);
-	    com_TxBuff(tmp, tot + 1);
-	    len = com_StrLen(leafs[i]->des);
-	    com_TxBuff(leafs[i]->des, len);
-	    com_TxBuff("\r\n", 2u);
-    }
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
-	com_TxBuff(rxBuf, sizeof(RX_BUF_SZ));
-	doParse = false;
+  rxCtx.wr = (uint8_t)(huart->pRxBuffPtr - (uint8_t*)rxBuf);
+  bp_IsrCb(&rxCtx);
 }
 
 /** @}*/

@@ -52,6 +52,11 @@ void initPeripherals(void)
 	MX_USART2_UART_Init();
 }
 
+uint32_t HAL_GetTick(void)
+{
+  return __HAL_TIM_GET_COUNTER(&htim2);
+}
+
 void greenLedToggle(void)
 {
 	HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);

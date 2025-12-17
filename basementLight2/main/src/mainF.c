@@ -290,15 +290,11 @@ int main(void)
 	{
 	  maintainStatusLeds();
 		msgeq_ticker();
+		bp_Parse(&rxCtx);
 		cyclicReSend(&anim_matrix);
 		cyclicReSend(&anim_mainL);
 		cyclicReSend(&anim_mainR);
 	}
-}
-
-uint32_t HAL_GetTick(void)
-{
-  return __HAL_TIM_GET_COUNTER(&htim2);
 }
 
 void _close(void)
