@@ -50,9 +50,11 @@ static uint8_t pb_IsComplete(pb_Ctx *const ctx) {
 
 
 static inline pb_ParserState Eval(pb_Ctx *const ctx) {
-  pb_ParserState res = pb_eIdle;
-  if(pb_IsComplete(ctx)) {
+  pb_ParserState res = ctx->prsrStt;
+  uint8_t len = ctx->wr - ctx->rd;
+  if((len > 3u) && pb_IsComplete(ctx)) {
       res = (ctx->pl[ctx->rd] == '?') ? pb_eEnq : pb_eAck;
+      ++ctx->rd;
   }
 
   return res;
@@ -63,21 +65,23 @@ void bp_Reset(pb_Ctx *const ctx){
     ctx->pl[i] = 0u;
   ctx->rd = ctx->wr = 0u;
   ((UART_HandleTypeDef*)ctx->hwCtx)->pRxBuffPtr = (uint8_t*)ctx->pl;
+  ctx->prsrStt = pb_eIdle;
 }
 
 pb_ParserState bp_Parse(pb_Ctx *const ctx) { 
-  pb_ParserState res = pb_eIdle;
   uint32_t aux;
   uint8_t i, j, k;
+  if(ctx->prsrStt == pb_eIdle)
+    return pb_eIdle;
 
   if(((HAL_GetTick() - ctx->lastToggle) > ctx->to)){
     bp_Reset(ctx);
-    res = pb_eTimeOut;
+    return pb_eTimeOut;
   }
   else
-    res = Eval(ctx);
+    ctx->prsrStt = Eval(ctx);
   
-  if(res > pb_eTimeOut)
+  if(ctx->prsrStt > pb_eTimeOut)
   {
     aux = pb_Convert(ctx);
     i = (aux != ULONG_MAX) ? (0xffuL & aux) : 0u;
@@ -90,7 +94,7 @@ pb_ParserState bp_Parse(pb_Ctx *const ctx) {
 
   if(ctx->rd && (ctx->rd == ctx->wr))
     bp_Reset(ctx);
-  return res;
+  return ctx->prsrStt;
 }
 
 uint32_t pb_Convert(pb_Ctx *const ctx) {
@@ -98,8 +102,11 @@ uint32_t pb_Convert(pb_Ctx *const ctx) {
   uint32_t res = strtoul(&ctx->pl[ctx->rd], &rdN, 10);
   int32_t dlt = (rdN - rdO);
   
-  if(dlt >= 0)
+  if(dlt >= 0){
     ctx->rd += (uint8_t)dlt;
+    if(ctx->pl[ctx->rd] == '.')
+      ++ctx->rd;
+  }
   return res;
 }
    

@@ -39,7 +39,7 @@
 
 #define RX_BUF_SZ 64u
 static char rxBuf[RX_BUF_SZ];
-pb_Ctx rxCtx = {.pl = rxBuf, .hwCtx = &huart2, .sz = RX_BUF_SZ, .to = 5u};
+pb_Ctx rxCtx = {.pl = rxBuf, .hwCtx = &huart2, .sz = RX_BUF_SZ, .to = 5000uL};
 
 #define TX_BUF_SZ 64u
 static char txBuf[TX_BUF_SZ];
