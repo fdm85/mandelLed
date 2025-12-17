@@ -23,11 +23,14 @@ typedef enum pb_ParserState_t{
   pb_eIdle,
   pb_eBusy,
   pb_eTimeOut,
-  pb_eRx,
+  pb_eRxNum,
+  pb_eRxTxt,
 }pb_ParserState;
+void bp_Reset(pb_Ctx *const ctx);
 void bp_Init(pb_Ctx *const ctx, uint8_t to, uint16_t size);
 void bp_Fill(pb_Ctx *const ctx, uint16_t inc);
 pb_ParserState bp_Parse(pb_Ctx *const ctx);
+uint32_t pb_Convert(pb_Ctx *const ctx);
 
 
 #endif /* MAIN_BRIDGEPARSER_H_ */

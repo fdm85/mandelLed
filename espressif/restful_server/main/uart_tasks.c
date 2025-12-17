@@ -80,21 +80,23 @@ static void tx_task(void *arg) {
 static void rx_task(void *arg) {
 	static pb_Ctx pb;
   int inc;
+  uint32_t tmp;
   pb_ParserState parRes = pb_eIdle;
   bp_Init(&pb, 10u,RX_BUF_SIZE);
   
 	while (1) {
     inc = uart_read_bytes(UART_NUM_2, &pb.pl[pb.wr], 1, t2w);
 
-    if(inc) {
+    if(inc)
       bp_Fill(&pb, inc);
-      parRes = bp_Parse(&pb);
-    }
+      
+    parRes = bp_Parse(&pb);
     
-    if(parRes == pb_eRx){
-        ESP_LOGW("uart_rx", "received %d bytes, s: s%", pb.wr - pb.rd, pb.pl);
-        pb.rd = pb.wr;
-      }
+    if(parRes == pb_eRxNum){
+      tmp = pb_Convert(&pb);
+      ESP_LOGW("uart_rx", "rx: %lu", pb.wr - pb.rd, pb.pl, tmp);
+      bp_Reset(&pb);
+    }
       
 	}
 }

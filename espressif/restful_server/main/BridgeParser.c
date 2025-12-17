@@ -10,33 +10,38 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+
 static inline void Rewind(pb_Ctx *const ctx) {
     ctx->tc = ctx->to;
 }
+
+static uint8_t pb_IsComplete(pb_Ctx *const ctx) {
+  uint8_t res = 0u;
+  for (uint8_t i = ctx->rd; i < ctx->wr; ++i) {
+    if(!res && (ctx->pl[i] == '\t' || ctx->pl[i] == 0x0Bu)){
+      ctx->rd = i;
+      ++res;
+    } 
+    if((res > 0) && (ctx->pl[i] == '\r' || ctx->pl[i] == '\n'))
+      ++res;
+  }
+  return (res == 3) ? 1u : 0u;
+}
+
 
 static inline pb_ParserState Eval(pb_Ctx *const ctx) {
   pb_ParserState res = pb_eIdle;
   uint8_t len = ctx->wr - ctx->rd;
 
-  switch (len) {
-  case 1u:
-
-    break;
-  case 2u:
-
-    break;
-  case 3u:
-
-    break;
-  default:
-
-    break;
+  if(len >= 3u) {
+    if(pb_IsComplete(ctx))
+      res = (ctx->pl[ctx->rd] == '\t') ? pb_eRxNum : pb_eRxTxt;
   }
 
   return res;
 }
 
-static void bp_Reset(pb_Ctx *const ctx){
+void bp_Reset(pb_Ctx *const ctx){
   for (uint16_t i = 0u; i < ctx->sz; ++i) 
     ctx->pl[i] = 0u;
   
@@ -78,5 +83,12 @@ pb_ParserState bp_Parse(pb_Ctx *const ctx) {
     bp_Reset(ctx);
   return res;
 }
-   
+
+uint32_t pb_Convert(pb_Ctx *const ctx) {
+  char *rdO = &ctx->pl[ctx->rd], *rdN;
+  uint32_t res = strtoul_l(&ctx->pl[ctx->rd], &rdN, 10, NULL);
+  
+  ctx->rd += (rdN - rdO);
+  return res;
+}
    
