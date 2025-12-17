@@ -27,8 +27,8 @@
 #include "leds.h"
 #include "tim.h"
 
-//#define LOC_INLINE	inline
-#define LOC_INL_DBG	__attribute__ ((noinline))
+#define LOC_INL_DBG	static inline
+//#define LOC_INL_DBG	__attribute__ ((noinline))
 
 uint32_t getLedCount(LedChainDesc_t *lcd) {
   return lcd->lRawNew->ledCountMax;
@@ -186,7 +186,7 @@ LOC_INL_DBG void led_startTransmitData(LedChainDesc_t *lcd) {
 /** @brief Trigger data transmission
  *  @param lcd strip context to work on
  */
-LOC_INL_DBG void led_stopTransmitData(LedChainDesc_t *lcd) {
+LOC_INL_DBG void stopTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
   result = HAL_TIM_PWM_Stop_DMA(lcd->timer, lcd->timChannel);
   if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
@@ -195,6 +195,10 @@ LOC_INL_DBG void led_stopTransmitData(LedChainDesc_t *lcd) {
       __BKPT(0);
   assrt(result == HAL_OK);
   (void) result;
+}
+
+void led_stopTransmitData(LedChainDesc_t *lcd) {
+  stopTransmitData(lcd);
 }
 
 #define inFrame 2uL
@@ -266,7 +270,7 @@ void led_txRaw(LedChainDesc_t *lcd) {
     lcd->lRawNew->rS = e_done;
     break;
   case e_done:
-    led_stopTransmitData(lcd);
+    stopTransmitData(lcd);
 
     break;
   case e_Inv:

@@ -99,7 +99,7 @@ typedef enum {
 typedef struct lRawDma_tag
 {
 	dmaState_t dS;
-	eDmaRawFill rS;
+	volatile eDmaRawFill rS;
 	uint32_t iS; /*!< index counter at source */
 	uint32_t iD; /*!< index counter at destination */
 	uint32_t ledEnd; /*!< count of 'real' leds in the strip */
@@ -178,6 +178,7 @@ typedef struct LedChainDesc_tag
 	uint32_t btDiv; /*!< brightness truncation divider */
 } LedChainDesc_t;
 
+void led_stopTransmitData(LedChainDesc_t *lcd);
 void led_SetStartAndEnd(LedChainDesc_t* lcd, uint32_t start, uint32_t end);
 void led_LedLogicInit(LedChainDesc_t* lcd);
 void led_setAllLedsToUniColors(LedChainDesc_t* lcd, uint8_t brightness);

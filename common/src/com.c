@@ -62,7 +62,9 @@ void com_SetDump(void) {
  * @brief Trigger TX of hello
  */
 void com_Init(void) {
+  bPar_Init();
   bp_ResetTx(&txCtx);
+  bp_ResetTx(&rxCtx);
   pb_txPutStr(&txCtx, "Hello World\r\n");
   com_enableRx();
 	com_Tx();

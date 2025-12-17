@@ -60,10 +60,12 @@ typedef enum
 typedef enum
 {
 	e_render,
-	e_waitTxCplt,
-	e_paste,
 	e_StartDma,
-	e_waitDmaDone
+	e_waitDmaDone,
+	e_disable,
+	e_reEnable,
+	e_Done,
+	e_disabled,
 } eSm;
 
 typedef struct mAnim_tag mAnim_t;
@@ -75,7 +77,7 @@ struct mAnim_tag
 	uint32_t triggerTime; /*!< */
 	uint32_t lastToggle; /*!< */
 	volatile uint32_t sendLock; /*!< */
-	eSm state; /*!< */
+	volatile eSm state; /*!< */
 	puState_t puState; /*!< */
 	uint16_t padd2; /*!< */
 	uint32_t isEnabled; /*!< en/disable switch */

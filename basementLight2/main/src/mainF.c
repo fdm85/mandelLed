@@ -118,9 +118,15 @@ static void cycleAnimMainR(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 }
 
 static void enDisAble(mAnim_t *ctx, uint32_t *param, uint8_t isAck){
-  if(isAck)
-    ctx->isEnabled ^= 1u;
+  if(isAck){
+    while(ctx->state < e_Done)
+      __NOP();
+    *param ^= 1u;
+    ctx->isEnabled = *param & 0x1uL;
+    ctx->state = (ctx->isEnabled) ? e_reEnable : e_disable;
+  }
 
+  ctx->isEnabled &= 0x1u;
   *param = ctx->isEnabled;
 }
 
@@ -159,7 +165,7 @@ static void setStartAndEnd(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
+mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 1000uL, .puState = done, .isEnabled = 0u};
 mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 550uL, .puState = done, .isEnabled = 0u};
@@ -195,22 +201,27 @@ const uBrdg_Leaf *const leafs[3] = {
 
 static void acLeaf(pb_Ctx *const rCtx, pb_Ctx *const tCtx, uint8_t isEnq)
 {
-  uint8_t i, j, k, idx = 0u;
+  uint8_t i, ii,  j, k, idx = 0u;
 
-  bPar_GetIdcs(&i, &j, &k);
-  if(isEnq)
-    while(idx < leafs[i][j].pCt){
+  bPar_GetIdcs(&ii, &j, &k);
+  i = ii ? ii - 1 : ii;
+
+  if (isEnq)
+    while (idx < leafs[i][j].pCt) {
       leafs[i][j].par[idx] = pb_Convert(rCtx);
       ++idx;
     }
 
-  if(*(leafs[i])[j].gtFp)
-    leafs[i][j].gtFp((mAnim_t *)leafs[i][0].par, leafs[i][j].par, isEnq);
+  if (*(leafs[i])[j].gtFp)
+    leafs[i][j].gtFp((mAnim_t*) leafs[i][0].par, leafs[i][j].par, isEnq);
 
-  while(idx < leafs[i][j].pCt){
+  pb_txPutIndices(tCtx, ii, j, k);
+  while (idx < leafs[i][j].pCt) {
     pb_txPutVal(tCtx, leafs[i][j].par[idx]);
-        ++idx;
-      }
+    ++idx;
+  }
+  pb_txPutStr(tCtx, "\r");
+  com_Tx();
 }
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
@@ -218,17 +229,15 @@ static void cyclicReSend(mAnim_t *ctx) {
 
     switch (ctx->state) {
     case e_render:
-      if(ctx->isEnabled)
+      if(ctx->isEnabled){
         ctx->fpRend(ctx);
-      else
-        allLedsOff(ctx);
-      ctx->state = e_StartDma;
+        ctx->state = e_StartDma;
+      } else ctx->state = e_disable;
+
+
       break;
 
     case e_StartDma:
-      if(((HAL_GetTick() - ctx->lastToggle) < ctx->triggerTime))
-        return;
-      ctx->lastToggle = HAL_GetTick();
       ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
       ctx->lcd_ctx->lRawNew->rS = e_Precursor;
       led_txRaw(ctx->lcd_ctx);
@@ -237,11 +246,27 @@ static void cyclicReSend(mAnim_t *ctx) {
 
     case e_waitDmaDone:
       if (ctx->lcd_ctx->lRawNew->rS == e_done)
-        ctx->state = e_render;
+        ctx->state = e_Done;
       break;
 
-    case e_waitTxCplt:
-    case e_paste:
+    case e_reEnable:
+      ctx->lcd_ctx->lRawNew->rS = e_done;
+      led_stopTransmitData(ctx->lcd_ctx);
+      ctx->state = e_render;
+      break;
+    case e_disabled:
+      break;
+    case e_disable:
+      ctx->lcd_ctx->lRawNew->rS = e_done;
+      led_stopTransmitData(ctx->lcd_ctx);
+      allLedsOff(ctx);
+      ctx->state = e_StartDma;
+      break;
+    case e_Done:
+      if(((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTime)){
+        ctx->lastToggle = HAL_GetTick();
+        ctx->state = ctx->isEnabled ? e_render : e_disabled;
+      }
       break;
 
     default:
@@ -346,9 +371,9 @@ int main(void)
 	led_setBrightnessTruncation(anim_matrix.lcd_ctx, 1uL, 1uL);
 
 	mtrx_Init();
-	led_LedLogicInit(anim_matrix.lcd_ctx);
 	led_LedLogicInit(anim_mainL.lcd_ctx);
 	led_LedLogicInit(anim_mainR.lcd_ctx);
+	led_LedLogicInit(anim_matrix.lcd_ctx);
 
 	__enable_irq();
 
@@ -363,9 +388,9 @@ int main(void)
 		  acLeaf(&rxCtx, &txCtx, parStt == pb_eAck ? 1u : 0u);
 
 
-		cyclicReSend(&anim_matrix);
 		cyclicReSend(&anim_mainL);
 		cyclicReSend(&anim_mainR);
+		cyclicReSend(&anim_matrix);
 	}
 }
 

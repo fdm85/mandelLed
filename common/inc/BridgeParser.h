@@ -43,9 +43,13 @@ static inline void bp_IsrCb(pb_Ctx *const rCtx) {
   if (rCtx->wr >= rCtx->sz)
     bp_ResetRx(rCtx);
 }
+
+
+void bPar_Init(void);
 pb_ParserState bp_Parse(pb_Ctx *const rCtx);
 uint32_t pb_Convert(pb_Ctx *const rCtx);
 void bPar_GetIdcs(uint8_t *iO, uint8_t *jO, uint8_t *kO);
 void pb_txPutVal(pb_Ctx *const tCtx, uint32_t val);
 void pb_txPutStr(pb_Ctx *const tCtx, const char * str);
+void pb_txPutIndices(pb_Ctx *const tCtx, uint8_t i, uint8_t j, uint8_t k);
 #endif /* MAIN_BRIDGEPARSER_H_ */

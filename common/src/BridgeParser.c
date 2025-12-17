@@ -102,6 +102,7 @@ pb_ParserState bp_Parse(pb_Ctx *const rCtx) {
   
   if(rCtx->prsrStt > pb_eTimeOut)
   {
+    bPar_Init();
     aux = pb_Convert(rCtx);
     i = (aux != ULONG_MAX) ? (0xffuL & aux) : 0u;
     aux = pb_Convert(rCtx);
@@ -127,9 +128,26 @@ uint32_t pb_Convert(pb_Ctx *const rCtx) {
   return res;
 }
 
+
+void pb_txPutIndices(pb_Ctx *const tCtx, uint8_t i, uint8_t j, uint8_t k){
+  int32_t dlt = snprintf(&tCtx->pl[tCtx->wr], tCtx->sz - tCtx->wr, "!%u", i);
+  if (dlt >= 0)
+    tCtx->wr += (uint8_t) dlt;
+  if (j) {
+    dlt = snprintf(&tCtx->pl[tCtx->wr], tCtx->sz - tCtx->wr, ".%u", j);
+    if (dlt >= 0)
+      tCtx->wr += (uint8_t) dlt;
+  }
+  if (k) {
+    dlt = snprintf(&tCtx->pl[tCtx->wr], tCtx->sz - tCtx->wr, ".%u", k);
+    if (dlt >= 0)
+      tCtx->wr += (uint8_t) dlt;
+  }
+}
+
 void pb_txPutVal(pb_Ctx *const tCtx, uint32_t val) {
 
-  int32_t dlt = snprintf(&tCtx->pl[tCtx->wr], tCtx->sz - tCtx->wr, "/t%lu", val);
+  int32_t dlt = snprintf(&tCtx->pl[tCtx->wr], tCtx->sz - tCtx->wr, "\t%lu", val);
 
   if(dlt >= 0)
     tCtx->wr += (uint8_t)dlt;
