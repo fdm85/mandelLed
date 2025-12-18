@@ -36,6 +36,7 @@ static uint8_t col = 5;
 static uint8_t idx = 0;
 void cycleColors(mAnim_t* ctx)
 {
+  led_setAllLedsToColor(ctx->lcd_ctx, 0,0,0);
   for (uint32_t i = ctx->lcd_ctx->lRawNew->ledStart; i < ctx->lcd_ctx->lRawNew->ledEnd;) {
     led_setLedToColor(ctx->lcd_ctx, i++, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col);
     if(i < ctx->lcd_ctx->lRawNew->ledEnd)
@@ -47,6 +48,7 @@ void cycleColors(mAnim_t* ctx)
 }
 void cycleColorsSingle(mAnim_t* ctx)
 {
+  led_setAllLedsToColor(ctx->lcd_ctx, 0,0,0);
   for (uint32_t i = ctx->lcd_ctx->lRawNew->ledStart; i < ctx->lcd_ctx->lRawNew->ledEnd; ++i)
     led_setLedToColor(ctx->lcd_ctx, i, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col);
 
@@ -152,20 +154,17 @@ static void setBrightnessTruncation(mAnim_t *ctx, uint32_t *param, uint8_t isAck
 static void setStartAndEnd(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
 
-  if (isAck) {
-    uint32_t start = ((uint32_t*) param)[0];
-    uint32_t end = ((uint32_t*) param)[1];
-    led_SetStartAndEnd(ctx->lcd_ctx, start, end);
-  }
+  if (isAck)
+    led_SetStartAndEnd(ctx->lcd_ctx, param[0], param[1]);
 
-  param[0] = ctx->lcd_ctx->btMult;
-  param[1] = ctx->lcd_ctx->btDiv;
+  param[0] = ctx->lcd_ctx->lRawNew->ledStart;
+  param[1] = ctx->lcd_ctx->lRawNew->ledEnd;
 
 }
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 1000uL, .puState = done, .isEnabled = 0u};
+mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
 mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 550uL, .puState = done, .isEnabled = 0u};
@@ -194,34 +193,43 @@ static const uBrdg_Leaf mainR[6] = { {.gtFp = NULL, .des = "anim_mainR", .par = 
                               {.gtFp = setStartAndEnd, .des = "activeLeds (start / end)", .par = LedStartEndMainR, .pCt = 2},
                               {.gtFp = cycleAnimMainR, .des = "fRender (+1;-1)", .par = &AnimIdxMainR, .pCt = 1},
 };
-
-const uBrdg_Leaf *const leafs[3] = {
-    mainL, mainR, NULL
+static const uBrdg_Leaf mtrx[6] = { {.gtFp = NULL, .des = "anim_matrix", .par = (uint32_t*)&anim_matrix, .pCt = 5},
+                              {.gtFp = enDisAble, .des = "OnOff", .par = &enabledMainR, .pCt = 1},
+                              {.gtFp = triggerTime, .des = "trgIntervall(100us)", .par = &trgTimeMainR, .pCt = 1},
+                              {.gtFp = setBrightnessTruncation, .des = "Brightness (Mult, Div)", .par = brightnessMainR, .pCt = 2},
+                              {.gtFp = NULL, .des = "N/A", .par = NULL, .pCt = 0},
+                              {.gtFp = NULL, .des = "N/A", .par = NULL, .pCt = 0},
 };
 
-static void acLeaf(pb_Ctx *const rCtx, pb_Ctx *const tCtx, uint8_t isEnq)
+const uBrdg_Leaf *const leafs[4] = {
+    mainL, mainR, mtrx, NULL
+};
+
+static void acLeaf(pb_Ctx *const rCtx, pb_Ctx *const tCtx, uint8_t isAck)
 {
   uint8_t i, ii,  j, k, idx = 0u;
 
   bPar_GetIdcs(&ii, &j, &k);
   i = ii ? ii - 1 : ii;
 
-  if (isEnq)
+  if (isAck)
     while (idx < leafs[i][j].pCt) {
-      leafs[i][j].par[idx] = pb_Convert(rCtx);
+      leafs[i][j].par[idx] = pb_Convert(rCtx, NULL);
       ++idx;
     }
 
   if (*(leafs[i])[j].gtFp)
-    leafs[i][j].gtFp((mAnim_t*) leafs[i][0].par, leafs[i][j].par, isEnq);
+    leafs[i][j].gtFp((mAnim_t*) leafs[i][0].par, leafs[i][j].par, isAck);
 
   pb_txPutIndices(tCtx, ii, j, k);
+  idx = 0u;
   while (idx < leafs[i][j].pCt) {
     pb_txPutVal(tCtx, leafs[i][j].par[idx]);
     ++idx;
   }
   pb_txPutStr(tCtx, "\r");
   com_Tx();
+  bp_ResetRx(rCtx);
 }
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
@@ -240,8 +248,10 @@ static void cyclicReSend(mAnim_t *ctx) {
     case e_StartDma:
       ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
       ctx->lcd_ctx->lRawNew->rS = e_Precursor;
-      led_txRaw(ctx->lcd_ctx);
-      ctx->state = e_waitDmaDone;
+      if(TIM_CHANNEL_STATE_GET(ctx->lcd_ctx->timer, ctx->lcd_ctx->timChannel) == HAL_TIM_CHANNEL_STATE_READY){
+        led_txRaw(ctx->lcd_ctx);
+        ctx->state = e_waitDmaDone;
+      }
       break;
 
     case e_waitDmaDone:

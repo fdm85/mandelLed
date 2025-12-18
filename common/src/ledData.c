@@ -35,7 +35,7 @@ uint32_t getLedCount(LedChainDesc_t *lcd) {
 }
 
 /// raw bits are stored MSB first, order is green, red, blue
-static void led_convertLed(const LedLogic_t *l, LedRaw *r) {
+LOC_INL_DBG void led_convertLed(const LedLogic_t *l, LedRaw *r) {
   for (uint8_t i = 0; i < 8u; ++i) {
     r->g[i] = (l->g & (0x80u >> i)) ? lRawOn : lRawOff;
     r->r[i] = (l->r & (0x80u >> i)) ? lRawOn : lRawOff;
@@ -69,8 +69,10 @@ void led_LedLogicInit(LedChainDesc_t *lcd) {
  *  @param div Divider
  */
 void led_setBrightnessTruncation(LedChainDesc_t *lcd, uint32_t mult, uint32_t div) {
-  lcd->btMult = mult;
-  lcd->btDiv = div;
+  if(mult <= div){
+    lcd->btMult = mult;
+    lcd->btDiv = div;
+  }
 }
 
 /** @brief Set a specific led's colors
@@ -81,10 +83,10 @@ void led_setBrightnessTruncation(LedChainDesc_t *lcd, uint32_t mult, uint32_t di
  *  @param mult multiplier
  *  @param div divider
  */
-static void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, uint32_t mult, uint32_t div) {
-  uint32_t rOut = (uint32_t) (r * mult) / div;
-  uint32_t gOut = (uint32_t) (g * mult) / div;
-  uint32_t bOut = (uint32_t) (b * mult) / div;
+LOC_INL_DBG void led_setLedColors(LedLogic_t *led, uint8_t r, uint8_t g, uint8_t b, uint32_t mult, uint32_t div) {
+  uint32_t rOut = (mult != div) ? (((uint32_t)r * mult) / div) : r;
+  uint32_t gOut = (mult != div) ? (((uint32_t)g * mult) / div) : g;
+  uint32_t bOut = (mult != div) ? (((uint32_t)b * mult) / div) : b;
 
   assrt(rOut <= UINT8_MAX);
   assrt(gOut <= UINT8_MAX);
@@ -178,7 +180,7 @@ void led_pasteData(LedChainDesc_t *lcd) {
 LOC_INL_DBG void led_startTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
   if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
-    __BKPT(0);
+    assrt(0);
   result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel,(const uint32_t *) &lcd->lRawNew->lRaw[0].g[0], (lcd->lRawNew->rawTxCount));
   assrt(result == HAL_OK);
   (void) result;
@@ -190,9 +192,9 @@ LOC_INL_DBG void stopTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
   result = HAL_TIM_PWM_Stop_DMA(lcd->timer, lcd->timChannel);
   if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
-      __BKPT(0);
+    assrt(0);
   if(result != HAL_OK)
-      __BKPT(0);
+    assrt(0);
   assrt(result == HAL_OK);
   (void) result;
 }

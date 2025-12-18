@@ -186,6 +186,9 @@ void anim_random3(mAnim_t *ctx)
 {
   assrt(ctx->lcd_ctx->diff);
   uint32_t i;
+  for (i = 0uL; i < ctx->lcd_ctx->lRawNew->ledStart; ++i)
+    led_setLedToColor(ctx->lcd_ctx, i, 0,0,0);
+
 	for (i = ctx->lcd_ctx->lRawNew->ledStart; i < ctx->lcd_ctx->lRawNew->ledEnd; ++i)
 	{
     assrt(i<ctx->lcd_ctx->diff->size);

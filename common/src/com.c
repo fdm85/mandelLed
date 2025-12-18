@@ -64,7 +64,7 @@ void com_SetDump(void) {
 void com_Init(void) {
   bPar_Init();
   bp_ResetTx(&txCtx);
-  bp_ResetTx(&rxCtx);
+  bp_ResetRx(&rxCtx);
   pb_txPutStr(&txCtx, "Hello World\r\n");
   com_enableRx();
 	com_Tx();

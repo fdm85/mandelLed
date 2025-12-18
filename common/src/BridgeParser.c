@@ -49,7 +49,7 @@ static uint8_t pb_IsComplete(pb_Ctx *const rCtx) {
       rCtx->rd = i;
       ++res;
     } 
-    if((res == 1u) && (rCtx))
+    if((res == 1u) && (rCtx->pl[i] == '\r'))
       ++res;
   }
   return (res == 2) ? 1u : 0u;
@@ -85,6 +85,7 @@ void bp_ResetTx(pb_Ctx *const tCtx){
 
 pb_ParserState bp_Parse(pb_Ctx *const rCtx) {
   uint32_t aux;
+  char rdPost;
   uint8_t i, j, k;
 
   if(rCtx->rd && (rCtx->rd == rCtx->wr))
@@ -103,11 +104,11 @@ pb_ParserState bp_Parse(pb_Ctx *const rCtx) {
   if(rCtx->prsrStt > pb_eTimeOut)
   {
     bPar_Init();
-    aux = pb_Convert(rCtx);
+    aux = pb_Convert(rCtx, &rdPost);
     i = (aux != ULONG_MAX) ? (0xffuL & aux) : 0u;
-    aux = pb_Convert(rCtx);
+    aux = (rdPost == '.') ? pb_Convert(rCtx, &rdPost) : 0u;
     j = (aux != ULONG_MAX) ? (0xffuL & aux) : 0u;
-    aux = pb_Convert(rCtx);
+    aux = (rdPost == '.') ? pb_Convert(rCtx, &rdPost) : 0u;
     k = (aux != ULONG_MAX) ? (0xffuL & aux) : 0u;
     bPar_SetIdcs(i, j, k);
   }
@@ -115,13 +116,15 @@ pb_ParserState bp_Parse(pb_Ctx *const rCtx) {
   return rCtx->prsrStt;
 }
 
-uint32_t pb_Convert(pb_Ctx *const rCtx) {
+uint32_t pb_Convert(pb_Ctx *const rCtx, char *rdPost) {
   char *rdO = &rCtx->pl[rCtx->rd], *rdN;
   uint32_t res = strtoul(&rCtx->pl[rCtx->rd], &rdN, 10);
   int32_t dlt = (rdN - rdO);
   
   if(dlt >= 0){
     rCtx->rd += (uint8_t)dlt;
+    if(rdPost)
+      *rdPost = rCtx->pl[rCtx->rd];
     if((rCtx->pl[rCtx->rd] != '\r') && ((rCtx->pl[rCtx->rd] < '0') || (rCtx->pl[rCtx->rd] > '9')))
       ++rCtx->rd;
   }
