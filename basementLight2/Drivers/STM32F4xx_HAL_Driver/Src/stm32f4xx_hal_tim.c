@@ -6493,7 +6493,7 @@ void TIM_DMAError(DMA_HandleTypeDef *hdma)
 
   htim->Channel = HAL_TIM_ACTIVE_CHANNEL_CLEARED;
 }
-typedef struct LedChainDesc_t LedChainDesc_t;
+typedef struct LedChainDesc_tag LedChainDesc_t;
 extern LedChainDesc_t lcd_matrix, lcd_mainR, lcd_mainL;
 extern TIM_HandleTypeDef htim4;
 /**

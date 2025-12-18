@@ -60,10 +60,12 @@ typedef enum
 typedef enum
 {
 	e_render,
-	e_waitTxCplt,
-	e_paste,
 	e_StartDma,
-	e_waitDmaDone
+	e_waitDmaDone,
+	e_disable,
+	e_reEnable,
+	e_Done,
+	e_disabled,
 } eSm;
 
 typedef struct mAnim_tag mAnim_t;
@@ -72,15 +74,19 @@ struct mAnim_tag
 {
 	fpRender fpRend; /*!< */
 	LedChainDesc_t *const lcd_ctx; /*!< */
-	const uint32_t triggerTimeMs; /*!< */
+	uint32_t triggerTime; /*!< */
 	uint32_t lastToggle; /*!< */
 	volatile uint32_t sendLock; /*!< */
-	volatile uint32_t a, b, c, d, e, f; /*!< */
-	eSm state; /*!< */
+	volatile eSm state; /*!< */
 	puState_t puState; /*!< */
 	uint16_t padd2; /*!< */
+	uint32_t isEnabled; /*!< en/disable switch */
 	anim_mode_e AnimMode;
 };
+
+
+void anim_frqDrvL(mAnim_t *ctx);
+void anim_frqDrvR(mAnim_t *ctx);
 
 void anim_setCirc(bool shrt);
 void anim_CyclicCall(mAnim_t* ctx);

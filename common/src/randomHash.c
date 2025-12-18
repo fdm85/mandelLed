@@ -81,7 +81,7 @@ void anim_r23DeInit(LedChainDesc_t *const lcd)
 
 void anim_random1(LedChainDesc_t *const lcd)
 {
-	for (uint32_t i = 0; i < lcd->lRawNew->ledCount; ++i)
+	for (uint32_t i = 0; i < lcd->lRawNew->ledEnd; ++i)
 	{
 		rand_u r;
 		HAL_RNG_GenerateRandomNumber(&hrng, &r.u32);
@@ -156,7 +156,7 @@ static void __attribute__ ((noinline)) anim_render(LedChainDesc_t *const lcd, ui
 #if !(defined(STM32F103xB))
 static void anim_r2Diff(LedChainDesc_t *const lcd)
 {
-	for (uint32_t i = 0; i < lcd->lRawNew->ledCount; ++i)
+	for (uint32_t i = 0; i < lcd->lRawNew->ledEnd; ++i)
 	{
 		anim_Diff(lcd, i, false);
 	}
@@ -164,7 +164,7 @@ static void anim_r2Diff(LedChainDesc_t *const lcd)
 
 static void anim_r2CalcAndSet(LedChainDesc_t *const lcd)
 {
-	for (uint32_t i = 0; i < lcd->lRawNew->ledCount; ++i)
+	for (uint32_t i = 0; i < lcd->lRawNew->ledEnd; ++i)
 	{
 		anim_render(lcd, i);
 	}
@@ -185,7 +185,11 @@ void anim_random2(LedChainDesc_t *const lcd)
 void anim_random3(mAnim_t *ctx)
 {
   assrt(ctx->lcd_ctx->diff);
-	for (uint32_t i = 0; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
+  uint32_t i;
+  for (i = 0uL; i < ctx->lcd_ctx->lRawNew->ledStart; ++i)
+    led_setLedToColor(ctx->lcd_ctx, i, 0,0,0);
+
+	for (i = ctx->lcd_ctx->lRawNew->ledStart; i < ctx->lcd_ctx->lRawNew->ledEnd; ++i)
 	{
     assrt(i<ctx->lcd_ctx->diff->size);
 
@@ -197,6 +201,8 @@ void anim_random3(mAnim_t *ctx)
 		anim_render(ctx->lcd_ctx, i);
 		++ctx->lcd_ctx->diff->lDc[i].itCur;
 	}
+	for (; i < ctx->lcd_ctx->lRawNew->ledCountMax; ++i)
+	  led_setLedToColor(ctx->lcd_ctx, i, 0,0,0);
 }
 void anim_setAllLedsToUniColors(mAnim_t *ctx)
 {

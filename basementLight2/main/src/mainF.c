@@ -22,39 +22,41 @@
  */
 #include "peripheral.h"
 #include "leds.h"
+#include "uartBridge.h"
 #include "msgeq7.h"
 #include "animations.h"
 #include "matrix.h"
 #include "com.h"
 #include "cmsis_compiler.h"
 #include "stm32f4xx_hal.h"
-
 #include "faultHandling.h"
+
 
 static uint8_t col = 5;
 static uint8_t idx = 0;
 void cycleColors(mAnim_t* ctx)
 {
-  for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount;) {
+  led_setAllLedsToColor(ctx->lcd_ctx, 0,0,0);
+  for (uint32_t i = ctx->lcd_ctx->lRawNew->ledStart; i < ctx->lcd_ctx->lRawNew->ledEnd;) {
     led_setLedToColor(ctx->lcd_ctx, i++, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col);
-    if(i < ctx->lcd_ctx->lRawNew->ledCount)
+    if(i < ctx->lcd_ctx->lRawNew->ledEnd)
       led_setLedToColor(ctx->lcd_ctx, i++, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col, ((idx + 0) % 3) ? 0 : col);
-    if(i < ctx->lcd_ctx->lRawNew->ledCount)
+    if(i < ctx->lcd_ctx->lRawNew->ledEnd)
       led_setLedToColor(ctx->lcd_ctx, i++, ((idx + 2) % 3) ? 0 : col, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col);
   }
   ++idx;
 }
 void cycleColorsSingle(mAnim_t* ctx)
 {
-  for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
+  led_setAllLedsToColor(ctx->lcd_ctx, 0,0,0);
+  for (uint32_t i = ctx->lcd_ctx->lRawNew->ledStart; i < ctx->lcd_ctx->lRawNew->ledEnd; ++i)
     led_setLedToColor(ctx->lcd_ctx, i, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col);
 
   ++idx;
 }
 void cycleColorsS(mAnim_t* ctx)
 {
-  for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
-    led_setLedToColor(ctx->lcd_ctx, i, 0,0,0);
+  led_setAllLedsToColor(ctx->lcd_ctx, 0,0,0);
 
   led_setLedToColor(ctx->lcd_ctx, 0, 0,0,0);
   led_setLedToColor(ctx->lcd_ctx, 1, 5,0,0);
@@ -81,57 +83,206 @@ void cycleColorsS(mAnim_t* ctx)
   led_setLedToColor(ctx->lcd_ctx, 249, 5,0,5);
 }
 
-void cycleColorsNone(mAnim_t* ctx)
-{
-  for (uint32_t i = 0uL; i < ctx->lcd_ctx->lRawNew->ledCount; ++i)
-    led_setLedToColor(ctx->lcd_ctx, i, 0,0,0);
-  (void)ctx;
+void allLedsOff(mAnim_t *ctx) {
+  led_setAllLedsToColor(ctx->lcd_ctx, 0, 0, 0);
+}
+
+static void cycleAnimMainL(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
+  static const void *fpMainL[] = { anim_frqDrvL, anim_random3, cycleColorsSingle, cycleColors, NULL };
+  uint32_t idx;
+
+  if (isAck) {
+    idx = *param;
+    if (fpMainL[idx] == NULL)
+      idx = 0;
+    ctx->fpRend = fpMainL[idx];
+  }
+
+  for (idx = 0; fpMainL[idx] != NULL; ++idx)
+    if (fpMainL[idx] == ctx->fpRend)
+      *param = idx;
+}
+
+static void cycleAnimMainR(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
+  static const void *fpMainR[] = { anim_frqDrvR, anim_random3, cycleColorsSingle, cycleColors, NULL };
+  uint32_t idx;
+
+  if (isAck) {
+    idx = *param;
+    if (fpMainR[idx] == NULL)
+      idx = 0;
+    ctx->fpRend = fpMainR[idx];
+  }
+
+  for (idx = 0; fpMainR[idx] != NULL; ++idx)
+    if (fpMainR[idx] == ctx->fpRend)
+      *param = idx;
+}
+
+static void enDisAble(mAnim_t *ctx, uint32_t *param, uint8_t isAck){
+  if(isAck){
+    while(ctx->state < e_Done)
+      __NOP();
+    *param ^= 1u;
+    ctx->isEnabled = *param & 0x1uL;
+    ctx->state = (ctx->isEnabled) ? e_reEnable : e_disable;
+  }
+
+  ctx->isEnabled &= 0x1u;
+  *param = ctx->isEnabled;
+}
+
+static void triggerTime(mAnim_t *ctx, uint32_t *param, uint8_t isAck){
+  if(isAck)
+    ctx->triggerTime = (param[0] > 100uL) ? param[0] : ctx->triggerTime;
+
+  *param = ctx->triggerTime;
+}
+
+static void setBrightnessTruncation(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
+
+  if (isAck) {
+    uint32_t mul = param[0];
+    uint32_t div =  param[1];
+    led_setBrightnessTruncation(ctx->lcd_ctx, mul, div);
+  }
+
+  param[0] = ctx->lcd_ctx->btMult;
+  param[1] = ctx->lcd_ctx->btDiv;
+}
+
+static void setStartAndEnd(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
+
+
+  if (isAck)
+    led_SetStartAndEnd(ctx->lcd_ctx, param[0], param[1]);
+
+  param[0] = ctx->lcd_ctx->lRawNew->ledStart;
+  param[1] = ctx->lcd_ctx->lRawNew->ledEnd;
+
 }
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTimeMs = 1000uL, .puState = done};
-mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTimeMs = 1000uL, .puState = done};
+mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
+mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 550uL, .puState = done, .isEnabled = 0u};
+uint32_t brightnessMainL[2];
+uint32_t LedStartEndMainL[2];
+uint32_t AnimIdxMainL;
+uint32_t enabledMainL;
+uint32_t trgTimeMainL;
+uint32_t brightnessMainR[2];
+uint32_t LedStartEndMainR[2];
+uint32_t AnimIdxMainR;
+uint32_t enabledMainR;
+uint32_t trgTimeMainR;
+
+static const uBrdg_Leaf mainL[6] = { {.gtFp = NULL, .des = "anim_mainL", .par = (uint32_t*)&anim_mainL, .pCt = 5},
+                              {.gtFp = enDisAble, .des = "OnOff", .par = &enabledMainL, .pCt = 1},
+                              {.gtFp = triggerTime, .des = "trgIntervall(100us)", .par = &trgTimeMainL, .pCt = 1},
+                              {.gtFp = setBrightnessTruncation, .des = "Brightness (Mult, Div)", .par = brightnessMainL, .pCt = 2},
+                              {.gtFp = setStartAndEnd, .des = "activeLeds (start / end)", .par = LedStartEndMainL, .pCt = 2},
+                              {.gtFp = cycleAnimMainL, .des = "fRender (+1;-1)", .par = &AnimIdxMainL, .pCt = 1},
+};
+static const uBrdg_Leaf mainR[6] = { {.gtFp = NULL, .des = "anim_mainR", .par = (uint32_t*)&anim_mainR, .pCt = 5},
+                              {.gtFp = enDisAble, .des = "OnOff", .par = &enabledMainR, .pCt = 1},
+                              {.gtFp = triggerTime, .des = "trgIntervall(100us)", .par = &trgTimeMainR, .pCt = 1},
+                              {.gtFp = setBrightnessTruncation, .des = "Brightness (Mult, Div)", .par = brightnessMainR, .pCt = 2},
+                              {.gtFp = setStartAndEnd, .des = "activeLeds (start / end)", .par = LedStartEndMainR, .pCt = 2},
+                              {.gtFp = cycleAnimMainR, .des = "fRender (+1;-1)", .par = &AnimIdxMainR, .pCt = 1},
+};
+static const uBrdg_Leaf mtrx[6] = { {.gtFp = NULL, .des = "anim_matrix", .par = (uint32_t*)&anim_matrix, .pCt = 5},
+                              {.gtFp = enDisAble, .des = "OnOff", .par = &enabledMainR, .pCt = 1},
+                              {.gtFp = triggerTime, .des = "trgIntervall(100us)", .par = &trgTimeMainR, .pCt = 1},
+                              {.gtFp = setBrightnessTruncation, .des = "Brightness (Mult, Div)", .par = brightnessMainR, .pCt = 2},
+                              {.gtFp = NULL, .des = "N/A", .par = NULL, .pCt = 0},
+                              {.gtFp = NULL, .des = "N/A", .par = NULL, .pCt = 0},
+};
+
+const uBrdg_Leaf *const leafs[4] = {
+    mainL, mainR, mtrx, NULL
+};
+
+static void acLeaf(pb_Ctx *const rCtx, pb_Ctx *const tCtx, uint8_t isAck)
+{
+  uint8_t i, ii,  j, k, idx = 0u;
+
+  bPar_GetIdcs(&ii, &j, &k);
+  i = ii ? ii - 1 : ii;
+
+  if (isAck)
+    while (idx < leafs[i][j].pCt) {
+      leafs[i][j].par[idx] = pb_Convert(rCtx, NULL);
+      ++idx;
+    }
+
+  if (*(leafs[i])[j].gtFp)
+    leafs[i][j].gtFp((mAnim_t*) leafs[i][0].par, leafs[i][j].par, isAck);
+
+  pb_txPutIndices(tCtx, ii, j, k);
+  idx = 0u;
+  while (idx < leafs[i][j].pCt) {
+    pb_txPutVal(tCtx, leafs[i][j].par[idx]);
+    ++idx;
+  }
+  pb_txPutStr(tCtx, "\r");
+  com_Tx();
+  bp_ResetRx(rCtx);
+}
 
 extern void led_startTransmitData(LedChainDesc_t* lcd);
 static void cyclicReSend(mAnim_t *ctx) {
 
-  switch (ctx->state) {
-  case e_render:
-//    ctx->a = HAL_GetTick();
-    ctx->fpRend(ctx);
-//    ctx->b = HAL_GetTick() - ctx->a;
-    ctx->state = e_StartDma;
-    break;
+    switch (ctx->state) {
+    case e_render:
+      if(ctx->isEnabled){
+        ctx->fpRend(ctx);
+        ctx->state = e_StartDma;
+      } else ctx->state = e_disable;
 
-  case e_StartDma:
-//		ctx->c = HAL_GetTick();
-//		ctx->d = HAL_GetTick() - ctx->c;
-//		ctx->e = HAL_GetTick();
-    if(((HAL_GetTick() - ctx->lastToggle) < ctx->triggerTimeMs))
-      return;
-    ctx->lastToggle = HAL_GetTick();
-    ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
-    ctx->lcd_ctx->lRawNew->rS = e_Precursor;
-    led_txRaw(ctx->lcd_ctx);
-    ctx->state = e_waitDmaDone;
-    break;
 
-  case e_waitDmaDone:
-    if (ctx->lcd_ctx->lRawNew->rS == e_done)
+      break;
+
+    case e_StartDma:
+      ctx->lcd_ctx->lRawNew->dS = e_fadeIn;
+      ctx->lcd_ctx->lRawNew->rS = e_Precursor;
+      if(TIM_CHANNEL_STATE_GET(ctx->lcd_ctx->timer, ctx->lcd_ctx->timChannel) == HAL_TIM_CHANNEL_STATE_READY){
+        led_txRaw(ctx->lcd_ctx);
+        ctx->state = e_waitDmaDone;
+      }
+      break;
+
+    case e_waitDmaDone:
+      if (ctx->lcd_ctx->lRawNew->rS == e_done)
+        ctx->state = e_Done;
+      break;
+
+    case e_reEnable:
+      ctx->lcd_ctx->lRawNew->rS = e_done;
+      led_stopTransmitData(ctx->lcd_ctx);
       ctx->state = e_render;
-    break;
+      break;
+    case e_disabled:
+      break;
+    case e_disable:
+      ctx->lcd_ctx->lRawNew->rS = e_done;
+      led_stopTransmitData(ctx->lcd_ctx);
+      allLedsOff(ctx);
+      ctx->state = e_StartDma;
+      break;
+    case e_Done:
+      if(((HAL_GetTick() - ctx->lastToggle) > ctx->triggerTime)){
+        ctx->lastToggle = HAL_GetTick();
+        ctx->state = ctx->isEnabled ? e_render : e_disabled;
+      }
+      break;
 
-  case e_waitTxCplt:
-  case e_paste:
-    break;
-
-  default:
-    __BKPT(0);
-    break;
-  }
+    default:
+      __BKPT(0);
+      break;
+    }
 }
 
 void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
@@ -162,22 +313,77 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 	 */
 }
 
+
+static void maintainStatusLeds(void) {
+  static const uint32_t blueLedToggleTimeMs = 100uL;
+  static uint32_t lastToggle = 0uL;
+  static uint8_t mrtxPuState = 0u;
+  if ((HAL_GetTick() - lastToggle) > blueLedToggleTimeMs) {
+    lastToggle = HAL_GetTick();
+
+    static uint8_t swCount = 0u;
+    if (getModeSwitch()) {
+      ++swCount;
+      if (swCount > 7u) {
+        swCount = 0u;
+        orangeLedToggle();
+
+        if (mrtxPuState < 5)
+          ++mrtxPuState;
+        if (mrtxPuState == 1)
+          anim_matrix.isEnabled ^= 1u;
+        else if (mrtxPuState == 2)
+        {
+          anim_mainL.triggerTime = 550uL;
+          anim_mainL.fpRend = anim_frqDrvL;
+          anim_mainR.triggerTime = 550uL;
+          anim_mainR.fpRend = anim_frqDrvR;
+        }
+        else if (mrtxPuState == 3)
+          anim_matrix.isEnabled ^= 1u;
+        else if (mrtxPuState == 4)
+        {
+          anim_mainL.triggerTime = 1000uL;
+          anim_mainL.fpRend = anim_random3;
+          anim_mainR.triggerTime = 1000uL;
+          anim_mainR.fpRend = anim_random3;
+        }
+        else {
+          if (anim_mainL.lcd_ctx->lRawNew->ledEnd > 20)
+            anim_mainL.lcd_ctx->lRawNew->ledEnd -= 20;
+          else
+            anim_mainL.lcd_ctx->lRawNew->ledEnd = anim_mainL.lcd_ctx->lRawNew->ledCountMax;
+
+          if (anim_mainR.lcd_ctx->lRawNew->ledEnd > 20)
+            anim_mainR.lcd_ctx->lRawNew->ledEnd -= 20;
+          else
+          {
+            anim_mainL.lcd_ctx->lRawNew->ledEnd = anim_mainL.lcd_ctx->lRawNew->ledCountMax;
+            anim_mainR.lcd_ctx->lRawNew->ledEnd = anim_mainR.lcd_ctx->lRawNew->ledCountMax;
+            mrtxPuState = 0u;
+          }
+        }
+      }
+    }
+  }
+}
 /** @brief main function
  */
 int main(void)
 {
+  pb_ParserState parStt;
 	initClock();
 	initPeripherals();
 	com_SetDump();
 
-	led_setBrightnessTruncation(&lcd_mainL, 1uL, 1uL);
-	led_setBrightnessTruncation(&lcd_mainR, 1uL, 1uL);
-	led_setBrightnessTruncation(&lcd_matrix, 1uL, 1uL);
+	led_setBrightnessTruncation(anim_mainL.lcd_ctx, 1uL, 1uL);
+	led_setBrightnessTruncation(anim_mainR.lcd_ctx, 1uL, 1uL);
+	led_setBrightnessTruncation(anim_matrix.lcd_ctx, 1uL, 1uL);
 
 	mtrx_Init();
-	led_LedLogicInit(&lcd_matrix);
-	led_LedLogicInit(&lcd_mainL);
-	led_LedLogicInit(&lcd_mainR);
+	led_LedLogicInit(anim_mainL.lcd_ctx);
+	led_LedLogicInit(anim_mainR.lcd_ctx);
+	led_LedLogicInit(anim_matrix.lcd_ctx);
 
 	__enable_irq();
 
@@ -185,16 +391,34 @@ int main(void)
 
 	for (;;)
 	{
-//		maintainModeSwitch();
+	  maintainStatusLeds();
 		msgeq_ticker();
-		cyclicReSend(&anim_matrix);
+		parStt = bp_Parse(&rxCtx);
+		if(parStt > pb_eTimeOut)
+		  acLeaf(&rxCtx, &txCtx, parStt == pb_eAck ? 1u : 0u);
+
+
 		cyclicReSend(&anim_mainL);
 		cyclicReSend(&anim_mainR);
+		cyclicReSend(&anim_matrix);
 	}
 }
 
-uint32_t HAL_GetTick(void)
+void _close(void)
 {
-  return __HAL_TIM_GET_COUNTER(&htim2);
 }
+
+void _lseek(void)
+{
+
+}
+
+void _read(void)
+{
+}
+
+void _write(void)
+{
+}
+
 /** @}*/

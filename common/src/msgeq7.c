@@ -179,8 +179,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
       if(ctx != NULL)
                mT.adcChan22[mT.cycle] =  ctx->f(ctx, mT.adcChan2[mT.cycle]);
    } else {
-      if (hadc == &hadc1)
-//         ADC_ConvCpltCallback(hadc);
       return;
    }
 

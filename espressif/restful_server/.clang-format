@@ -1,0 +1,14 @@
+# We'll use defaults from the LLVM style, but with some modifications so that it's close to the CDT K&R style.
+BasedOnStyle: Google
+UseTab: UT_Never
+IndentWidth: 2
+TabWidth: 2
+BreakConstructorInitializers: AfterColon
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+
+Language: Cpp
+# Force pointers to the type for C++.
+DerivePointerAlignment: false
+PointerAlignment: Left
+ColumnLimit: 240

@@ -25,13 +25,27 @@
 #define ASSRT_H_
 
 #include "cmsis_compiler.h"
+#include "com.h"
 #include "stddef.h"
 #include <stdbool.h>
 
-#ifndef NO_ASSRT
+#define BREAK 1
+#define TEXT 2
+#define ASSRT TEXT
+
+#define S1(x) #x
+#define S2(x) S1(x)
+#define LOCATION __FILE_NAME__ " : " S2(__LINE__)
+
+#if (ASSRT == BREAK)
    #define assrt(b) if((b)==false) __BKPT(0)
    #define assrtRet(b) if((b)==false) return
-#else
+#endif
+#if (ASSRT == TEXT)
+  #define assrt(b) if((b)==false) (com_TxBuff( LOCATION , sizeof(LOCATION)))
+   #define assrtRet(b) if((b)==false) return
+#endif
+#ifndef ASSRT
    #define assrt(b)
    #define assrtRet(b)
 #endif
