@@ -35,13 +35,13 @@ LedChainDesc_t lcd_matrix = { \
       .lLogic = &ledsLog_matrix[0], \
       .lRawNew = &matrix_dma, \
       .timer = &htim3, \
-      .timChannel = TIM_CHANNEL_3, \
+      .timChannel = TIM_CHANNEL_1, \
       .diff = NULL,\
   };
 LedChainDesc_t lcd_mainR = { \
       .lLogic = &ledsLog_mainR[0], \
       .lRawNew = &mainR_dma, \
-      .timer = &htim4, \
+      .timer = &htim3, \
       .timChannel = TIM_CHANNEL_2, \
       .diff = &mainR_diff,\
   };
@@ -49,6 +49,6 @@ LedChainDesc_t lcd_mainL = { \
       .lLogic = &ledsLog_mainL[0], \
       .lRawNew = &mainL_dma, \
       .timer = &htim3, \
-      .timChannel = TIM_CHANNEL_2, \
+      .timChannel = TIM_CHANNEL_3, \
       .diff = &mainL_diff,\
   };

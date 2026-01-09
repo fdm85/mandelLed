@@ -37,20 +37,12 @@
 #endif
 
 
-#define RX_BUF_SZ 64u
-static char rxBuf[RX_BUF_SZ];
-pb_Ctx rxCtx = {.pl = rxBuf, .hwCtx = &huart2, .sz = RX_BUF_SZ, .to = 5000uL};
-
-#define TX_BUF_SZ 64u
-static char txBuf[TX_BUF_SZ];
-pb_Ctx txCtx = {.pl = txBuf, .hwCtx = &huart2, .sz = TX_BUF_SZ};
-
 static char faultDumpBuffer[FAULT_HANDLING_DUMP_SIZE];
 #define FailStr "snprintf failed!"
 #define FailSz (sizeof(FailStr))
 
 static void com_DumpFault(void) {
-  HAL_UART_Transmit(&huart2, (const uint8_t *)faultDumpBuffer, sizeof(FAULT_HANDLING_DUMP_SIZE), 1000uL);
+  HAL_UART_Transmit(txCtx.hwCtx, (const uint8_t *)faultDumpBuffer, sizeof(FAULT_HANDLING_DUMP_SIZE), 1000uL);
 }
 void com_SetDump(void) {
   faultHandlingSetDumpProcessor( faultDumpBuffer, com_DumpFault );
@@ -75,7 +67,7 @@ void com_Tx(void)
 }
 void com_TxBuff(const char * buff, size_t sz)
 {
-  HAL_UART_Transmit(&huart2, (const uint8_t*)buff, (uint16_t)sz, 1000uL);
+  HAL_UART_Transmit(txCtx.hwCtx, (const uint8_t*)buff, (uint16_t)sz, 1000uL);
 }
 
 /**
@@ -83,7 +75,7 @@ void com_TxBuff(const char * buff, size_t sz)
  */
 void com_enableRx(void) {
 
-	HAL_StatusTypeDef res = HAL_UART_Receive_IT(&huart2, (uint8_t*) rxBuf, RX_BUF_SZ);
+	HAL_StatusTypeDef res = HAL_UART_Receive_IT(rxCtx.hwCtx, (uint8_t*) rxBuf, RX_BUF_SZ);
 
 	if(res != HAL_OK)
 	{

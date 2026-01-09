@@ -31,6 +31,8 @@
 #include "stm32f4xx_hal.h"
 #include "faultHandling.h"
 #include <string.h>
+#include "BridgeParser.h"
+
 
 static uint8_t col = 5;
 static uint8_t idx = 0;
@@ -404,13 +406,11 @@ int main(void)
 
 	for (;;)
 	{
-	  maintainStatusLeds();
-		msgeq_ticker();
-		parStt = bp_Parse(&rxCtx);
-		if(parStt > pb_eEnqAll)
-		  acLeaf(&rxCtx, &txCtx, parStt == pb_eAck ? 1u : 0u);
-		if(parStt == pb_eEnqAll)
-		  acQueryAll();
+    maintainStatusLeds();
+    msgeq_ticker();
+    parStt = bp_Parse(&rxCtx);
+    if(parStt > pb_eTimeOut)
+      acLeaf(&rxCtx, &txCtx, parStt == pb_eAck ? 1u : 0u);
 
 
 		cyclicReSend(&anim_mainL);

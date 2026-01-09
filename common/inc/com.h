@@ -27,11 +27,9 @@
 #include <stdint.h>
 #include <string.h>
 #include "uartBridge.h"
-#include "BridgeParser.h"
+#include "comPrj.h"
 
 extern const uBrdg_Leaf *const leafs[];
-extern pb_Ctx rxCtx;
-extern pb_Ctx txCtx;
 
 void com_SetDump(void);
 void com_Init(void);

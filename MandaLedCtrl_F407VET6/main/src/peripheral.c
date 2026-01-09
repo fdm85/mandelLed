@@ -43,38 +43,37 @@ void initPeripherals(void)
 {
 	MX_GPIO_Init();
 	MX_DMA_Init();
-	MX_TIM2_Init();
 	MX_TIM3_Init();
-	MX_TIM4_Init();
+	MX_TIM6_Init();
 	MX_RNG_Init();
+	MX_ADC1_Init();
 	MX_ADC2_Init();
 	MX_ADC3_Init();
-	MX_USART2_UART_Init();
+	MX_USART1_UART_Init();
 }
 
 uint32_t HAL_GetTick(void)
 {
-  return __HAL_TIM_GET_COUNTER(&htim2);
+  return LL_TIM_GetCounter(TIM6);
 }
 
 void greenLedToggle(void)
 {
-	HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+  LL_GPIO_TogglePin(UsrLed1_GPIO_Port, UsrLed1_Pin);
 }
 
 void orangeLedToggle(void)
 {
-	HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+  LL_GPIO_TogglePin(UsrLed2_GPIO_Port, UsrLed2_Pin);
 }
 
-void blueLedToggle(void)
-{
-	HAL_GPIO_TogglePin(LD6_GPIO_Port, LD6_Pin);
+void blueLedToggle(void){
+
 }
 
 bool getModeSwitch(void)
 {
-	return HAL_GPIO_ReadPin(But1_GPIO_Port, But1_Pin);
+	return (LL_GPIO_IsInputPinSet(Key1_GPIO_Port, Key1_Pin)) ? true : false;
 }
 
 static uint32_t adcVal[3] =
