@@ -61,6 +61,10 @@ void SystemClock_Config(void);
 #define Key1_GPIO_Port GPIOE
 #define Key0_Pin GPIO_PIN_4
 #define Key0_GPIO_Port GPIOE
+#define MS_RESET_Pin GPIO_PIN_5
+#define MS_RESET_GPIO_Port GPIOE
+#define MS_STROBE_Pin GPIO_PIN_6
+#define MS_STROBE_GPIO_Port GPIOE
 #define RL_Pin GPIO_PIN_0
 #define RL_GPIO_Port GPIOC
 #define RM_Pin GPIO_PIN_1
