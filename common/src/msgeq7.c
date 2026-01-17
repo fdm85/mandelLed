@@ -116,7 +116,7 @@ void msgeq_ticker(void) {
       break;
       // reset to strobe delay 72uS
    case eStart:
-      if (tElapsed(&mT.initTime) >= 1uL) {
+      if (tElapsed(&mT.initTime) >= 8uL) {
          mT.gS = eStrobe;
       } else {
          if (!mT.initTime.started)
@@ -127,7 +127,7 @@ void msgeq_ticker(void) {
       // min strobe pulse width 18uS
       // min stobe to strobe delay 72us (falling edge to falling edge)
    case eStrobe:
-      if (tElapsed(&mT.strobeTime) >= 1uL) {
+      if (tElapsed(&mT.strobeTime) >= 2uL) {
          exStrobe();
          mT.gS = eAdcStart;
       } else {
@@ -137,7 +137,7 @@ void msgeq_ticker(void) {
       break;
       // min output settling time 36uS
    case eAdcStart:
-      if (tElapsed(&mT.strobeTime) > 2uL) {
+      if (tElapsed(&mT.strobeTime) > 4uL) {
          sAdc();
          mT.gS = eAdcFin;
       }
