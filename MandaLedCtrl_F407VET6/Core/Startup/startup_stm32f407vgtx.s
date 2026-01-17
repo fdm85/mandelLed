@@ -291,19 +291,19 @@ g_pfnVectors:
 * 
 *******************************************************************************/
    .weak      NMI_Handler
-   .thumb_set NMI_Handler,Default_Handler
+   .thumb_set NMI_Handler,FaultHandler
   
    .weak      HardFault_Handler
-   .thumb_set HardFault_Handler,Default_Handler
+   .thumb_set HardFault_Handler,FaultHandler
   
    .weak      MemManage_Handler
-   .thumb_set MemManage_Handler,Default_Handler
+   .thumb_set MemManage_Handler,FaultHandler
   
    .weak      BusFault_Handler
-   .thumb_set BusFault_Handler,Default_Handler
+   .thumb_set BusFault_Handler,FaultHandler
 
    .weak      UsageFault_Handler
-   .thumb_set UsageFault_Handler,Default_Handler
+   .thumb_set UsageFault_Handler,FaultHandler
 
    .weak      SVC_Handler
    .thumb_set SVC_Handler,Default_Handler
