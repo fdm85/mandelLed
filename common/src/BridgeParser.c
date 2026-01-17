@@ -85,7 +85,7 @@ void bp_ResetTx(pb_Ctx *const tCtx){
 
 pb_ParserState bp_Parse(pb_Ctx *const rCtx) {
   uint32_t aux;
-  char rdPost;
+  char rdPost = 0x0u;
   uint8_t i, j, k;
 
   if(rCtx->rd && (rCtx->rd == rCtx->wr))
