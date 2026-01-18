@@ -76,7 +76,7 @@ void blueLedToggle(void){
 
 bool getModeSwitch(void)
 {
-  return HAL_GPIO_ReadPin(Key1_GPIO_Port, Key1_Pin);
+  return !HAL_GPIO_ReadPin(Key1_GPIO_Port, Key1_Pin);
 //	return (LL_GPIO_IsInputPinSet(Key1_GPIO_Port, Key1_Pin)) ? true : false;
 }
 

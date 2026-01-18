@@ -39,7 +39,6 @@ typedef struct mT_s {
    time_t cycleTime;
    uint32_t cycleTarget;
    time_t strobeTime;
-   uint32_t strobeTarget;
    uint32_t adcChan1[eMax];
    uint32_t adcChan2[eMax];
    uint32_t adcChan12[eMax];
@@ -56,8 +55,7 @@ static mT_t mT = { .cc1 = { &cc1_64, &cc1_160, &cc1_400, &cc1_1k, &cc1_2k5, &cc1
 
 static void sInit(void) {
    assrt(mT.gS == eInit);
-   mT.cycleTarget = 40uL;
-   mT.strobeTarget = 1uL;
+   mT.cycleTarget = 5000uL;
    tStart(&mT.initTime);
    HAL_GPIO_WritePin(MS_RESET_GPIO_Port, MS_RESET_Pin, GPIO_PIN_SET);
 }
@@ -106,7 +104,7 @@ void msgeq_ticker(void) {
    switch (mT.gS) {
    // min reset pulse width 100nS
    case eInit:
-      if (tElapsed(&mT.initTime) >= 1uL) {
+      if (tElapsed(&mT.initTime) >= 3uL) {
          exInit();
          mT.gS = eStart;
       } else {
@@ -116,7 +114,7 @@ void msgeq_ticker(void) {
       break;
       // reset to strobe delay 72uS
    case eStart:
-      if (tElapsed(&mT.initTime) >= 8uL) {
+      if (tElapsed(&mT.initTime) >= 9uL) {
          mT.gS = eStrobe;
       } else {
          if (!mT.initTime.started)
@@ -125,9 +123,9 @@ void msgeq_ticker(void) {
 
       break;
       // min strobe pulse width 18uS
-      // min stobe to strobe delay 72us (falling edge to falling edge)
+      // min strobe to strobe delay 72us (falling edge to falling edge)
    case eStrobe:
-      if (tElapsed(&mT.strobeTime) >= 2uL) {
+      if (tElapsed(&mT.strobeTime) >= 3uL) {
          exStrobe();
          mT.gS = eAdcStart;
       } else {
@@ -137,7 +135,7 @@ void msgeq_ticker(void) {
       break;
       // min output settling time 36uS
    case eAdcStart:
-      if (tElapsed(&mT.strobeTime) > 4uL) {
+      if (tElapsed(&mT.strobeTime) >= 7uL) {
          sAdc();
          mT.gS = eAdcFin;
       }
