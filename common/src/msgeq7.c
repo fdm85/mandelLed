@@ -55,7 +55,7 @@ static mT_t mT = { .cc1 = { &cc1_64, &cc1_160, &cc1_400, &cc1_1k, &cc1_2k5, &cc1
 
 static void sInit(void) {
    assrt(mT.gS == eInit);
-   mT.cycleTarget = 5000uL;
+   mT.cycleTarget = 4000uL;
    tStart(&mT.initTime);
    HAL_GPIO_WritePin(MS_RESET_GPIO_Port, MS_RESET_Pin, GPIO_PIN_SET);
 }
@@ -144,6 +144,7 @@ void msgeq_ticker(void) {
       if (mT.actChan == 3uL) {
          ++mT.cycle;
          if (mT.cycle == eMax) {
+           HAL_GPIO_WritePin(MS_STROBE_GPIO_Port, MS_STROBE_Pin, GPIO_PIN_SET);
             mT.gS = eFin;
          } else
             mT.gS = eStrobe;
