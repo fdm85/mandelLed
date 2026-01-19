@@ -43,7 +43,7 @@ bool clk_first_set[8];
 /* Private functions */
 /*********************/
 
-static uint64_t pll_calc(enum si5351_pll pll, uint64_t freq, struct Si5351RegSet *reg, uint32_t correction, uint8_t vcxo)
+static uint64_t pll_calc(enum si5351_pll pll, uint64_t freq, struct Si5351RegSet *reg, int32_t correction, uint8_t vcxo)
 {
   uint64_t ref_freq;
   if(pll == SI5351_PLLA)
@@ -1071,7 +1071,7 @@ void Si5351_set_ms(enum si5351_clock clk, struct Si5351RegSet ms_reg, uint8_t in
     params[i++] = temp;
 
     // Register 44 for CLK0
-    reg_val = Si5351_read((SI5351_CLK0_PARAMETERS + 2) + (clk * 8));
+    reg_val = Si5351_read((SI5351_CLK0_PARAMETERS + 2u) + (uint8_t)(clk * 8u));
     reg_val &= (uint8_t)~(0x03);
     temp = reg_val | ((uint8_t)((ms_reg.p1 >> 16) & 0x03));
     params[i++] = temp;
@@ -1120,7 +1120,7 @@ void Si5351_set_ms(enum si5351_clock clk, struct Si5351RegSet ms_reg, uint8_t in
       ms_div(clk, r_div, div_by_4);
       break;
     case SI5351_CLK3:
-      si5351_write_bulk(SI5351_CLK3_PARAMETERS, i, params);
+      Si5351_write_bulk(SI5351_CLK3_PARAMETERS, i, params);
       Si5351_set_int(clk, int_mode);
       ms_div(clk, r_div, div_by_4);
       break;
@@ -1561,7 +1561,7 @@ void Si5351_set_clock_fanout(enum si5351_clock_fanout fanout, uint8_t enable)
     }
     else
     {
-      reg_val &= ~(SI5351_CLKIN_ENABLE);
+      reg_val &=  (uint8_t)~(SI5351_CLKIN_ENABLE);
     }
     break;
   case SI5351_FANOUT_XO:
@@ -1571,7 +1571,7 @@ void Si5351_set_clock_fanout(enum si5351_clock_fanout fanout, uint8_t enable)
     }
     else
     {
-      reg_val &= ~(SI5351_XTAL_ENABLE);
+      reg_val &=  (uint8_t)~(SI5351_XTAL_ENABLE);
     }
     break;
   case SI5351_FANOUT_MS:
@@ -1581,7 +1581,7 @@ void Si5351_set_clock_fanout(enum si5351_clock_fanout fanout, uint8_t enable)
     }
     else
     {
-      reg_val &= ~(SI5351_MULTISYNTH_ENABLE);
+      reg_val &=  (uint8_t)~(SI5351_MULTISYNTH_ENABLE);
     }
     break;
   default:
@@ -1643,8 +1643,8 @@ void Si5351_set_pll_input(enum si5351_pll pll, enum si5351_pll_input input)
 
   Si5351_write(SI5351_PLL_INPUT_SOURCE, reg_val);
 
-  set_pll(plla_freq, SI5351_PLLA);
-  set_pll(pllb_freq, SI5351_PLLB);
+  Si5351_set_pll(plla_freq, SI5351_PLLA);
+  Si5351_set_pll(pllb_freq, SI5351_PLLB);
 }
 
 /*
@@ -1712,7 +1712,7 @@ void Si5351_set_vcxo(uint64_t pll_freq, uint8_t ppm)
   params[i++] = temp;
 
   // Write the parameters
-  si5351_write_bulk(SI5351_PLLB_PARAMETERS, i, params);
+  Si5351_write_bulk(SI5351_PLLB_PARAMETERS, i, params);
 
   // Write the VCXO parameters
   vcxo_param = ((vcxo_param * ppm * SI5351_VCXO_MARGIN) / 100ULL) / 1000000ULL;
