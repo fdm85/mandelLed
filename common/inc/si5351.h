@@ -33,157 +33,157 @@
 #include <stdbool.h>
 /* Define definitions */
 
-#define SI5351_BUS_BASE_ADDR            0x60
-#define SI5351_XTAL_FREQ                25000000
+#define SI5351_BUS_BASE_ADDR            0x60u
+#define SI5351_XTAL_FREQ                25000000u
 #define SI5351_PLL_FIXED                80000000000ULL
 #define SI5351_FREQ_MULT                100ULL
 #define SI5351_DEFAULT_CLK              1000000000ULL
 
-#define SI5351_PLL_VCO_MIN              600000000
-#define SI5351_PLL_VCO_MAX              900000000
-#define SI5351_MULTISYNTH_MIN_FREQ      500000
-#define SI5351_MULTISYNTH_DIVBY4_FREQ   150000000
-#define SI5351_MULTISYNTH_MAX_FREQ      225000000
-#define SI5351_MULTISYNTH_SHARE_MAX     100000000
-#define SI5351_MULTISYNTH_SHARE_MIN     1024000
+#define SI5351_PLL_VCO_MIN              600000000u
+#define SI5351_PLL_VCO_MAX              900000000u
+#define SI5351_MULTISYNTH_MIN_FREQ      500000u
+#define SI5351_MULTISYNTH_DIVBY4_FREQ   150000000u
+#define SI5351_MULTISYNTH_MAX_FREQ      225000000u
+#define SI5351_MULTISYNTH_SHARE_MAX     100000000u
+#define SI5351_MULTISYNTH_SHARE_MIN     1024000u
 #define SI5351_MULTISYNTH67_MAX_FREQ    SI5351_MULTISYNTH_DIVBY4_FREQ
-#define SI5351_CLKOUT_MIN_FREQ          4000
+#define SI5351_CLKOUT_MIN_FREQ          4000u
 #define SI5351_CLKOUT_MAX_FREQ          SI5351_MULTISYNTH_MAX_FREQ
 #define SI5351_CLKOUT67_MS_MIN          SI5351_PLL_VCO_MIN / SI5351_MULTISYNTH67_A_MAX
 #define SI5351_CLKOUT67_MIN_FREQ        SI5351_CLKOUT67_MS_MIN / 128
 #define SI5351_CLKOUT67_MAX_FREQ        SI5351_MULTISYNTH67_MAX_FREQ
 
-#define SI5351_PLL_A_MIN                15
-#define SI5351_PLL_A_MAX                90
+#define SI5351_PLL_A_MIN                15u
+#define SI5351_PLL_A_MAX                90u
 #define SI5351_PLL_B_MAX                (SI5351_PLL_C_MAX-1)
-#define SI5351_PLL_C_MAX                1048575
-#define SI5351_MULTISYNTH_A_MIN         6
-#define SI5351_MULTISYNTH_A_MAX         1800
-#define SI5351_MULTISYNTH67_A_MAX       254
+#define SI5351_PLL_C_MAX                1048575u
+#define SI5351_MULTISYNTH_A_MIN         6u
+#define SI5351_MULTISYNTH_A_MAX         1800u
+#define SI5351_MULTISYNTH67_A_MAX       254u
 #define SI5351_MULTISYNTH_B_MAX         (SI5351_MULTISYNTH_C_MAX-1)
 #define SI5351_MULTISYNTH_C_MAX         1048575
-#define SI5351_MULTISYNTH_P1_MAX        ((1<<18)-1)
-#define SI5351_MULTISYNTH_P2_MAX        ((1<<20)-1)
-#define SI5351_MULTISYNTH_P3_MAX        ((1<<20)-1)
-#define SI5351_VCXO_PULL_MIN            30
-#define SI5351_VCXO_PULL_MAX            240
-#define SI5351_VCXO_MARGIN              103
+#define SI5351_MULTISYNTH_P1_MAX        ((1u<<18)-1)
+#define SI5351_MULTISYNTH_P2_MAX        ((1u<<20)-1)
+#define SI5351_MULTISYNTH_P3_MAX        ((1u<<20)-1)
+#define SI5351_VCXO_PULL_MIN            30u
+#define SI5351_VCXO_PULL_MAX            240u
+#define SI5351_VCXO_MARGIN              103u
 
-#define SI5351_DEVICE_STATUS            0
-#define SI5351_INTERRUPT_STATUS         1
-#define SI5351_INTERRUPT_MASK           2
-#define SI5351_STATUS_SYS_INIT          (1<<7)
-#define SI5351_STATUS_LOL_B             (1<<6)
-#define SI5351_STATUS_LOL_A             (1<<5)
-#define SI5351_STATUS_LOS               (1<<4)
-#define SI5351_OUTPUT_ENABLE_CTRL       3
-#define SI5351_OEB_PIN_ENABLE_CTRL      9
-#define SI5351_PLL_INPUT_SOURCE         15
-#define SI5351_CLKIN_DIV_MASK           (3<<6)
-#define SI5351_CLKIN_DIV_1              (0<<6)
-#define SI5351_CLKIN_DIV_2              (1<<6)
-#define SI5351_CLKIN_DIV_4              (2<<6)
-#define SI5351_CLKIN_DIV_8              (3<<6)
-#define SI5351_PLLB_SOURCE              (1<<3)
-#define SI5351_PLLA_SOURCE              (1<<2)
+#define SI5351_DEVICE_STATUS            0u
+#define SI5351_INTERRUPT_STATUS         1u
+#define SI5351_INTERRUPT_MASK           2u
+#define SI5351_STATUS_SYS_INIT          (1u<<7u)
+#define SI5351_STATUS_LOL_B             (1u<<6u)
+#define SI5351_STATUS_LOL_A             (1u<<5u)
+#define SI5351_STATUS_LOS               (1u<<4u)
+#define SI5351_OUTPUT_ENABLE_CTRL       3u
+#define SI5351_OEB_PIN_ENABLE_CTRL      9u
+#define SI5351_PLL_INPUT_SOURCE         15u
+#define SI5351_CLKIN_DIV_MASK           (3u<<6u)
+#define SI5351_CLKIN_DIV_1              (0u<<6u)
+#define SI5351_CLKIN_DIV_2              (1u<<6u)
+#define SI5351_CLKIN_DIV_4              (2u<<6u)
+#define SI5351_CLKIN_DIV_8              (3u<<6u)
+#define SI5351_PLLB_SOURCE              (1u<<3u)
+#define SI5351_PLLA_SOURCE              (1u<<2u)
 
-#define SI5351_CLK0_CTRL                16
-#define SI5351_CLK1_CTRL                17
-#define SI5351_CLK2_CTRL                18
-#define SI5351_CLK3_CTRL                19
-#define SI5351_CLK4_CTRL                20
-#define SI5351_CLK5_CTRL                21
-#define SI5351_CLK6_CTRL                22
-#define SI5351_CLK7_CTRL                23
-#define SI5351_CLK_POWERDOWN            (1<<7)
-#define SI5351_CLK_INTEGER_MODE         (1<<6)
-#define SI5351_CLK_PLL_SELECT           (1<<5)
-#define SI5351_CLK_INVERT               (1<<4)
-#define SI5351_CLK_INPUT_MASK           (3<<2)
-#define SI5351_CLK_INPUT_XTAL           (0<<2)
-#define SI5351_CLK_INPUT_CLKIN          (1<<2)
-#define SI5351_CLK_INPUT_MULTISYNTH_0_4 (2<<2)
-#define SI5351_CLK_INPUT_MULTISYNTH_N   (3<<2)
-#define SI5351_CLK_DRIVE_STRENGTH_MASK  (3<<0)
-#define SI5351_CLK_DRIVE_STRENGTH_2MA   (0<<0)
-#define SI5351_CLK_DRIVE_STRENGTH_4MA   (1<<0)
-#define SI5351_CLK_DRIVE_STRENGTH_6MA   (2<<0)
-#define SI5351_CLK_DRIVE_STRENGTH_8MA   (3<<0)
+#define SI5351_CLK0_CTRL                16u
+#define SI5351_CLK1_CTRL                17u
+#define SI5351_CLK2_CTRL                18u
+#define SI5351_CLK3_CTRL                19u
+#define SI5351_CLK4_CTRL                20u
+#define SI5351_CLK5_CTRL                21u
+#define SI5351_CLK6_CTRL                22u
+#define SI5351_CLK7_CTRL                23u
+#define SI5351_CLK_POWERDOWN            (1u<<7u)
+#define SI5351_CLK_INTEGER_MODE         (1u<<6u)
+#define SI5351_CLK_PLL_SELECT           (1u<<5u)
+#define SI5351_CLK_INVERT               (1u<<4u)
+#define SI5351_CLK_INPUT_MASK           (3u<<2u)
+#define SI5351_CLK_INPUT_XTAL           (0u<<2u)
+#define SI5351_CLK_INPUT_CLKIN          (1u<<2u)
+#define SI5351_CLK_INPUT_MULTISYNTH_0_4 (2u<<2u)
+#define SI5351_CLK_INPUT_MULTISYNTH_N   (3u<<2u)
+#define SI5351_CLK_DRIVE_STRENGTH_MASK  (3u<<0u)
+#define SI5351_CLK_DRIVE_STRENGTH_2MA   (0u<<0u)
+#define SI5351_CLK_DRIVE_STRENGTH_4MA   (1u<<0u)
+#define SI5351_CLK_DRIVE_STRENGTH_6MA   (2u<<0u)
+#define SI5351_CLK_DRIVE_STRENGTH_8MA   (3u<<0u)
 
-#define SI5351_CLK3_0_DISABLE_STATE     24
-#define SI5351_CLK7_4_DISABLE_STATE     25
-#define SI5351_CLK_DISABLE_STATE_MASK   3
-#define SI5351_CLK_DISABLE_STATE_LOW    0
-#define SI5351_CLK_DISABLE_STATE_HIGH   1
-#define SI5351_CLK_DISABLE_STATE_FLOAT  2
-#define SI5351_CLK_DISABLE_STATE_NEVER  3
+#define SI5351_CLK3_0_DISABLE_STATE     24u
+#define SI5351_CLK7_4_DISABLE_STATE     25u
+#define SI5351_CLK_DISABLE_STATE_MASK   3u
+#define SI5351_CLK_DISABLE_STATE_LOW    0u
+#define SI5351_CLK_DISABLE_STATE_HIGH   1u
+#define SI5351_CLK_DISABLE_STATE_FLOAT  2u
+#define SI5351_CLK_DISABLE_STATE_NEVER  3u
 
-#define SI5351_PARAMETERS_LENGTH        8
-#define SI5351_PLLA_PARAMETERS          26
-#define SI5351_PLLB_PARAMETERS          34
-#define SI5351_CLK0_PARAMETERS          42
-#define SI5351_CLK1_PARAMETERS          50
-#define SI5351_CLK2_PARAMETERS          58
-#define SI5351_CLK3_PARAMETERS          66
-#define SI5351_CLK4_PARAMETERS          74
-#define SI5351_CLK5_PARAMETERS          82
-#define SI5351_CLK6_PARAMETERS          90
-#define SI5351_CLK7_PARAMETERS          91
-#define SI5351_CLK6_7_OUTPUT_DIVIDER    92
-#define SI5351_OUTPUT_CLK_DIV_MASK      (7 << 4)
-#define SI5351_OUTPUT_CLK6_DIV_MASK     (7 << 0)
-#define SI5351_OUTPUT_CLK_DIV_SHIFT     4
-#define SI5351_OUTPUT_CLK_DIV6_SHIFT    0
-#define SI5351_OUTPUT_CLK_DIV_1         0
-#define SI5351_OUTPUT_CLK_DIV_2         1
-#define SI5351_OUTPUT_CLK_DIV_4         2
-#define SI5351_OUTPUT_CLK_DIV_8         3
-#define SI5351_OUTPUT_CLK_DIV_16        4
-#define SI5351_OUTPUT_CLK_DIV_32        5
-#define SI5351_OUTPUT_CLK_DIV_64        6
-#define SI5351_OUTPUT_CLK_DIV_128       7
-#define SI5351_OUTPUT_CLK_DIVBY4       (3<<2)
+#define SI5351_PARAMETERS_LENGTH        8u
+#define SI5351_PLLA_PARAMETERS          26u
+#define SI5351_PLLB_PARAMETERS          34u
+#define SI5351_CLK0_PARAMETERS          42u
+#define SI5351_CLK1_PARAMETERS          50u
+#define SI5351_CLK2_PARAMETERS          58u
+#define SI5351_CLK3_PARAMETERS          66u
+#define SI5351_CLK4_PARAMETERS          74u
+#define SI5351_CLK5_PARAMETERS          82u
+#define SI5351_CLK6_PARAMETERS          90u
+#define SI5351_CLK7_PARAMETERS          91u
+#define SI5351_CLK6_7_OUTPUT_DIVIDER    92u
+#define SI5351_OUTPUT_CLK_DIV_MASK      (7u << 4u)
+#define SI5351_OUTPUT_CLK6_DIV_MASK     (7u << 0u)
+#define SI5351_OUTPUT_CLK_DIV_SHIFT     4u
+#define SI5351_OUTPUT_CLK_DIV6_SHIFT    0u
+#define SI5351_OUTPUT_CLK_DIV_1         0u
+#define SI5351_OUTPUT_CLK_DIV_2         1u
+#define SI5351_OUTPUT_CLK_DIV_4         2u
+#define SI5351_OUTPUT_CLK_DIV_8         3u
+#define SI5351_OUTPUT_CLK_DIV_16        4u
+#define SI5351_OUTPUT_CLK_DIV_32        5u
+#define SI5351_OUTPUT_CLK_DIV_64        6u
+#define SI5351_OUTPUT_CLK_DIV_128       7u
+#define SI5351_OUTPUT_CLK_DIVBY4       (3u<<2u)
 
-#define SI5351_SSC_PARAM0               149
-#define SI5351_SSC_PARAM1               150
-#define SI5351_SSC_PARAM2               151
-#define SI5351_SSC_PARAM3               152
-#define SI5351_SSC_PARAM4               153
-#define SI5351_SSC_PARAM5               154
-#define SI5351_SSC_PARAM6               155
-#define SI5351_SSC_PARAM7               156
-#define SI5351_SSC_PARAM8               157
-#define SI5351_SSC_PARAM9               158
-#define SI5351_SSC_PARAM10              159
-#define SI5351_SSC_PARAM11              160
-#define SI5351_SSC_PARAM12              161
+#define SI5351_SSC_PARAM0               149u
+#define SI5351_SSC_PARAM1               150u
+#define SI5351_SSC_PARAM2               151u
+#define SI5351_SSC_PARAM3               152u
+#define SI5351_SSC_PARAM4               153u
+#define SI5351_SSC_PARAM5               154u
+#define SI5351_SSC_PARAM6               155u
+#define SI5351_SSC_PARAM7               156u
+#define SI5351_SSC_PARAM8               157u
+#define SI5351_SSC_PARAM9               158u
+#define SI5351_SSC_PARAM10              159u
+#define SI5351_SSC_PARAM11              160u
+#define SI5351_SSC_PARAM12              161u
 
-#define SI5351_VXCO_PARAMETERS_LOW      162
-#define SI5351_VXCO_PARAMETERS_MID      163
-#define SI5351_VXCO_PARAMETERS_HIGH     164
+#define SI5351_VXCO_PARAMETERS_LOW      162u
+#define SI5351_VXCO_PARAMETERS_MID      163u
+#define SI5351_VXCO_PARAMETERS_HIGH     164u
 
-#define SI5351_CLK0_PHASE_OFFSET        165
-#define SI5351_CLK1_PHASE_OFFSET        166
-#define SI5351_CLK2_PHASE_OFFSET        167
-#define SI5351_CLK3_PHASE_OFFSET        168
-#define SI5351_CLK4_PHASE_OFFSET        169
-#define SI5351_CLK5_PHASE_OFFSET        170
+#define SI5351_CLK0_PHASE_OFFSET        165u
+#define SI5351_CLK1_PHASE_OFFSET        166u
+#define SI5351_CLK2_PHASE_OFFSET        167u
+#define SI5351_CLK3_PHASE_OFFSET        168u
+#define SI5351_CLK4_PHASE_OFFSET        169u
+#define SI5351_CLK5_PHASE_OFFSET        170u
 
-#define SI5351_PLL_RESET                177
-#define SI5351_PLL_RESET_B              (1<<7)
-#define SI5351_PLL_RESET_A              (1<<5)
+#define SI5351_PLL_RESET                177u
+#define SI5351_PLL_RESET_B              (1u<<7u)
+#define SI5351_PLL_RESET_A              (1u<<5u)
 
-#define SI5351_CRYSTAL_LOAD             183
-#define SI5351_CRYSTAL_LOAD_MASK        (3<<6)
-#define SI5351_CRYSTAL_LOAD_0PF         (0<<6)
-#define SI5351_CRYSTAL_LOAD_6PF         (1<<6)
-#define SI5351_CRYSTAL_LOAD_8PF         (2<<6)
-#define SI5351_CRYSTAL_LOAD_10PF        (3<<6)
+#define SI5351_CRYSTAL_LOAD             183u
+#define SI5351_CRYSTAL_LOAD_MASK        (3u<<6u)
+#define SI5351_CRYSTAL_LOAD_0PF         (0u<<6u)
+#define SI5351_CRYSTAL_LOAD_6PF         (1u<<6u)
+#define SI5351_CRYSTAL_LOAD_8PF         (2u<<6u)
+#define SI5351_CRYSTAL_LOAD_10PF        (3u<<6u)
 
-#define SI5351_FANOUT_ENABLE            187
-#define SI5351_CLKIN_ENABLE             (1<<7)
-#define SI5351_XTAL_ENABLE              (1<<6)
-#define SI5351_MULTISYNTH_ENABLE        (1<<4)
+#define SI5351_FANOUT_ENABLE            187u
+#define SI5351_CLKIN_ENABLE             (1u<<7u)
+#define SI5351_XTAL_ENABLE              (1u<<6u)
+#define SI5351_MULTISYNTH_ENABLE        (1u<<4u)
 
 
 /* Macro definitions */
@@ -274,26 +274,25 @@ struct Si5351IntStatus
   uint8_t LOS_STKY;
 };
 
-void  Si5351(uint8_t i2c_addr = SI5351_BUS_BASE_ADDR);
-  bool Si5351_init(uint8_t xtal_load_c, uint32_t xo_freq, int32_t corr);
+  bool Si5351_init(uint8_t xtal_load_c, uint32_t xo_freq, uint32_t corr);
   void Si5351_reset(void);
   uint8_t Si5351_set_freq(uint64_t freq, enum si5351_clock clk);
   uint8_t Si5351_set_freq_manual(uint64_t freq, uint64_t pll_freq, enum si5351_clock clk);
-  void Si5351_set_pll(uint64_t freq, uint64_t pll_freq, enum si5351_clock clk);
+  void Si5351_set_pll(uint64_t pll_freq, enum si5351_pll target_pll);
   void Si5351_set_ms(enum si5351_clock clk, struct Si5351RegSet ms_reg, uint8_t int_mode, uint8_t r_div, uint8_t div_by_4);
   void Si5351_output_enable(enum si5351_clock clk, uint8_t enable);
   void Si5351_drive_strength(enum si5351_clock clk, enum si5351_drive drive);
   void Si5351_update_status(void);
   void Si5351_set_correction(int32_t corr, enum si5351_pll_input ref_osc);
   void Si5351_set_phase(enum si5351_clock clk, uint8_t phase);
-  int32_t Si5351_get_correction(enum si5351_pll target_pll);
+  int32_t Si5351_get_correction(enum si5351_pll_input ref_osc);
   void Si5351_pll_reset(enum si5351_pll target_pll);
   void Si5351_set_ms_source(enum si5351_clock clk, enum si5351_pll pll);
   void Si5351_set_int(enum si5351_clock clk, uint8_t enable);
   void Si5351_set_clock_pwr(enum si5351_clock clk, uint8_t pwr);
   void Si5351_set_clock_invert(enum si5351_clock clk, uint8_t pwr);
   void Si5351_set_clock_source(enum si5351_clock clk, enum si5351_clock_source src);
-  void Si5351_set_clock_disable(enum si5351_clock clk, enum si5351_clock_source src);
+  void Si5351_set_clock_disable(enum si5351_clock clk, enum si5351_clock_disable dis_state);
   void Si5351_set_clock_fanout(enum si5351_clock_fanout fanout, uint8_t enable);
   void Si5351_set_pll_input(enum si5351_pll pll, enum si5351_pll_input input);
   void Si5351_set_vcxo(uint64_t pll_freq, uint8_t ppm);
