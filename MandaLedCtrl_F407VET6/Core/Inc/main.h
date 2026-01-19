@@ -81,6 +81,10 @@ void SystemClock_Config(void);
 #define UsrLed1_GPIO_Port GPIOA
 #define UsrLed2_Pin GPIO_PIN_7
 #define UsrLed2_GPIO_Port GPIOA
+#define i2c_1scl_Pin GPIO_PIN_6
+#define i2c_1scl_GPIO_Port GPIOB
+#define i2c_1sda_Pin GPIO_PIN_7
+#define i2c_1sda_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

@@ -21,6 +21,7 @@
 #include "adc.h"
 #include "crc.h"
 #include "dma.h"
+#include "i2c.h"
 #include "rng.h"
 #include "tim.h"
 #include "usart.h"
