@@ -164,10 +164,10 @@ static void setStartAndEnd(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
-mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTime = 1000uL, .puState = done, .isEnabled = 1u};
+mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 1000uL, .puState = done, .isEnabled = 0u};
+mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTime = 1000uL, .puState = done, .isEnabled = 0u};
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
-mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 550uL, .puState = done, .isEnabled = 0u};
+mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 550uL, .puState = done, .isEnabled = 1u};
 uint32_t brightnessMainL[2];
 uint32_t LedStartEndMainL[2];
 uint32_t AnimIdxMainL;
@@ -407,8 +407,8 @@ int main(void)
 	led_setBrightnessTruncation(anim_matrix.lcd_ctx, 1uL, 1uL);
 
 	mtrx_Init();
-	led_LedLogicInit(anim_mainL.lcd_ctx);
-	led_LedLogicInit(anim_mainR.lcd_ctx);
+//	led_LedLogicInit(anim_mainL.lcd_ctx);
+//	led_LedLogicInit(anim_mainR.lcd_ctx);
 	led_LedLogicInit(anim_matrix.lcd_ctx);
 
 	__enable_irq();
@@ -424,8 +424,8 @@ int main(void)
       acLeaf(&rxCtx, &txCtx, parStt == pb_eAck ? 1u : 0u);
 
 
-		cyclicReSend(&anim_mainL);
-		cyclicReSend(&anim_mainR);
+//		cyclicReSend(&anim_mainL);
+//		cyclicReSend(&anim_mainR);
 		cyclicReSend(&anim_matrix);
 	}
 }

@@ -92,7 +92,7 @@ void MX_TIM3_Init(void)
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 105;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
@@ -170,7 +170,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     hdma_tim3_ch1_trig.Init.MemInc = DMA_MINC_ENABLE;
     hdma_tim3_ch1_trig.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_tim3_ch1_trig.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_tim3_ch1_trig.Init.Mode = DMA_NORMAL;
+    hdma_tim3_ch1_trig.Init.Mode = DMA_CIRCULAR;
     hdma_tim3_ch1_trig.Init.Priority = DMA_PRIORITY_VERY_HIGH;
     hdma_tim3_ch1_trig.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_tim3_ch1_trig) != HAL_OK)
@@ -191,7 +191,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     hdma_tim3_ch2.Init.MemInc = DMA_MINC_ENABLE;
     hdma_tim3_ch2.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_tim3_ch2.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_tim3_ch2.Init.Mode = DMA_NORMAL;
+    hdma_tim3_ch2.Init.Mode = DMA_CIRCULAR;
     hdma_tim3_ch2.Init.Priority = DMA_PRIORITY_VERY_HIGH;
     hdma_tim3_ch2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_tim3_ch2) != HAL_OK)
@@ -209,7 +209,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     hdma_tim3_ch3.Init.MemInc = DMA_MINC_ENABLE;
     hdma_tim3_ch3.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_tim3_ch3.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_tim3_ch3.Init.Mode = DMA_NORMAL;
+    hdma_tim3_ch3.Init.Mode = DMA_CIRCULAR;
     hdma_tim3_ch3.Init.Priority = DMA_PRIORITY_VERY_HIGH;
     hdma_tim3_ch3.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_tim3_ch3) != HAL_OK)
@@ -227,7 +227,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     hdma_tim3_ch4_up.Init.MemInc = DMA_MINC_ENABLE;
     hdma_tim3_ch4_up.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_tim3_ch4_up.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_tim3_ch4_up.Init.Mode = DMA_NORMAL;
+    hdma_tim3_ch4_up.Init.Mode = DMA_CIRCULAR;
     hdma_tim3_ch4_up.Init.Priority = DMA_PRIORITY_VERY_HIGH;
     hdma_tim3_ch4_up.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_tim3_ch4_up) != HAL_OK)
