@@ -61,10 +61,9 @@ extern ADC_HandleTypeDef hadc3;
 extern DMA_HandleTypeDef hdma_tim3_ch1_trig;
 extern DMA_HandleTypeDef hdma_tim3_ch2;
 extern DMA_HandleTypeDef hdma_tim3_ch3;
-extern DMA_HandleTypeDef hdma_tim3_ch4_up;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
-
+#include "leds.h"
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -129,20 +128,6 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
-
-/**
-  * @brief This function handles DMA1 stream2 global interrupt.
-  */
-void DMA1_Stream2_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
-
-  /* USER CODE END DMA1_Stream2_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_tim3_ch4_up);
-  /* USER CODE BEGIN DMA1_Stream2_IRQn 1 */
-
-  /* USER CODE END DMA1_Stream2_IRQn 1 */
-}
 
 /**
   * @brief This function handles DMA1 stream4 global interrupt.

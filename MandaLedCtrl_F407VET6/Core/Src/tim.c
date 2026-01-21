@@ -29,7 +29,6 @@ TIM_HandleTypeDef htim3;
 DMA_HandleTypeDef hdma_tim3_ch1_trig;
 DMA_HandleTypeDef hdma_tim3_ch2;
 DMA_HandleTypeDef hdma_tim3_ch3;
-DMA_HandleTypeDef hdma_tim3_ch4_up;
 
 /* TIM2 init function */
 void MX_TIM2_Init(void)
@@ -128,10 +127,6 @@ void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN TIM3_Init 2 */
 
   /* USER CODE END TIM3_Init 2 */
@@ -192,7 +187,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     hdma_tim3_ch2.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_tim3_ch2.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
     hdma_tim3_ch2.Init.Mode = DMA_CIRCULAR;
-    hdma_tim3_ch2.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+    hdma_tim3_ch2.Init.Priority = DMA_PRIORITY_HIGH;
     hdma_tim3_ch2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_tim3_ch2) != HAL_OK)
     {
@@ -210,7 +205,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     hdma_tim3_ch3.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_tim3_ch3.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
     hdma_tim3_ch3.Init.Mode = DMA_CIRCULAR;
-    hdma_tim3_ch3.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+    hdma_tim3_ch3.Init.Priority = DMA_PRIORITY_HIGH;
     hdma_tim3_ch3.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_tim3_ch3) != HAL_OK)
     {
@@ -218,27 +213,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     }
 
     __HAL_LINKDMA(tim_baseHandle,hdma[TIM_DMA_ID_CC3],hdma_tim3_ch3);
-
-    /* TIM3_CH4_UP Init */
-    hdma_tim3_ch4_up.Instance = DMA1_Stream2;
-    hdma_tim3_ch4_up.Init.Channel = DMA_CHANNEL_5;
-    hdma_tim3_ch4_up.Init.Direction = DMA_MEMORY_TO_PERIPH;
-    hdma_tim3_ch4_up.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_tim3_ch4_up.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_tim3_ch4_up.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    hdma_tim3_ch4_up.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_tim3_ch4_up.Init.Mode = DMA_CIRCULAR;
-    hdma_tim3_ch4_up.Init.Priority = DMA_PRIORITY_VERY_HIGH;
-    hdma_tim3_ch4_up.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-    if (HAL_DMA_Init(&hdma_tim3_ch4_up) != HAL_OK)
-    {
-      Error_Handler();
-    }
-
-    /* Several peripheral DMA handle pointers point to the same DMA handle.
-     Be aware that there is only one stream to perform all the requested DMAs. */
-    __HAL_LINKDMA(tim_baseHandle,hdma[TIM_DMA_ID_CC4],hdma_tim3_ch4_up);
-    __HAL_LINKDMA(tim_baseHandle,hdma[TIM_DMA_ID_UPDATE],hdma_tim3_ch4_up);
 
   /* USER CODE BEGIN TIM3_MspInit 1 */
 
@@ -260,9 +234,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle)
     PC6     ------> TIM3_CH1
     PC7     ------> TIM3_CH2
     PC8     ------> TIM3_CH3
-    PC9     ------> TIM3_CH4
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
+    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLDOWN;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -303,8 +276,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
     HAL_DMA_DeInit(tim_baseHandle->hdma[TIM_DMA_ID_TRIGGER]);
     HAL_DMA_DeInit(tim_baseHandle->hdma[TIM_DMA_ID_CC2]);
     HAL_DMA_DeInit(tim_baseHandle->hdma[TIM_DMA_ID_CC3]);
-    HAL_DMA_DeInit(tim_baseHandle->hdma[TIM_DMA_ID_CC4]);
-    HAL_DMA_DeInit(tim_baseHandle->hdma[TIM_DMA_ID_UPDATE]);
   /* USER CODE BEGIN TIM3_MspDeInit 1 */
 
   /* USER CODE END TIM3_MspDeInit 1 */

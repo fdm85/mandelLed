@@ -17,11 +17,11 @@ lRawDma_t matrix_dma = {.ledEnd = MRTX_LDCNT, .ledCountMax = MRTX_LDCNT, .rawCou
 lRawDma_t mainL_dma = {.ledEnd = MAIN_L_LDCNT, .ledCountMax = MAIN_L_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds2, .rawTxCount = RAW_DMA_CNT};
 lRawDma_t mainR_dma = {.ledEnd = MAIN_R_LDCNT, .ledCountMax = MAIN_R_LDCNT, .rawCount = RAW_LDCNT, .lRaw = rawLeds3, .rawTxCount = RAW_DMA_CNT};
 
-Led_progColor_t mainL_r3[MAIN_L_LDCNT] __attribute__ ((section (".bssmram"))) = {0};
-diffRunnerCtx_t mainL_diff __attribute__ ((section (".ccmram"))) = {.lDc = &mainL_r3[0], .size = MAIN_L_LDCNT};
+Led_progColor_t mainL_r3[MAIN_L_LDCNT] CCRAM_BSS = {0};
+diffRunnerCtx_t mainL_diff CCRAM_DAT = {.lDc = &mainL_r3[0], .size = MAIN_L_LDCNT};
 
-Led_progColor_t mainR_r3[MAIN_R_LDCNT] __attribute__ ((section (".bssmram"))) = {0};
-diffRunnerCtx_t mainR_diff __attribute__ ((section (".ccmram"))) = {.lDc = &mainR_r3[0], .size = MAIN_R_LDCNT};
+Led_progColor_t mainR_r3[MAIN_R_LDCNT] CCRAM_BSS = {0};
+diffRunnerCtx_t mainR_diff CCRAM_DAT = {.lDc = &mainR_r3[0], .size = MAIN_R_LDCNT};
 
 lLogicContainer(mainL, MAIN_L_LDCNT);
 lRawContainer(mainL, MAIN_L_LDCNT);

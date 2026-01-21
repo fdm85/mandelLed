@@ -37,6 +37,8 @@
 									<listOptionValue builtIn="false" value="USE_RIDERS=1"/>
 									<listOptionValue builtIn="false" value="LEFT=hadc2"/>
 									<listOptionValue builtIn="false" value="RIGHT=hadc3"/>
+									<listOptionValue builtIn="false" value="&quot;CCRAM_BSS=__attribute__ ((section (&quot;.bssmram&quot;)))&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;CCRAM_DAT=__attribute__ ((section (&quot;.ccmram&quot;)))&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.option.includepaths.1664199518" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.option.includepaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/common/inc}&quot;"/>
@@ -56,6 +58,8 @@
 									<listOptionValue builtIn="false" value="USE_RIDERS=1"/>
 									<listOptionValue builtIn="false" value="LEFT=hadc2"/>
 									<listOptionValue builtIn="false" value="RIGHT=hadc3"/>
+									<listOptionValue builtIn="false" value="&quot;CCRAM_BSS=__attribute__ ((section (&quot;.bssmram&quot;)))&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;CCRAM_DAT=__attribute__ ((section (&quot;.ccmram&quot;)))&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.567820980" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/common/inc}&quot;"/>
@@ -155,6 +159,8 @@
 									<listOptionValue builtIn="false" value="USE_RIDERS=1"/>
 									<listOptionValue builtIn="false" value="LEFT=hadc2"/>
 									<listOptionValue builtIn="false" value="RIGHT=hadc3"/>
+									<listOptionValue builtIn="false" value="&quot;CCRAM_BSS=__attribute__ ((section (&quot;.bssmram&quot;)))&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;CCRAM_DAT=__attribute__ ((section (&quot;.ccmram&quot;)))&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1823051144" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -169,6 +175,8 @@
 									<listOptionValue builtIn="false" value="USE_RIDERS=1"/>
 									<listOptionValue builtIn="false" value="LEFT=hadc2"/>
 									<listOptionValue builtIn="false" value="RIGHT=hadc3"/>
+									<listOptionValue builtIn="false" value="&quot;CCRAM_BSS=__attribute__ ((section (&quot;.bssmram&quot;)))&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;CCRAM_DAT=__attribute__ ((section (&quot;.ccmram&quot;)))&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.1228988641" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../Core/Inc"/>
