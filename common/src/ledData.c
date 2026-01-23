@@ -179,11 +179,9 @@ void led_pasteData(LedChainDesc_t *lcd) {
 //static LOC_INL_DBG void led_startTransmitData(LedChainDesc_t* lcd)
 LOC_INL_DBG void led_startTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
-  if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
-    assrt(0);
+  assrt(TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) != HAL_TIM_CHANNEL_STATE_BUSY);
   result = HAL_TIM_PWM_Start_DMA(lcd->timer, lcd->timChannel,(const uint32_t *) &lcd->lRawNew->lRaw[0].g[0], (lcd->lRawNew->rawTxCount));
   assrt(result == HAL_OK);
-  (void) result;
 }
 /** @brief Trigger data transmission
  *  @param lcd strip context to work on
@@ -191,12 +189,8 @@ LOC_INL_DBG void led_startTransmitData(LedChainDesc_t *lcd) {
 LOC_INL_DBG void stopTransmitData(LedChainDesc_t *lcd) {
   volatile HAL_StatusTypeDef result;
   result = HAL_TIM_PWM_Stop_DMA(lcd->timer, lcd->timChannel);
-  if (TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) == HAL_TIM_CHANNEL_STATE_BUSY)
-    assrt(0);
-  if(result != HAL_OK)
-    assrt(0);
+  assrt(TIM_CHANNEL_STATE_GET(lcd->timer, lcd->timChannel) != HAL_TIM_CHANNEL_STATE_BUSY);
   assrt(result == HAL_OK);
-  (void) result;
 }
 
 void led_stopTransmitData(LedChainDesc_t *lcd) {

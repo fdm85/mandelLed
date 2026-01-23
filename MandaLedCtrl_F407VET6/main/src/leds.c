@@ -24,12 +24,12 @@ Led_progColor_t mainR_r3[MAIN_R_LDCNT] CCRAM_BSS = {0};
 diffRunnerCtx_t mainR_diff CCRAM_DAT = {.lDc = &mainR_r3[0], .size = MAIN_R_LDCNT};
 
 lLogicContainer(mainL, MAIN_L_LDCNT);
-lRawContainer(mainL, MAIN_L_LDCNT);
+//lRawContainer(mainL, MAIN_L_LDCNT);
 lLogicContainer(mainR, MAIN_R_LDCNT);
-lRawContainer(mainR, MAIN_R_LDCNT);
+//lRawContainer(mainR, MAIN_R_LDCNT);
 
 lLogicContainer(matrix, MRTX_LDCNT);
-lRawContainer(matrix, MRTX_LDCNT);
+//lRawContainer(matrix, MRTX_LDCNT);
 
 LedChainDesc_t lcd_matrix = { \
       .lLogic = &ledsLog_matrix[0], \

@@ -159,7 +159,7 @@ static void setStartAndEnd(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 20000uL, .puState = done, .isEnabled = 0u };
+mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 20000uL, .puState = done, .isEnabled = 1u };
 mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTime = 20000uL, .puState = done, .isEnabled = 1u };
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 5500uL, .puState = done, .isEnabled = 1u };
@@ -291,9 +291,9 @@ static void cyclicReSend(mAnim_t *ctx) {
 void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim) {
   LedChainDesc_t *lcd = &lcd_matrix;
 
-  if (htim->Channel == TIM_CHANNEL_2)
+  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
     lcd = &lcd_mainR;
-  if (htim->Channel == TIM_CHANNEL_3)
+  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
     lcd = &lcd_mainL;
 
   lcd->lRawNew->dS = e_FirstHalf;
@@ -304,9 +304,9 @@ void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim) {
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
   LedChainDesc_t *lcd = &lcd_matrix;
 
-  if (htim->Channel == TIM_CHANNEL_2)
+  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
     lcd = &lcd_mainR;
-  if (htim->Channel == TIM_CHANNEL_3)
+  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
     lcd = &lcd_mainL;
 
   lcd->lRawNew->dS = e_SecondHalf;

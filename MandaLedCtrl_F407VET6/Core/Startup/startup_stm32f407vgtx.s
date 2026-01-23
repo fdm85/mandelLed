@@ -79,12 +79,29 @@ Reset_Handler:
   movs r3, #0
   bl LoopCopyDataInit
 
+  ldr r2, =_sbss
+  ldr r4, =_ebss
+  movs r3, #0
+  bl  LoopFillZerobss
+
   ldr r0, =_sccmram
   ldr r1, =_eccmram
   ldr r2, =_siccmram
   movs r3, #0
   bl LoopCopyDataInit
-  b  BssInit
+
+  ldr r2, =_sccbss
+  ldr r4, =_eccbss
+  movs r3, #0
+  bl  LoopFillZerobss
+
+  bl __libc_init_array
+
+/* Call the application's entry point.*/
+  bl  main
+  bx  lr
+
+
 
 CopyDataInit:
   ldr r4, [r2, r3]
@@ -96,21 +113,8 @@ LoopCopyDataInit:
   cmp r4, r1
   bcc CopyDataInit
   bx  lr
-  
-/* Zero fill the bss segment. */
-BssInit:
-  ldr r2, =_sbss
-  ldr r4, =_ebss
-  movs r3, #0
-  bl LoopFillZerobss
-/* Zero fill the bss segment. */
-  ldr r2, =_sccbss
-  ldr r4, =_eccbss
-  movs r3, #0
-  bl LoopFillZerobss
-  bl __libc_init_array
-  bl  main
-  bx  lr
+
+
 FillZerobss:
   str  r3, [r2]
   adds r2, r2, #4
@@ -118,12 +122,7 @@ FillZerobss:
 LoopFillZerobss:
   cmp r2, r4
   bcc FillZerobss
-/* Call static constructors */
-  bl __libc_init_array
-/* Call the application's entry point.*/
-  bl  main
-  bx  lr    
-
+  bx  lr
 
 .size  Reset_Handler, .-Reset_Handler
 
