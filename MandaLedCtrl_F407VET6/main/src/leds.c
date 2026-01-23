@@ -48,7 +48,7 @@ LedChainDesc_t lcd_mainR = { \
 LedChainDesc_t lcd_mainL = { \
       .lLogic = &ledsLog_mainL[0], \
       .lRawNew = &mainL_dma, \
-      .timer = &htim3, \
-      .timChannel = TIM_CHANNEL_3, \
+      .timer = &htim4, \
+      .timChannel = TIM_CHANNEL_1, \
       .diff = &mainL_diff,\
   };

@@ -293,11 +293,10 @@ void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim) {
 
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
     lcd = &lcd_mainR;
-  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
+  if (htim == &htim4)
     lcd = &lcd_mainL;
 
   lcd->lRawNew->dS = e_FirstHalf;
-//	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
   led_txRaw(lcd);
 }
 
@@ -306,22 +305,11 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
 
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
     lcd = &lcd_mainR;
-  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
+  if (htim == &htim4)
     lcd = &lcd_mainL;
 
   lcd->lRawNew->dS = e_SecondHalf;
-//	HAL_GPIO_TogglePin(dbg1_GPIO_Port, dbg1_Pin);
   led_txRaw(lcd);
-//	else
-//	{
-//		anim_main.sendLock = false;
-//		anim_main.e = HAL_GetTick() - anim_main.e;
-//		anim_main.f = HAL_GetTick();
-//	}
-//  __BKPT(0);
-  /* NOTE : This function should not be modified, when the callback is needed,
-   the HAL_TIM_PWM_PulseFinishedCallback could be implemented in the user file
-   */
 }
 
 static void maintainStatusLeds(void) {
