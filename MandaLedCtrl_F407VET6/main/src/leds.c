@@ -34,9 +34,16 @@ lLogicContainer(matrix, MRTX_LDCNT);
 LedChainDesc_t lcd_matrix = { \
       .lLogic = &ledsLog_matrix[0], \
       .lRawNew = &matrix_dma, \
-      .timer = &htim3, \
+      .timer = &htim4, \
       .timChannel = TIM_CHANNEL_1, \
       .diff = NULL,\
+  };
+LedChainDesc_t lcd_mainL = { \
+      .lLogic = &ledsLog_mainL[0], \
+      .lRawNew = &mainL_dma, \
+      .timer = &htim3, \
+      .timChannel = TIM_CHANNEL_1, \
+      .diff = &mainL_diff,\
   };
 LedChainDesc_t lcd_mainR = { \
       .lLogic = &ledsLog_mainR[0], \
@@ -44,11 +51,4 @@ LedChainDesc_t lcd_mainR = { \
       .timer = &htim3, \
       .timChannel = TIM_CHANNEL_2, \
       .diff = &mainR_diff,\
-  };
-LedChainDesc_t lcd_mainL = { \
-      .lLogic = &ledsLog_mainL[0], \
-      .lRawNew = &mainL_dma, \
-      .timer = &htim4, \
-      .timChannel = TIM_CHANNEL_1, \
-      .diff = &mainL_diff,\
   };

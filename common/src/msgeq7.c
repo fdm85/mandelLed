@@ -87,16 +87,17 @@ static void sStart(void) {
 
 static void sAdc(void) {
    assrt(mT.gS == eAdcStart);
-   uint32_t adcState = HAL_ADC_GetState(&RIGHT);
-   bool rdy = ((adcState & HAL_ADC_STATE_READY) != 0uL);
-   assrt(rdy);
-   adcState = HAL_ADC_GetState(&LEFT);
-   rdy = ((adcState & HAL_ADC_STATE_READY) != 0uL);
-   assrt(rdy);
+//   uint32_t adcState = HAL_ADC_GetState(&RIGHT);
+//   uint32_t adcState = HAL_ADC_GetState(&RIGHT);
+//   bool rdy = ((adcState & HAL_ADC_STATE_READY) != 0uL);
+//   assrt(rdy);
+//   adcState = HAL_ADC_GetState(&LEFT);
+//   rdy = ((adcState & HAL_ADC_STATE_READY) != 0uL);
+//   assrt(rdy);
    mT.actChan = 1u;
    tReset(&mT.strobeTime);
-   HAL_ADC_Start_IT(&RIGHT);
-   HAL_ADC_Start_IT(&LEFT);
+//   HAL_ADC_Start_IT(&RIGHT);
+//   HAL_ADC_Start_IT(&LEFT);
 }
 
 void msgeq_ticker(void) {

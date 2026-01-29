@@ -32,6 +32,7 @@
 #include "faultHandling.h"
 #include <string.h>
 #include "BridgeParser.h"
+#include "assrt.h"
 
 static uint8_t col = 5;
 static uint8_t idx = 0;
@@ -289,26 +290,32 @@ static void cyclicReSend(mAnim_t *ctx) {
 }
 
 void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim) {
-  LedChainDesc_t *lcd = &lcd_matrix;
+  LedChainDesc_t *lcd = NULL;
 
+  if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) && (htim == &htim4))
+    lcd = &lcd_matrix;
+  if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) && (htim == &htim3))
+    lcd = &lcd_mainL;
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
     lcd = &lcd_mainR;
-  if (htim == &htim4)
-    lcd = &lcd_mainL;
 
   lcd->lRawNew->dS = e_FirstHalf;
+  assrt(lcd != NULL);
   led_txRaw(lcd);
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
-  LedChainDesc_t *lcd = &lcd_matrix;
+  LedChainDesc_t *lcd = NULL;
 
+  if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) && (htim == &htim4))
+    lcd = &lcd_matrix;
+  if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) && (htim == &htim3))
+    lcd = &lcd_mainL;
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
     lcd = &lcd_mainR;
-  if (htim == &htim4)
-    lcd = &lcd_mainL;
 
   lcd->lRawNew->dS = e_SecondHalf;
+  assrt(lcd != NULL);
   led_txRaw(lcd);
 }
 
@@ -380,7 +387,8 @@ int main(void) {
   __enable_irq();
 
   com_Init();
-
+  __HAL_TIM_ENABLE(&htim1);
+  __HAL_TIM_ENABLE(&htim8);
   for (;;) {
     maintainStatusLeds();
     msgeq_ticker();

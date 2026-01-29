@@ -57,6 +57,8 @@ void SystemClock_Config(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define WdgDis_Pin GPIO_PIN_2
+#define WdgDis_GPIO_Port GPIOE
 #define Key1_Pin GPIO_PIN_3
 #define Key1_GPIO_Port GPIOE
 #define Key0_Pin GPIO_PIN_4
@@ -77,10 +79,18 @@ void SystemClock_Config(void);
 #define LM_GPIO_Port GPIOA
 #define LH_Pin GPIO_PIN_3
 #define LH_GPIO_Port GPIOA
+#define T_STROBE_Pin GPIO_PIN_5
+#define T_STROBE_GPIO_Port GPIOA
 #define UsrLed1_Pin GPIO_PIN_6
 #define UsrLed1_GPIO_Port GPIOA
 #define UsrLed2_Pin GPIO_PIN_7
 #define UsrLed2_GPIO_Port GPIOA
+#define mrtx_Pin GPIO_PIN_12
+#define mrtx_GPIO_Port GPIOD
+#define left_Pin GPIO_PIN_6
+#define left_GPIO_Port GPIOC
+#define right_Pin GPIO_PIN_5
+#define right_GPIO_Port GPIOB
 #define i2c_1scl_Pin GPIO_PIN_6
 #define i2c_1scl_GPIO_Port GPIOB
 #define i2c_1sda_Pin GPIO_PIN_7

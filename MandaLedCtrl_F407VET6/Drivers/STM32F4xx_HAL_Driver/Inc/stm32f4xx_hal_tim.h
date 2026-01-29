@@ -347,7 +347,7 @@ typedef struct
   __IO HAL_TIM_ChannelStateTypeDef   ChannelState[4];   /*!< TIM channel operation state                       */
   __IO HAL_TIM_ChannelStateTypeDef   ChannelNState[4];  /*!< TIM complementary channel operation state         */
   __IO HAL_TIM_DMABurstStateTypeDef  DMABurstState;     /*!< DMA burst operation state                         */
-  void * ctx;
+
 #if (USE_HAL_TIM_REGISTER_CALLBACKS == 1)
   void (* Base_MspInitCallback)(struct __TIM_HandleTypeDef *htim);              /*!< TIM Base Msp Init Callback                              */
   void (* Base_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);            /*!< TIM Base Msp DeInit Callback                            */
@@ -377,7 +377,6 @@ typedef struct
   void (* CommutationHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);       /*!< TIM Commutation half complete Callback                  */
   void (* BreakCallback)(struct __TIM_HandleTypeDef *htim);                     /*!< TIM Break Callback                                      */
 #endif /* USE_HAL_TIM_REGISTER_CALLBACKS */
-
 } TIM_HandleTypeDef;
 
 #if (USE_HAL_TIM_REGISTER_CALLBACKS == 1)
