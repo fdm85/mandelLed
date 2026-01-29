@@ -79,8 +79,6 @@ void SystemClock_Config(void);
 #define LM_GPIO_Port GPIOA
 #define LH_Pin GPIO_PIN_3
 #define LH_GPIO_Port GPIOA
-#define T_STROBE_Pin GPIO_PIN_5
-#define T_STROBE_GPIO_Port GPIOA
 #define UsrLed1_Pin GPIO_PIN_6
 #define UsrLed1_GPIO_Port GPIOA
 #define UsrLed2_Pin GPIO_PIN_7
@@ -89,6 +87,8 @@ void SystemClock_Config(void);
 #define mrtx_GPIO_Port GPIOD
 #define left_Pin GPIO_PIN_6
 #define left_GPIO_Port GPIOC
+#define T_STROBE_Pin GPIO_PIN_7
+#define T_STROBE_GPIO_Port GPIOC
 #define right_Pin GPIO_PIN_5
 #define right_GPIO_Port GPIOB
 #define i2c_1scl_Pin GPIO_PIN_6
