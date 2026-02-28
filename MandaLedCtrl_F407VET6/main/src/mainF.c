@@ -118,10 +118,10 @@ static void cycleAnimMainR(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
       *param = idx;
 }
 
-static void enDisAble(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
+static void enDisAble(volatile mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
   if (isAck) {
-    while (ctx->state < e_Done)
-      __NOP();
+//    while (ctx->state < e_Done)
+//      __NOP();
     ctx->isEnabled ^= 1u;
     ctx->state = (ctx->isEnabled) ? e_reEnable : e_disable;
   }
