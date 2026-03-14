@@ -72,6 +72,7 @@ void anim_r23Init(LedChainDesc_t *const lcd)
 
 void anim_r23DeInit(LedChainDesc_t *const lcd)
 {
+  (void)lcd;
 //	if(diff.lDc)
 //	{
 //		free(diff.lDc);

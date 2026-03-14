@@ -89,6 +89,7 @@ void com_enableRx(void) {
 
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+  (void)huart;
   bp_ResetTx(&txCtx);
 }
 
