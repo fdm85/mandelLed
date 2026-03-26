@@ -33,8 +33,8 @@
 #include <string.h>
 #include "BridgeParser.h"
 
-static uint8_t col = 5;
-static uint8_t idx = 0;
+static uint8_t col = 100u;
+static uint8_t idx = 0u;
 void cycleColors(mAnim_t *ctx) {
   led_setAllLedsToColor(ctx->lcd_ctx, 0, 0, 0);
   for (uint32_t i = ctx->lcd_ctx->lRawNew->ledStart; i < ctx->lcd_ctx->lRawNew->ledEnd;) {
@@ -159,8 +159,8 @@ static void setStartAndEnd(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainL, .triggerTime = 20000uL, .puState = done, .isEnabled = 1u };
-mAnim_t anim_mainR = { .fpRend = anim_random3, .lcd_ctx = &lcd_mainR, .triggerTime = 20000uL, .puState = done, .isEnabled = 1u };
+mAnim_t anim_mainL = { .fpRend = cycleColors, .lcd_ctx = &lcd_mainL, .triggerTime = 15000uL, .puState = done, .isEnabled = 1u };
+mAnim_t anim_mainR = { .fpRend = cycleColors, .lcd_ctx = &lcd_mainR, .triggerTime = 15000uL, .puState = done, .isEnabled = 1u };
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 5500uL, .puState = done, .isEnabled = 1u };
 uint32_t brightnessMainL[2];

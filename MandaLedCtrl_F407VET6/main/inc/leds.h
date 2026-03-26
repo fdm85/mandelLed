@@ -10,8 +10,8 @@
 
 #include "ledData.h"
 
-#define MAIN_L_LDCNT  32uL
-#define MAIN_R_LDCNT  32uL
+#define MAIN_L_LDCNT  240uL
+#define MAIN_R_LDCNT  330uL
 #define MRTX_LDCNT  256uL
 #define RAW_LDCNT  16uL
 #define RAW_DMA_CNT (3uL*8uL*RAW_LDCNT)
