@@ -120,8 +120,8 @@ static void cycleAnimMainR(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
 static void enDisAble(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
   if (isAck) {
-    while (ctx->state < e_Done)
-      __NOP();
+//    while (ctx->state < e_Done)
+//      __NOP();
     ctx->isEnabled ^= 1u;
     ctx->state = (ctx->isEnabled) ? e_reEnable : e_disable;
   }
@@ -160,8 +160,8 @@ static void setStartAndEnd(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = cycleColorsSingle, .lcd_ctx = &lcd_mainL, .triggerTime = 15000uL, .puState = done, .isEnabled = 1u };
-mAnim_t anim_mainR = { .fpRend = cycleColorsSingle, .lcd_ctx = &lcd_mainR, .triggerTime = 15000uL, .puState = done, .isEnabled = 1u };
+mAnim_t anim_mainL = { .fpRend = cycleColorsSingle, .lcd_ctx = &lcd_mainL, .triggerTime = 5500uL, .puState = done, .isEnabled = 1u };
+mAnim_t anim_mainR = { .fpRend = cycleColorsSingle, .lcd_ctx = &lcd_mainR, .triggerTime = 5500uL, .puState = done, .isEnabled = 1u };
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 5500uL, .puState = done, .isEnabled = 1u };
 uint32_t brightnessMainL[2];
@@ -194,15 +194,22 @@ static const uBrdg_Leaf mtrx[6] = { { .gtFp = NULL, .des = "anim_matrix", .par =
 const uBrdg_Leaf *const leafs[4] = { mainL, mainR, mtrx, NULL };
 
 static void acQueryAll(void) {
-  for (uint32_t i = 0; leafs[i] != NULL; ++i) {
+  for (uint8_t i = 0; leafs[i] != NULL; ++i) {
+	char idx[2];
+	idx[1] = 0;
+	idx[0] = '0' + i;
+    com_TxBuff(idx, 1);
     com_TxBuff(leafs[i][0].des, strlen(leafs[i][0].des));
     com_TxBuff("\r", 1);
-    for (uint32_t j = 1; j <= leafs[i][0].pCt; ++j) {
+    for (uint8_t j = 1; j <= leafs[i][0].pCt; ++j) {
+	  idx[0] = '0' + j;
+	  com_TxBuff(idx, 1);
       com_TxBuff("   ", 3);
       com_TxBuff(leafs[i][j].des, strlen(leafs[i][j].des));
       com_TxBuff("\r", 1);
     }
   }
+  bp_ResetRx(&rxCtx);
 }
 
 static void acLeaf(pb_Ctx *const rCtx, pb_Ctx *const tCtx, uint8_t isAck) {
@@ -364,35 +371,38 @@ static void maintainStatusLeds(void) {
 /** @brief main function
  */
 int main(void) {
-  pb_ParserState parStt;
-  initClock();
-  initPeripherals();
-  com_SetDump();
+	pb_ParserState parStt;
+	initClock();
+	initPeripherals();
+	com_SetDump();
 
-  led_setBrightnessTruncation(anim_mainL.lcd_ctx, 1uL, 1uL);
-  led_setBrightnessTruncation(anim_mainR.lcd_ctx, 1uL, 1uL);
-  led_setBrightnessTruncation(anim_matrix.lcd_ctx, 1uL, 1uL);
+	led_setBrightnessTruncation(anim_mainL.lcd_ctx, 1uL, 1uL);
+	led_setBrightnessTruncation(anim_mainR.lcd_ctx, 1uL, 1uL);
+	led_setBrightnessTruncation(anim_matrix.lcd_ctx, 1uL, 1uL);
 
-  mtrx_Init();
+	mtrx_Init();
 	led_LedLogicInit(anim_mainL.lcd_ctx);
 	led_LedLogicInit(anim_mainR.lcd_ctx);
-  led_LedLogicInit(anim_matrix.lcd_ctx);
+	led_LedLogicInit(anim_matrix.lcd_ctx);
 
-  __enable_irq();
+	__enable_irq();
 
-  com_Init();
+	com_Init();
 
-  for (;;) {
-    maintainStatusLeds();
-    msgeq_ticker();
-    parStt = bp_Parse(&rxCtx);
-    if (parStt > pb_eTimeOut)
-      acLeaf(&rxCtx, &txCtx, parStt == pb_eAck ? 1u : 0u);
+	for (;;) {
+		maintainStatusLeds();
+		msgeq_ticker();
+
+		parStt = bp_Parse(&rxCtx);
+		if (parStt > pb_eEnqAll)
+			acLeaf(&rxCtx, &txCtx, parStt == pb_eAck ? 1u : 0u);
+		if (parStt == pb_eEnqAll)
+			acQueryAll();
 
 		cyclicReSend(&anim_mainL);
 		cyclicReSend(&anim_mainR);
-    cyclicReSend(&anim_matrix);
-  }
+		cyclicReSend(&anim_matrix);
+	}
 }
 
 void _close(void) {

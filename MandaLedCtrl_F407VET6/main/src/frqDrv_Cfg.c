@@ -28,28 +28,28 @@
 #define colorSetVal 100u
 #include "animations.h"
 #include "leds.h"
-fm_frqBand(rl0, getLChanVal2,   0u,  80u, 0u, 0u, colorSetVal, e63Hz, MAX_OUT);
-fm_frqBand(rl1, getLChanVal2,  81u, 120u, colorSetVal, 0u, colorSetVal, e160Hz, MAX_OUT);
-fm_frqBand(bl2, getLChanVal2, 121u, 200u, colorSetVal, 0u, 0u, e400Hz, MAX_OUT);
-fm_frqBand(bl3, getLChanVal2, 201u, 280u, colorSetVal, colorSetVal, 0u, e1kHz, MAX_OUT);
-fm_frqBand(bl4, getLChanVal2, 281u, 360u, 0u, 0u, colorSetVal, e2_5kHz, MAX_OUT);
-fm_frqBand(bl5, getLChanVal2, 361u, 440u, 0u, colorSetVal, 0u, e6_25kHz, MAX_OUT);
-fm_frqBand(bl6, getLChanVal2, 441u, MAIN_L_LDCNT, colorSetVal, colorSetVal, 0u, e16kHz, MAX_OUT);
+fm_frqBand(rl0, getLChanVal2,   0u,  59u, 0u, 0u, colorSetVal, e63Hz, MAX_OUT);
+fm_frqBand(rl1, getLChanVal2,  60u, 120u, colorSetVal, 0u, colorSetVal, e160Hz, MAX_OUT);
+fm_frqBand(bl2, getLChanVal2, 121u, 140u, colorSetVal, 0u, 0u, e400Hz, MAX_OUT);
+fm_frqBand(bl3, getLChanVal2, 141u, 160u, colorSetVal, colorSetVal, 0u, e1kHz, MAX_OUT);
+fm_frqBand(bl4, getLChanVal2, 161u, 180u, 0u, 0u, colorSetVal, e2_5kHz, MAX_OUT);
+fm_frqBand(bl5, getLChanVal2, 181u, MAIN_L_LDCNT, 0u, colorSetVal, 0u, e6_25kHz, MAX_OUT);
+//fm_frqBand(bl6, getLChanVal2, 201u, MAIN_L_LDCNT, colorSetVal, colorSetVal, 0u, e16kHz, MAX_OUT);
 // 250
 
-fm_frqBand(rr0, getRChanVal2,   0u,  80u,  0u, 0u, colorSetVal, e63Hz, MAX_OUT);
-fm_frqBand(rr1, getRChanVal2,  81u, 120u, colorSetVal, 0u, colorSetVal, e160Hz, MAX_OUT);
-fm_frqBand(br2, getRChanVal2, 121u, 200u, colorSetVal, 0u, 0u, e400Hz, MAX_OUT);
-fm_frqBand(br3, getRChanVal2, 201u, 280u, colorSetVal, colorSetVal, 0u, e1kHz, MAX_OUT);
-fm_frqBand(br4, getRChanVal2, 281u, 360u, 0u, 0u, colorSetVal, e2_5kHz, MAX_OUT);
-fm_frqBand(br5, getRChanVal2, 361u, 440u, 0u, colorSetVal, 0u, e6_25kHz, MAX_OUT);
-fm_frqBand(br6, getRChanVal2, 441u, MAIN_R_LDCNT, colorSetVal, colorSetVal, 0u, e16kHz, MAX_OUT);
+fm_frqBand(rr0, getRChanVal2,   0u,  59u,  0u, 0u, colorSetVal, e63Hz, MAX_OUT);
+fm_frqBand(rr1, getRChanVal2,  60u, 120u, colorSetVal, 0u, colorSetVal, e160Hz, MAX_OUT);
+fm_frqBand(br2, getRChanVal2, 121u, 140u, colorSetVal, 0u, 0u, e400Hz, MAX_OUT);
+fm_frqBand(br3, getRChanVal2, 141u, 180u, colorSetVal, colorSetVal, 0u, e1kHz, MAX_OUT);
+fm_frqBand(br4, getRChanVal2, 181u, 220u, 0u, 0u, colorSetVal, e2_5kHz, MAX_OUT);
+fm_frqBand(br5, getRChanVal2, 221u, MAIN_R_LDCNT, 0u, colorSetVal, 0u, e6_25kHz, MAX_OUT);
+//fm_frqBand(br6, getRChanVal2, 441u, MAIN_R_LDCNT, colorSetVal, colorSetVal, 0u, e16kHz, MAX_OUT);
 
 
 /*! @brief Left side config frequency-band to position config */
-const frqBand_t *frqL[] = { &bl2, &bl3, &bl4, &bl5, &bl6, NULL };
+const frqBand_t *frqL[] = { &bl2, &bl3, &bl4, &bl5, NULL };
 /*! @brief Right side frequency-band to position config */
-const frqBand_t *frqR[] = { &br2, &br3, &br4, &br5, &br6, NULL };
+const frqBand_t *frqR[] = { &br2, &br3, &br4, &br5, NULL };
 /*! @brief Middle side config frequency-band to position config */
 const frqBand_t *frqML[] = { &rl0, &rl1, NULL };
 const frqBand_t *frqMR[] = { &rr0, &rr1, NULL };
