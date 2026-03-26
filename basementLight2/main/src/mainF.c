@@ -30,7 +30,7 @@
 #include "cmsis_compiler.h"
 #include "stm32f4xx_hal.h"
 #include "faultHandling.h"
-
+#include <string.h>
 
 static uint8_t col = 5;
 static uint8_t idx = 0;
@@ -123,13 +123,11 @@ static void enDisAble(mAnim_t *ctx, uint32_t *param, uint8_t isAck){
   if(isAck){
     while(ctx->state < e_Done)
       __NOP();
-    *param ^= 1u;
-    ctx->isEnabled = *param & 0x1uL;
+    ctx->isEnabled ^= 1u;
     ctx->state = (ctx->isEnabled) ? e_reEnable : e_disable;
   }
 
-  ctx->isEnabled &= 0x1u;
-  *param = ctx->isEnabled;
+  *param = (ctx->isEnabled) ? 1uL : 0uL;
 }
 
 static void triggerTime(mAnim_t *ctx, uint32_t *param, uint8_t isAck){
@@ -178,6 +176,9 @@ uint32_t LedStartEndMainR[2];
 uint32_t AnimIdxMainR;
 uint32_t enabledMainR;
 uint32_t trgTimeMainR;
+uint32_t brightnessMatrix[2];
+uint32_t enabledMatrix;
+uint32_t trgTimeMatrix;
 
 static const uBrdg_Leaf mainL[6] = { {.gtFp = NULL, .des = "anim_mainL", .par = (uint32_t*)&anim_mainL, .pCt = 5},
                               {.gtFp = enDisAble, .des = "OnOff", .par = &enabledMainL, .pCt = 1},
@@ -204,6 +205,18 @@ static const uBrdg_Leaf mtrx[6] = { {.gtFp = NULL, .des = "anim_matrix", .par = 
 const uBrdg_Leaf *const leafs[4] = {
     mainL, mainR, mtrx, NULL
 };
+
+static void acQueryAll(void) {
+  for (uint32_t i = 0; leafs[i] != NULL; ++i) {
+    com_TxBuff(leafs[i][0].des, strlen(leafs[i][0].des));
+    com_TxBuff("\r", 1);
+    for (uint32_t j = 1; j <= leafs[i][0].pCt; ++j) {
+      com_TxBuff("   ", 3);
+      com_TxBuff(leafs[i][j].des, strlen(leafs[i][j].des));
+      com_TxBuff("\r", 1);
+    }
+  }
+}
 
 static void acLeaf(pb_Ctx *const rCtx, pb_Ctx *const tCtx, uint8_t isAck)
 {
@@ -331,7 +344,7 @@ static void maintainStatusLeds(void) {
         if (mrtxPuState < 5)
           ++mrtxPuState;
         if (mrtxPuState == 1)
-          anim_matrix.isEnabled ^= 1u;
+          enDisAble(&anim_matrix, &enabledMatrix, 1u);
         else if (mrtxPuState == 2)
         {
           anim_mainL.triggerTime = 550uL;
@@ -340,7 +353,7 @@ static void maintainStatusLeds(void) {
           anim_mainR.fpRend = anim_frqDrvR;
         }
         else if (mrtxPuState == 3)
-          anim_matrix.isEnabled ^= 1u;
+          enDisAble(&anim_matrix, &enabledMatrix, 1u);
         else if (mrtxPuState == 4)
         {
           anim_mainL.triggerTime = 1000uL;
@@ -394,8 +407,10 @@ int main(void)
 	  maintainStatusLeds();
 		msgeq_ticker();
 		parStt = bp_Parse(&rxCtx);
-		if(parStt > pb_eTimeOut)
+		if(parStt > pb_eEnqAll)
 		  acLeaf(&rxCtx, &txCtx, parStt == pb_eAck ? 1u : 0u);
+		if(parStt == pb_eEnqAll)
+		  acQueryAll();
 
 
 		cyclicReSend(&anim_mainL);
