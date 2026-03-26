@@ -49,7 +49,8 @@ void cycleColors(mAnim_t *ctx) {
 void cycleColorsSingle(mAnim_t *ctx) {
   led_setAllLedsToColor(ctx->lcd_ctx, 0, 0, 0);
   for (uint32_t i = ctx->lcd_ctx->lRawNew->ledStart; i < ctx->lcd_ctx->lRawNew->ledEnd; ++i)
-    led_setLedToColor(ctx->lcd_ctx, i, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col);
+    led_setLedToColor(ctx->lcd_ctx, i, 255u, 255u, 255);
+//  led_setLedToColor(ctx->lcd_ctx, i, ((idx + 0) % 3) ? 0 : col, ((idx + 1) % 3) ? 0 : col, ((idx + 2) % 3) ? 0 : col);
 
   ++idx;
 }
@@ -86,7 +87,7 @@ void allLedsOff(mAnim_t *ctx) {
 }
 
 static void cycleAnimMainL(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
-  static const void *fpMainL[] = { anim_frqDrvL, anim_random3, cycleColorsSingle, cycleColors, NULL };
+  static const void *fpMainL[] = { cycleColorsSingle, anim_frqDrvL, anim_random3, cycleColorsSingle, cycleColors, NULL };
   uint32_t idx;
 
   if (isAck) {
@@ -102,7 +103,7 @@ static void cycleAnimMainL(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 }
 
 static void cycleAnimMainR(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
-  static const void *fpMainR[] = { anim_frqDrvR, anim_random3, cycleColorsSingle, cycleColors, NULL };
+  static const void *fpMainR[] = { cycleColorsSingle, anim_frqDrvR, anim_random3, cycleColorsSingle, cycleColors, NULL };
   uint32_t idx;
 
   if (isAck) {
@@ -159,8 +160,8 @@ static void setStartAndEnd(mAnim_t *ctx, uint32_t *param, uint8_t isAck) {
 
 /// .triggerTimeMs = 20000uL == 2 seconds
 //mAnim_t anim_main = { .fpRend = cycleColors, .lcd_ctx = &lcd_main, .triggerTimeMs = 1500uL, .puState = done};
-mAnim_t anim_mainL = { .fpRend = cycleColors, .lcd_ctx = &lcd_mainL, .triggerTime = 15000uL, .puState = done, .isEnabled = 1u };
-mAnim_t anim_mainR = { .fpRend = cycleColors, .lcd_ctx = &lcd_mainR, .triggerTime = 15000uL, .puState = done, .isEnabled = 1u };
+mAnim_t anim_mainL = { .fpRend = cycleColorsSingle, .lcd_ctx = &lcd_mainL, .triggerTime = 15000uL, .puState = done, .isEnabled = 1u };
+mAnim_t anim_mainR = { .fpRend = cycleColorsSingle, .lcd_ctx = &lcd_mainR, .triggerTime = 15000uL, .puState = done, .isEnabled = 1u };
 //mAnim_t anim_matrix = { .fpRend = cycleColorsNone, .lcd_ctx = &lcd_matrix, .triggerTimeMs = 550uL, .puState = done};
 mAnim_t anim_matrix = { .fpRend = mtrx_anim, .lcd_ctx = &lcd_matrix, .triggerTime = 5500uL, .puState = done, .isEnabled = 1u };
 uint32_t brightnessMainL[2];

@@ -61,13 +61,18 @@ void com_Init(void) {
   com_enableRx();
 	com_Tx();
 }
-void com_Tx(void)
-{
-  HAL_UART_Transmit_IT(txCtx.hwCtx, (const uint8_t*)&txCtx.pl[txCtx.rd], (uint16_t)txCtx.wr - txCtx.rd);
+void com_Tx(void) {
+	HAL_StatusTypeDef res = HAL_UART_Transmit_IT(txCtx.hwCtx,
+			(const uint8_t*) &txCtx.pl[txCtx.rd],
+			(uint16_t) txCtx.wr - txCtx.rd);
+	if (res != HAL_OK)
+		__BKPT(0);
 }
-void com_TxBuff(const char * buff, size_t sz)
-{
-  HAL_UART_Transmit(txCtx.hwCtx, (const uint8_t*)buff, (uint16_t)sz, 1000uL);
+void com_TxBuff(const char *buff, size_t sz) {
+	HAL_StatusTypeDef res = HAL_UART_Transmit(txCtx.hwCtx,
+			(const uint8_t*) buff, (uint16_t) sz, 1000uL);
+	if (res != HAL_OK)
+		__BKPT(0);
 }
 
 /**
@@ -75,7 +80,8 @@ void com_TxBuff(const char * buff, size_t sz)
  */
 void com_enableRx(void) {
 
-	HAL_StatusTypeDef res = HAL_UART_Receive_IT(rxCtx.hwCtx, (uint8_t*) rxBuf, RX_BUF_SZ);
+//	HAL_StatusTypeDef res = HAL_UART_Receive_IT(rxCtx.hwCtx, (uint8_t*) rxBuf, RX_BUF_SZ);
+	HAL_StatusTypeDef res = HAL_UART_Receive_IT(rxCtx.hwCtx, (uint8_t*) rxBuf, 1);
 
 	if(res != HAL_OK)
 	{
@@ -89,7 +95,8 @@ void com_enableRx(void) {
 
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
-  bp_ResetTx(&txCtx);
+	if(huart == txCtx.hwCtx)
+		bp_ResetTx(&txCtx);
 }
 
 /**
@@ -98,9 +105,10 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
  *                the configuration information for the specified UART module.
  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-
-  rxCtx.wr = (uint8_t)(huart->pRxBuffPtr - (uint8_t*)rxBuf);
-  bp_IsrCb(&rxCtx);
+	if (huart == rxCtx.hwCtx) {
+		rxCtx.wr = (uint8_t) (huart->pRxBuffPtr - (uint8_t*) rxBuf);
+		bp_IsrCb(&rxCtx);
+	}
 }
 
 /** @}*/
