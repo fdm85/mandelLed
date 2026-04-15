@@ -30,19 +30,19 @@
 #include "leds.h"
 fm_frqBand(rl0, getLChanVal2,   0u,  59u, 0u, 0u, colorSetVal, e63Hz, MAX_OUT);
 fm_frqBand(rl1, getLChanVal2,  60u, 120u, colorSetVal, 0u, colorSetVal, e160Hz, MAX_OUT);
-fm_frqBand(bl2, getLChanVal2, 121u, 140u, colorSetVal, 0u, 0u, e400Hz, MAX_OUT);
-fm_frqBand(bl3, getLChanVal2, 141u, 160u, colorSetVal, colorSetVal, 0u, e1kHz, MAX_OUT);
-fm_frqBand(bl4, getLChanVal2, 161u, 180u, 0u, 0u, colorSetVal, e2_5kHz, MAX_OUT);
-fm_frqBand(bl5, getLChanVal2, 181u, MAIN_L_LDCNT, 0u, colorSetVal, 0u, e6_25kHz, MAX_OUT);
+fm_frqBand(bl2, getLChanVal2, 121u, 151u, colorSetVal, 0u, 0u, e400Hz, MAX_OUT);
+fm_frqBand(bl3, getLChanVal2, 151u, 180u, colorSetVal, colorSetVal, 0u, e1kHz, MAX_OUT);
+fm_frqBand(bl4, getLChanVal2, 181u, 210u, 0u, 0u, colorSetVal, e2_5kHz, MAX_OUT);
+fm_frqBand(bl5, getLChanVal2, 211u, MAIN_L_LDCNT, 0u, colorSetVal, 0u, e6_25kHz, MAX_OUT);
 //fm_frqBand(bl6, getLChanVal2, 201u, MAIN_L_LDCNT, colorSetVal, colorSetVal, 0u, e16kHz, MAX_OUT);
 // 250
 
 fm_frqBand(rr0, getRChanVal2,   0u,  59u,  0u, 0u, colorSetVal, e63Hz, MAX_OUT);
 fm_frqBand(rr1, getRChanVal2,  60u, 120u, colorSetVal, 0u, colorSetVal, e160Hz, MAX_OUT);
-fm_frqBand(br2, getRChanVal2, 121u, 140u, colorSetVal, 0u, 0u, e400Hz, MAX_OUT);
-fm_frqBand(br3, getRChanVal2, 141u, 180u, colorSetVal, colorSetVal, 0u, e1kHz, MAX_OUT);
-fm_frqBand(br4, getRChanVal2, 181u, 220u, 0u, 0u, colorSetVal, e2_5kHz, MAX_OUT);
-fm_frqBand(br5, getRChanVal2, 221u, MAIN_R_LDCNT, 0u, colorSetVal, 0u, e6_25kHz, MAX_OUT);
+fm_frqBand(br2, getRChanVal2, 121u, 151u, colorSetVal, 0u, 0u, e400Hz, MAX_OUT);
+fm_frqBand(br3, getRChanVal2, 151u, 180u, colorSetVal, colorSetVal, 0u, e1kHz, MAX_OUT);
+fm_frqBand(br4, getRChanVal2, 181u, 210u, 0u, 0u, colorSetVal, e2_5kHz, MAX_OUT);
+fm_frqBand(br5, getRChanVal2, 211u, MAIN_R_LDCNT, 0u, colorSetVal, 0u, e6_25kHz, MAX_OUT);
 //fm_frqBand(br6, getRChanVal2, 441u, MAIN_R_LDCNT, colorSetVal, colorSetVal, 0u, e16kHz, MAX_OUT);
 
 
