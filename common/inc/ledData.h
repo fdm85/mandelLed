@@ -141,7 +141,7 @@ typedef struct lRawDma_tag
  *  @param name Name of the instance
  *  @param ledCnt count of real leds */
 #define lLogicContainer(name, ledCnt)\
-	static LedLogic_t CCRAM_PLACING ledsLog_##name[ledCnt]
+	static LedLogic_t CCRAM_BSS ledsLog_##name[ledCnt]
 
 /** @brief factory macro to tie a logic LED strip to a timer PWM output channel
  *  @param name Name of the instance

@@ -15,6 +15,7 @@ typedef enum pb_ParserState_t{
   pb_eIdle,
   pb_eBusy,
   pb_eTimeOut,
+  pb_eEnqAll,
   pb_eEnq,
   pb_eAck,
 }pb_ParserState;

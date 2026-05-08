@@ -31,7 +31,7 @@
 
 #define BREAK 1
 #define TEXT 2
-#define ASSRT TEXT
+#define ASSRT BREAK
 
 #define S1(x) #x
 #define S2(x) S1(x)

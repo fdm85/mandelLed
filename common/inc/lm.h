@@ -27,6 +27,13 @@
 
 /*! @brief Define memory section pragma for led data */
 //#define CCRAM_PLACING __attribute__((section (".ccmram")))
-#define CCRAM_PLACING
+#ifndef CCRAM_BSS
+#define CCRAM_BSS
+#endif
+
+#ifndef CCRAM_DAT
+#define CCRAM_DAT
+#endif
+
 #endif /* INC_LM_H_ */
 /** @}*/

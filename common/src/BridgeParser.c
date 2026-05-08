@@ -63,6 +63,10 @@ static inline pb_ParserState Eval(pb_Ctx *const rCtx) {
       res = (rCtx->pl[rCtx->rd] == '?') ? pb_eEnq : pb_eAck;
       ++rCtx->rd;
   }
+  if((len == 3u) && pb_IsComplete(rCtx)) {
+      if((rCtx->pl[rCtx->rd] == '?') && (rCtx->pl[rCtx->rd + 1] == '0'))
+        res = pb_eEnqAll;
+  }
 
   return res;
 }
@@ -85,7 +89,7 @@ void bp_ResetTx(pb_Ctx *const tCtx){
 
 pb_ParserState bp_Parse(pb_Ctx *const rCtx) {
   uint32_t aux;
-  char rdPost;
+  char rdPost = 0x0u;
   uint8_t i, j, k;
 
   if(rCtx->rd && (rCtx->rd == rCtx->wr))
